@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vahako – Fabrication & Conveyors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fixed Header -->
+  <header class="vh-header">
+    <div class="vh-header-inner">
+      <!-- Left: Logo + Menu -->
+      <div class="vh-left">
+        <button class="vh-burger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <a href="/" class="vh-logo">
+          <img src="logo.png" alt="Vahako Logo">
+          <span>VAHAKO</span>
+        </a>
+        <nav class="vh-nav">
+          <a href="#">Conveyors</a>
+          <a href="#">Freight Elevators</a>
+          <a href="#">Spares</a>
+          <a href="#">Projects</a>
+          <a href="#">Contact</a>
+        </nav>
+      </div>
+
+      <!-- Middle: Search -->
+      <div class="vh-search">
+        <input
+          type="search"
+          id="vh-search-input"
+          placeholder="Search pages…"
+          autocomplete="off"
+        />
+        <div id="vh-search-suggestions" class="vh-search-suggestions"></div>
+      </div>
+
+      <!-- Right: Social icons -->
+      <div class="vh-right">
+        <a href="https://www.youtube.com" target="_blank" aria-label="YouTube" class="vh-icon-btn">
+          <!-- simple play icon -->
+          <span class="vh-icon-play"></span>
+        </a>
+        <a href="https://www.facebook.com" target="_blank" aria-label="Facebook" class="vh-icon-btn">
+          <span class="vh-icon-f">f</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Simple main content just to show logo for now -->
+  <main class="vh-main">
+    <img src="logo.png" alt="Vahako Logo" class="vh-main-logo">
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
