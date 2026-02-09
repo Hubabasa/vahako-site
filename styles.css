@@ -34,7 +34,6 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   clip:rect(0,0,0,0); white-space:nowrap; border:0;
 }
 
-/* Sticky / fixed header */
 .site-header{
   position: sticky;
   top: 0;
@@ -42,7 +41,9 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   background: var(--header);
   color: var(--text);
   border-bottom: 1px solid var(--border);
+  overflow: visible;
 }
+
 
 /* Rows */
 .header-row{
