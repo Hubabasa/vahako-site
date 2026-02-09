@@ -2,191 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Vahako staniless steel, Iron and wood febrications services in sri lanka</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#008080" />
 
-  <!-- Meta description (~75 words) -->
-  <meta name="description" content="Vahako offers stainless steel, iron, and wood fabrication services in Sri Lanka, delivering custom-built solutions for industrial and commercial needs. We design and manufacture conveyor systems, customized machinery, and fabricated components with a focus on quality, durability, and clean finishing. Our services also include powder coating and dependable maintenance & repair support. Contact Vahako for quotations, project discussions, and tailored fabrication work." />
+  <title>Vahako.com, Sri Lankas No. Fabricator</title>
+  <meta name="description" content="Vahako.com — Sri Lankas No. Fabricator. Metal fabrication near me, sheet metal fabrication, custom woodworking, custom machines, metal work, custom fence, customized sink, all types of stainless steel, metal and wood working." />
+  <meta name="keywords" content="metal fabrication near me, sheet metal fabrication, custom woodworking, custom machines, metal work, custom fence, customized sink, all types of stainless steel, metal and wood working" />
 
-  <meta name="theme-color" content="#27C7C7" />
+  <link rel="preload" href="styles.css" as="style" />
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- =========================
-       Tracking placeholders
-       ========================= -->
-  <!-- Google Tag Manager (GTM) - PLACEHOLDER
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
-  -->
-
-  <!-- Google Analytics (GA4) - PLACEHOLDER
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-  -->
-
-  <!-- Meta Pixel - PLACEHOLDER
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'YOUR_PIXEL_ID');
-    fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
-  -->
+  <script defer src="script.js"></script>
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) - PLACEHOLDER
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  -->
+  <!-- Sticky / Fixed Header -->
+  <header class="site-header" role="banner">
+    <!-- Desktop (Logo > Social > Search > Menu) -->
+    <div class="header-row header-desktop">
+      <a class="logo" href="index.html" aria-label="Vahako Home">
+        <img src="logo.png" alt="Vahako.com logo" width="180" height="56" decoding="async" />
+      </a>
 
-  <!-- Header -->
-  <header class="vh-header" role="banner">
-    <div class="vh-header-inner">
-      <!-- Left: Logo + Menu -->
-      <div class="vh-left">
-        <button class="vh-burger" aria-label="Open menu" aria-expanded="false" aria-controls="vh-nav">
-          <span></span><span></span><span></span>
-        </button>
+      <nav class="social" aria-label="Social links">
+        <a href="#" class="social-link" aria-label="Facebook">FB</a>
+        <a href="#" class="social-link" aria-label="YouTube">YT</a>
+        <a href="#" class="social-link" aria-label="TikTok">TT</a>
+      </nav>
 
-        <a href="/" class="vh-logo" aria-label="Vahako home">
-          <img src="logo.png" alt="Vahako Logo" width="36" height="36" />
-          <span>VAHAKO</span>
-        </a>
-
-        <nav class="vh-nav" id="vh-nav" aria-label="Primary navigation">
-          <a href="#services">Services</a>
-          <a href="#projects">Projects</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
+      <div class="search" role="search">
+        <label class="sr-only" for="searchDesktop">Search</label>
+        <input id="searchDesktop" class="search-input" type="search" placeholder="Search..." autocomplete="off" />
+        <div id="resultsDesktop" class="search-results" aria-live="polite"></div>
       </div>
 
-      <!-- Middle: Search (centered) -->
-      <div class="vh-search" role="search">
-        <label class="vh-sr-only" for="vh-search-input">Search pages</label>
-        <input
-          type="search"
-          id="vh-search-input"
-          placeholder="Search: conveyors, powder coating, stainless steel…"
-          autocomplete="off"
-        />
-        <div id="vh-search-suggestions" class="vh-search-suggestions" aria-live="polite"></div>
-      </div>
+      <nav class="menu" aria-label="Main menu">
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
 
-      <!-- Right: Social icons -->
-      <div class="vh-right">
-        <a href="#" aria-label="YouTube (placeholder)" class="vh-icon-btn" title="YouTube (placeholder)">
-          <span class="vh-icon-play" aria-hidden="true"></span>
-        </a>
-        <a href="#" aria-label="Facebook (placeholder)" class="vh-icon-btn" title="Facebook (placeholder)">
-          <span class="vh-icon-f" aria-hidden="true">f</span>
-        </a>
+    <!-- Mobile Layer 1 (Logo > Social > Hamburger) -->
+    <div class="header-row header-mobile layer1">
+      <a class="logo" href="index.html" aria-label="Vahako Home">
+        <img src="logo.png" alt="Vahako.com logo" width="160" height="50" decoding="async" />
+      </a>
+
+      <nav class="social" aria-label="Social links">
+        <a href="#" class="social-link" aria-label="Facebook">FB</a>
+        <a href="#" class="social-link" aria-label="YouTube">YT</a>
+        <a href="#" class="social-link" aria-label="TikTok">TT</a>
+      </nav>
+
+      <button id="hamburger" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+        ☰
+      </button>
+    </div>
+
+    <!-- Mobile Layer 2 (Search bar) -->
+    <div class="header-row header-mobile layer2">
+      <div class="search" role="search">
+        <label class="sr-only" for="searchMobile">Search</label>
+        <input id="searchMobile" class="search-input" type="search" placeholder="Search..." autocomplete="off" />
+        <div id="resultsMobile" class="search-results" aria-live="polite"></div>
       </div>
     </div>
+
+    <!-- Mobile menu (shown by hamburger) -->
+    <nav id="mobileMenu" class="mobile-menu" aria-label="Mobile menu">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </header>
 
-  <main class="vh-main" role="main">
-    <section class="vh-hero" id="top">
-      <div class="vh-container">
-        <h1>Fabrication Services in Sri Lanka</h1>
-        <p class="vh-lead">
-          Stainless steel fabrications, iron work, wood work, customized machinery, conveyor systems, powder coating,
-          and maintenance & repair.
-        </p>
-        <div class="vh-cta">
-          <a class="vh-btn vh-btn-primary" href="#contact">Get a Quote</a>
-          <a class="vh-btn" href="#services">View Services</a>
-        </div>
-      </div>
+  <main class="page">
+    <!-- Required special page title line on EVERY page -->
+    <p class="site-title-line">Vahako.com, Sri Lankas No. Fabricator</p>
+
+    <!-- Minimal homepage content (SEO keywords included naturally) -->
+    <section class="hero">
+      <h1>Metal Fabrication & Stainless Steel Work</h1>
+      <p>
+        Metal fabrication near me, sheet metal fabrication, custom woodworking, custom machines, metal work,
+        custom fence, customized sink, all types of stainless steel, metal and wood working.
+      </p>
+
+      <h2>Our Core Services</h2>
+      <p>
+        We build reliable fabrication solutions with strong finishes and accurate measurements.
+      </p>
     </section>
-
-    <section class="vh-section" id="services">
-      <div class="vh-container">
-        <h2>Services</h2>
-        <p class="vh-sub">Custom fabrication and industrial solutions built for durability and clean finishing.</p>
-
-        <div class="vh-grid">
-          <article class="vh-card">
-            <h3>Stainless Steel Fabrications</h3>
-            <p>Custom stainless builds for industrial environments.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Iron Work</h3>
-            <p>Strong, reliable iron fabrication for projects and installations.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Wood Work</h3>
-            <p>Wood components and builds tailored to requirements.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Customized Machinery</h3>
-            <p>Purpose-built machinery and fixtures for your workflow.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Conveyor Systems</h3>
-            <p>Conveyors designed for smooth handling and dependable operation.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Powder Coating</h3>
-            <p>Durable coating for protection and premium finishing.</p>
-          </article>
-
-          <article class="vh-card">
-            <h3>Maintenance & Repair</h3>
-            <p>Keep equipment running with preventive and corrective support.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="vh-section" id="projects">
-      <div class="vh-container">
-        <h2>Projects</h2>
-        <p class="vh-sub">Project showcase coming soon.</p>
-        <div class="vh-placeholder">Add photos and case studies here.</div>
-      </div>
-    </section>
-
-    <section class="vh-section" id="about">
-      <div class="vh-container">
-        <h2>About</h2>
-        <p class="vh-sub">Vahako is a brand of Vantage Vortex Capital (Pvt) Ltd.</p>
-      </div>
-    </section>
-
-    <section class="vh-section" id="contact">
-      <div class="vh-container">
-        <h2>Contact</h2>
-        <p>Email: <a href="mailto:sales@vahako.com">sales@vahako.com</a></p>
-        <p>Hotline: <span class="vh-muted">[placeholder]</span></p>
-        <p>WhatsApp: <span class="vh-muted">[placeholder]</span></p>
-      </div>
-    </section>
-
-    <footer class="vh-footer">
-      <div class="vh-container">
-        <p>© <span id="vh-year"></span> Vahako</p>
-      </div>
-    </footer>
   </main>
-
-  <script src="script.js" defer></script>
 </body>
 </html>
