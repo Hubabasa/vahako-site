@@ -23,11 +23,21 @@
         <img src="logo.png" alt="Vahako.com logo" width="180" height="56" decoding="async" />
       </a>
 
-      <nav class="social" aria-label="Social links">
-        <a href="#" class="social-link" aria-label="Facebook">FB</a>
-        <a href="#" class="social-link" aria-label="YouTube">YT</a>
-        <a href="#" class="social-link" aria-label="TikTok">TT</a>
-      </nav>
+<nav class="social" aria-label="Social links">
+  <a href="#" class="social-link icon" aria-label="Facebook" title="Facebook">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.87v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.62.77-1.62 1.56V12h2.76l-.44 2.88h-2.32v6.99A10 10 0 0 0 22 12Z"/></svg>
+  </a>
+
+  <a href="#" class="social-link icon" aria-label="YouTube" title="YouTube">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2s-.23-1.64-.93-2.36c-.9-.93-1.9-.93-2.36-.99C16.9 2.6 12 2.6 12 2.6h0s-4.9 0-8.2.25c-.46.06-1.46.06-2.36.99C.74 4.56.5 6.2.5 6.2S.25 8.13.25 10.06v1.81c0 1.93.25 3.86.25 3.86s.23 1.64.93 2.36c.9.93 2.08.9 2.6 1 1.89.18 8.22.24 8.22.24s4.9-.01 8.2-.26c.46-.06 1.46-.06 2.36-.99.7-.72.93-2.36.93-2.36s.25-1.93.25-3.86v-1.81c0-1.93-.25-3.86-.25-3.86ZM9.75 14.2V7.7l6.25 3.25-6.25 3.25Z"/></svg>
+  </a>
+
+  <a href="#" class="social-link icon" aria-label="TikTok" title="TikTok">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.7 3c.4 3 2.1 4.8 5 5.1v3.2c-1.8.2-3.4-.3-5-1.3v6.2c0 4.5-4.9 6.8-8.2 4.4-2.1-1.5-2.7-4.4-1.5-6.6 1.2-2.3 3.9-3.2 6.6-2.5V9.1c-.3 0-.6.1-.9.1-2.3.3-4.2 1.6-5.3 3.6-1.1 2-1.1 4.5 0 6.5 2.3 4.2 8.3 4.2 10.6 0 .6-1 .8-2.2.8-3.4V3h2.9Z"/></svg>
+  </a>
+</nav>
+
+
 
       <div class="search" role="search">
         <label class="sr-only" for="searchDesktop">Search</label>
@@ -49,11 +59,20 @@
         <img src="logo.png" alt="Vahako.com logo" width="160" height="50" decoding="async" />
       </a>
 
-      <nav class="social" aria-label="Social links">
-        <a href="#" class="social-link" aria-label="Facebook">FB</a>
-        <a href="#" class="social-link" aria-label="YouTube">YT</a>
-        <a href="#" class="social-link" aria-label="TikTok">TT</a>
-      </nav>
+<nav class="social" aria-label="Social links">
+  <a href="#" class="social-link icon" aria-label="Facebook" title="Facebook">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.87v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.62.77-1.62 1.56V12h2.76l-.44 2.88h-2.32v6.99A10 10 0 0 0 22 12Z"/></svg>
+  </a>
+
+  <a href="#" class="social-link icon" aria-label="YouTube" title="YouTube">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2s-.23-1.64-.93-2.36c-.9-.93-1.9-.93-2.36-.99C16.9 2.6 12 2.6 12 2.6h0s-4.9 0-8.2.25c-.46.06-1.46.06-2.36.99C.74 4.56.5 6.2.5 6.2S.25 8.13.25 10.06v1.81c0 1.93.25 3.86.25 3.86s.23 1.64.93 2.36c.9.93 2.08.9 2.6 1 1.89.18 8.22.24 8.22.24s4.9-.01 8.2-.26c.46-.06 1.46-.06 2.36-.99.7-.72.93-2.36.93-2.36s.25-1.93.25-3.86v-1.81c0-1.93-.25-3.86-.25-3.86ZM9.75 14.2V7.7l6.25 3.25-6.25 3.25Z"/></svg>
+  </a>
+
+  <a href="#" class="social-link icon" aria-label="TikTok" title="TikTok">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.7 3c.4 3 2.1 4.8 5 5.1v3.2c-1.8.2-3.4-.3-5-1.3v6.2c0 4.5-4.9 6.8-8.2 4.4-2.1-1.5-2.7-4.4-1.5-6.6 1.2-2.3 3.9-3.2 6.6-2.5V9.1c-.3 0-.6.1-.9.1-2.3.3-4.2 1.6-5.3 3.6-1.1 2-1.1 4.5 0 6.5 2.3 4.2 8.3 4.2 10.6 0 .6-1 .8-2.2.8-3.4V3h2.9Z"/></svg>
+  </a>
+</nav>
+
 
       <button id="hamburger" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         ☰
@@ -80,7 +99,10 @@
 
   <main class="page">
     <!-- Required special page title line on EVERY page -->
-    <p class="site-title-line">Vahako.com, Sri Lankas No. Fabricator</p>
+<div class="site-title-line">
+  <span class="site-name">VAHAKO.COM</span>
+  <span class="site-tag">#1 FABRICATOR IN SRI LANKA</span>
+</div>
 
     <!-- Minimal homepage content (SEO keywords included naturally) -->
     <section class="hero">
@@ -98,4 +120,5 @@
   </main>
 </body>
 </html>
+
 
