@@ -69,7 +69,25 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   border: 1px solid rgba(0,0,0,.25);
   border-radius: 10px;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.social-link.icon{
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: rgba(255,255,255,.9);
+}
+
+.social-link.icon svg{
+  width: 18px;
+  height: 18px;
+  fill: #000;
+  display:block;
+}
+
 
 .menu{
   display:flex;
@@ -162,9 +180,30 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 }
 
 .site-title-line{
-  margin: 10px 0 18px;
-  font-weight: 700;
+  margin: 12px 0 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
+.site-title-line .site-name{
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: clamp(26px, 3.2vw, 44px);
+  color: var(--navy);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.site-title-line .site-tag{
+  font-weight: 800;
+  letter-spacing: 3px;
+  font-size: clamp(11px, 1.2vw, 14px);
+  color: #c40000;
+  text-transform: uppercase;
+}
+
 
 /* Responsive breakpoints */
 @media (max-width: 860px){
