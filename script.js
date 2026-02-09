@@ -1,71 +1,139 @@
-(() => {
-  const $ = (s, r = document) => r.querySelector(s);
+/* Smart search suggestions (grows as you add more pages) */
+const PAGES = [
+  // Add more items as your site grows
+  { title: "Home", url: "index.html", keywords: ["vahako", "fabricator", "metal fabrication near me"] },
+  { title: "Services", url: "services.html", keywords: ["sheet metal fabrication", "metal work", "stainless steel", "custom woodworking"] },
+  { title: "Projects", url: "projects.html", keywords: ["custom machines", "metal work", "fabrication projects"] },
+  { title: "Contact", url: "contact.html", keywords: ["quote", "contact", "location"] },
+  { title: "Custom Fence", url: "custom-fence.html", keywords: ["custom fence", "gate", "metal fence"] },
+  { title: "Customized Sink", url: "customized-sink.html", keywords: ["customized sink", "stainless sink", "kitchen"] }
+];
 
-  // Year in footer
-  const year = $("#vh-year");
-  if (year) year.textContent = String(new Date().getFullYear());
+function normalize(s) {
+  return (s || "").toLowerCase().trim();
+}
 
-  // Mobile nav toggle
-  const burger = $(".vh-burger");
-  const nav = $(".vh-nav");
-  if (burger && nav) {
-    burger.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
-      burger.setAttribute("aria-expanded", open ? "true" : "false");
-    });
+function scoreMatch(query, item) {
+  const q = normalize(query);
+  if (!q) return 0;
+
+  const hay = normalize(item.title + " " + item.keywords.join(" "));
+  // Simple fast scoring:
+  // - exact title contains -> big score
+  // - startsWith -> extra
+  // - keyword contains -> medium
+  let score = 0;
+
+  const title = normalize(item.title);
+  if (title === q) score += 100;
+  if (title.startsWith(q)) score += 60;
+  if (title.includes(q)) score += 40;
+
+  if (hay.includes(q)) score += 20;
+
+  // bonus for word-by-word
+  const parts = q.split(/\s+/).filter(Boolean);
+  let hits = 0;
+  for (const p of parts) {
+    if (p.length < 2) continue;
+    if (hay.includes(p)) hits += 1;
+  }
+  score += hits * 8;
+
+  return score;
+}
+
+function buildResults(query) {
+  const q = normalize(query);
+  if (!q) return [];
+
+  const ranked = PAGES
+    .map(p => ({ ...p, _score: scoreMatch(q, p) }))
+    .filter(p => p._score > 0)
+    .sort((a,b) => b._score - a._score)
+    .slice(0, 6);
+
+  return ranked;
+}
+
+function renderResults(container, results) {
+  if (!container) return;
+
+  if (!results.length) {
+    container.innerHTML = `<div class="hint">No matches.</div>`;
+    container.style.display = "block";
+    return;
   }
 
-  // "AJAX-like" search suggestions (fast, client-side)
-  const input = $("#vh-search-input");
-  const box = $("#vh-search-suggestions");
+  container.innerHTML = results
+    .map(r => `<a href="${r.url}">${escapeHtml(r.title)}</a>`)
+    .join("");
 
-  if (input && box) {
-    const PAGES = [
-      { title: "Services", desc: "All fabrication categories", href: "#services" },
-      { title: "Stainless Steel Fabrications", desc: "Custom stainless fabrication work", href: "#services" },
-      { title: "Iron Work", desc: "Iron fabrication services", href: "#services" },
-      { title: "Wood Work", desc: "Wood fabrication services", href: "#services" },
-      { title: "Customized Machinery", desc: "Purpose-built machines & fixtures", href: "#services" },
-      { title: "Conveyor Systems", desc: "Design and manufacture conveyors", href: "#services" },
-      { title: "Powder Coating", desc: "Durable coating and finishing", href: "#services" },
-      { title: "Maintenance & Repair", desc: "Preventive and corrective support", href: "#services" },
-      { title: "Contact", desc: "sales@vahako.com", href: "#contact" },
-      { title: "About", desc: "Vahako brand & company info", href: "#about" }
-    ];
+  container.style.display = "block";
+}
 
-    const openBox = () => box.classList.add("is-open");
-    const closeBox = () => box.classList.remove("is-open");
+function hideResults(container) {
+  if (!container) return;
+  container.style.display = "none";
+  container.innerHTML = "";
+}
 
-    const esc = (s) =>
-      String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-    let t = null;
-    input.addEventListener("input", () => {
-      clearTimeout(t);
-      const q = input.value.trim().toLowerCase();
-      if (!q) return closeBox();
+function wireSearch(inputId, resultsId) {
+  const input = document.getElementById(inputId);
+  const results = document.getElementById(resultsId);
+  if (!input || !results) return;
 
-      t = setTimeout(() => {
-        const results = PAGES.filter(p => (p.title + " " + p.desc).toLowerCase().includes(q)).slice(0, 6);
+  let t = null;
 
-        box.innerHTML = results.length
-          ? results.map(p => `<a class="vh-suggest" href="${p.href}"><strong>${esc(p.title)}</strong><small>${esc(p.desc)}</small></a>`).join("")
-          : `<div class="vh-suggest"><strong>No results</strong><smallTry a different keyword.</small></div>`;
+  input.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const q = input.value;
+      const matches = buildResults(q);
+      renderResults(results, matches);
+    }, 80); // tiny debounce for speed
+  });
 
-        openBox();
-      }, 60);
-    });
+  input.addEventListener("focus", () => {
+    const matches = buildResults(input.value);
+    if (input.value.trim()) renderResults(results, matches);
+  });
 
-    input.addEventListener("focus", () => {
-      if (input.value.trim()) openBox();
-    });
+  document.addEventListener("click", (e) => {
+    const within = results.contains(e.target) || input.contains(e.target);
+    if (!within) hideResults(results);
+  });
 
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".vh-search")) closeBox();
-    });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hideResults(results);
+  });
+}
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeBox();
-    });
-  }
-})();
+/* Mobile hamburger */
+function wireHamburger() {
+  const btn = document.getElementById("hamburger");
+  const menu = document.getElementById("mobileMenu");
+  if (!btn || !menu) return;
+
+  btn.addEventListener("click", () => {
+    const open = menu.style.display === "block";
+    menu.style.display = open ? "none" : "block";
+    btn.setAttribute("aria-expanded", open ? "false" : "true");
+  });
+}
+
+/* Init */
+document.addEventListener("DOMContentLoaded", () => {
+  wireSearch("searchDesktop", "resultsDesktop");
+  wireSearch("searchMobile", "resultsMobile");
+  wireHamburger();
+});
