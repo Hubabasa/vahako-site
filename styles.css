@@ -247,9 +247,10 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 
 .hero-grid{
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
   gap: 10px;
 }
+
 
 .hero-item{
   margin: 0;
@@ -268,10 +269,10 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 }
 
 /* Responsive */
-@media (max-width: 1100px){
-  .hero-grid{ grid-template-columns: repeat(3, 1fr); }
-}
 @media (max-width: 640px){
-  .hero-grid{ grid-template-columns: repeat(2, 1fr); }
+  .hero-grid{
+    grid-template-columns: repeat(2, 1fr); /* 2 columns = 3 rows */
+  }
 }
+
 
