@@ -237,43 +237,240 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   text-align: center;
 }
 
-/* HERO 6-IMAGE SHOWCASE (1:1 squares) */
-.hero-showcase{
+/* ============================= */
+/* HERO D – Carousel + Mosaic   */
+/* ============================= */
+
+.heroD{
   width: 100%;
-  max-width: var(--maxw);
+  max-width: var(--maxw, 1200px);
   margin: 10px auto 18px;
   padding: 0 12px;
 }
 
-.hero-grid{
+.heroD-wrap{
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 20px;
+  align-items: start;
+}
+
+/* ============================= */
+/* LEFT COPY (DESKTOP ONLY)     */
+/* ============================= */
+
+.heroD-copy{
+  display: none;
+}
+
+.heroD-eyebrow{
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+
+.heroD-title{
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+.heroD-sub{
+  font-size: 15px;
+  opacity: .8;
+  margin-bottom: 18px;
+}
+
+.heroD-cta{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.btn{
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn-primary{
+  background: #0d6efd;
+  color: #fff;
+}
+
+.btn-ghost{
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+/* Highlight chips */
+.heroD-chips{
+  display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
+.chip{
+  background: #f3f3f3;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
 
-.hero-item{
-  margin: 0;
-  border-radius: 14px;
+/* ============================= */
+/* BADGES                       */
+/* ============================= */
+
+.badge{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #0d6efd;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.badge-alt{
+  background: #198754;
+}
+
+/* ============================= */
+/* MOBILE CAROUSEL              */
+/* ============================= */
+
+.heroD-carousel{
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
+}
+
+.heroD-carousel::-webkit-scrollbar{
+  display: none;
+}
+
+.card{
+  position: relative;
+  flex: 0 0 85%;
+  scroll-snap-align: start;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,.15);
-  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
 }
 
-.hero-item img{
+.card img{
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;     /* forces 1:1 */
-  object-fit: cover;       /* crops nicely */
+  height: 420px;
+  object-fit: cover;
   display: block;
 }
 
-/* Responsive */
-@media (max-width: 640px){
-  .hero-grid{
-    grid-template-columns: repeat(2, 1fr); /* 2 columns = 3 rows */
-  }
+.overlay{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,.65), rgba(0,0,0,0));
+  color: #fff;
 }
+
+.overlay h3{
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.overlay p{
+  margin: 0 0 8px;
+  font-size: 14px;
+  opacity: .9;
+}
+
+.cardlink{
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ============================= */
+/* DESKTOP MOSAIC               */
+/* ============================= */
+
+.heroD-mosaic{
+  display: none;
+}
+
+.tile{
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tile img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.tile:hover img{
+  transform: scale(1.05);
+}
+
+.tile .overlay{
+  transition: background .3s ease;
+}
+
+.tile:hover .overlay{
+  background: linear-gradient(to top, rgba(0,0,0,.8), rgba(0,0,0,.1));
+}
+
+.hint{
+  font-size: 12px;
+  opacity: .8;
+}
+
+/* ============================= */
+/* RESPONSIVE BREAKPOINT        */
+/* ============================= */
+
+@media (min-width: 992px){
+
+  .heroD-wrap{
+    grid-template-columns: 1fr 1.4fr;
+  }
+
+  .heroD-copy{
+    display: block;
+  }
+
+  .heroD-carousel{
+    display: none;
+  }
+
+  .heroD-mosaic{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 180px;
+    gap: 16px;
+  }
+
+  .tile--big{
+    grid-row: span 2;
+  }
+
+}
+
 
 /* Reusable: first-into-after-hero-section */
 .first-into-after-hero-section{
