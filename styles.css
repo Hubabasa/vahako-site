@@ -237,7 +237,10 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   text-align: center;
 }
 
-/* HERO 6-IMAGE SHOWCASE (1:1 squares) */
+/* =========================================
+   HERO 6-IMAGE SHOWCASE
+   ========================================= */
+
 .hero-showcase{
   width: 100%;
   max-width: var(--maxw);
@@ -247,10 +250,9 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 
 .hero-grid{
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
   gap: 10px;
+  grid-template-columns: repeat(3, 1fr); /* Default = mobile */
 }
-
 
 .hero-item{
   margin: 0;
@@ -262,18 +264,49 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 
 .hero-item img{
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;     /* forces 1:1 */
-  object-fit: cover;       /* crops nicely */
+  height: 100%;
+  aspect-ratio: 1 / 1;     /* Square images */
+  object-fit: cover;
   display: block;
 }
 
-/* Responsive */
+/* =========================================
+   SMALL DEVICES (2 columns)
+   ========================================= */
+
 @media (max-width: 640px){
   .hero-grid{
-    grid-template-columns: repeat(2, 1fr); /* 2 columns = 3 rows */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* =========================================
+   DESKTOP CUSTOM LAYOUT
+   ========================================= */
+
+@media (min-width: 1024px){
+
+  .hero-grid{
+    grid-template-columns: 1fr 2fr 2fr 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  /* Large center images */
+  .hero-item:nth-child(2),
+  .hero-item:nth-child(3){
+    grid-row: span 2;
+  }
+
+  /* Remove square restriction on tall items */
+  .hero-item:nth-child(2) img,
+  .hero-item:nth-child(3) img{
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+}
+
 
 /* Reusable: first-into-after-hero-section */
 .first-into-after-hero-section{
