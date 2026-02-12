@@ -332,7 +332,7 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   background: var(--header);            /* same color as header (#008080) */
   border: 1px solid rgba(0,0,0,.18);
   border-radius: 14px;
-  padding: 14px 14px 12px;
+  padding: 20px 20px 20px;
 }
 
 .first-into-after-hero-section .service-card h2{
