@@ -310,8 +310,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('vvYear').textContent = new Date().getFullYear();
   </script>
 
+    <!-- Back To Top Button -->
+  <button id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5l7 7-1.4 1.4L13 9.8V19h-2V9.8L6.4 13.4 5 12l7-7z"/>
+    </svg>
+  </button>
+
+  <script>
+    const backToTopBtn = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add("show");
+      } else {
+        backToTopBtn.classList.remove("show");
+      }
+    });
+
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+
 </body>
 </html>
+
 
 
 
