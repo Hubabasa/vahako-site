@@ -158,3 +158,35 @@ if (smsBtn) {
   smsBtn.href = `sms:+94717229666?body=${encodedMessage}`;
 }
 
+
+// Run after DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Auto update year
+  const yearEl = document.getElementById("vvYear");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // Back to top button
+  const backToTopBtn = document.getElementById("backToTop");
+
+  if (backToTopBtn) {
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add("show");
+      } else {
+        backToTopBtn.classList.remove("show");
+      }
+    });
+
+    backToTopBtn.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  }
+
+});
+
