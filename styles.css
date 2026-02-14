@@ -570,62 +570,111 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 
 /* ===== Quick Contact Buttons ===== */
 
-.vv-quick-contact {
+/* ===== Quick Contact (two different layouts) ===== */
+.vv-quick-contact{
   position: fixed;
-  bottom: 95px; /* sits above back-to-top */
   right: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  bottom: 95px;              /* sits ABOVE your backToTop */
   z-index: 9998;
 }
 
-.vv-float {
+/* Show mobile/tablet by default */
+.vv-qc--mobile{ display: flex; flex-direction: column; gap: 14px; }
+.vv-qc--desktop{ display: none; }
+
+/* MOBILE/TABLET floating icons */
+.vv-fab{
   width: 50px;
   height: 50px;
   border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   text-decoration: none;
-  color: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  transition: transform 0.3s ease;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.08);
+  transform: translateZ(0);
+}
+.vv-fab svg{ width: 22px; height: 22px; fill: currentColor; }
+
+/* Icon colors */
+.vv-fab--call{ background:#1D4ED8; } /* blue */
+.vv-fab--wa{ background:#25D366; }   /* green */
+.vv-fab--sms{ background:#DC2626; }  /* red */
+
+/* Subtle sequential attention animation (CSS-only) */
+@keyframes vvNudge {
+  0%, 85%, 100% { transform: translateY(0); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+  92% { transform: translateY(-6px); filter: drop-shadow(0 10px 14px rgba(0,0,0,0.18)); }
 }
 
-.vv-float svg {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
+/* Same animation, different delays = Call -> WhatsApp -> SMS -> repeat */
+.vv-fab--call{ animation: vvNudge 3.6s infinite; animation-delay: 0s; }
+.vv-fab--wa{ animation: vvNudge 3.6s infinite; animation-delay: 1.2s; }
+.vv-fab--sms{ animation: vvNudge 3.6s infinite; animation-delay: 2.4s; }
+
+/* Hover polish (desktop devices that support hover) */
+@media (hover:hover){
+  .vv-fab:hover{ transform: translateY(-2px); }
 }
 
-/* Individual colors */
-.vv-call { background: #1D4ED8; }  /* Blue */
-.vv-wa   { background: #25D366; }  /* WhatsApp Green */
-.vv-sms  { background: #DC2626; }  /* Red */
-
-/* Sequential Animation */
-@keyframes attention {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+/* Small screens tweaks */
+@media (max-width: 600px){
+  .vv-quick-contact{ right: 20px; bottom: 85px; }
+  .vv-fab{ width: 45px; height: 45px; border-radius: 14px; }
 }
 
-.vv-call { animation: attention 2.4s infinite; animation-delay: 0s; }
-.vv-wa   { animation: attention 2.4s infinite; animation-delay: .8s; }
-.vv-sms  { animation: attention 2.4s infinite; animation-delay: 1.6s; }
-
-/* Mobile adjust */
-@media (max-width: 600px) {
-  .vv-quick-contact {
-    bottom: 85px;
-    right: 20px;
+/* DESKTOP layout: show email/hotline bars + whatsapp icon */
+@media (min-width: 992px){
+  .vv-qc--mobile{ display: none; }
+  .vv-qc--desktop{
+    display: grid;
+    gap: 10px;
+    justify-items: end;
   }
 
-  .vv-float {
-    width: 45px;
-    height: 45px;
+  .vv-bar{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    text-decoration: none;
+    /* match your footer colors */
+    background: #0E8282;
+    color: #FDD035;
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    max-width: 360px;
+    white-space: nowrap;
+  }
+
+  .vv-bar__icon{
+    width: 18px; height: 18px;
+    display: inline-flex;
+    color: #FDD035;
+  }
+  .vv-bar__icon svg{ width:18px; height:18px; }
+  .vv-bar__text{ font-size: 14px; }
+  .vv-bar__text strong{ font-weight: 800; }
+
+  .vv-waDesk{
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: #25D366;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    text-decoration: none;
+    justify-self: end;
+  }
+  .vv-waDesk svg{ width: 24px; height: 24px; fill: currentColor; }
+
+  @media (hover:hover){
+    .vv-bar:hover{ transform: translateY(-1px); }
+    .vv-waDesk:hover{ transform: translateY(-1px); }
   }
 }
-
-
-
