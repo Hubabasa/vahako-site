@@ -568,4 +568,64 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   }
 }
 
+/* ===== Quick Contact Buttons ===== */
+
+.vv-quick-contact {
+  position: fixed;
+  bottom: 95px; /* sits above back-to-top */
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 9998;
+}
+
+.vv-float {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease;
+}
+
+.vv-float svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* Individual colors */
+.vv-call { background: #1D4ED8; }  /* Blue */
+.vv-wa   { background: #25D366; }  /* WhatsApp Green */
+.vv-sms  { background: #DC2626; }  /* Red */
+
+/* Sequential Animation */
+@keyframes attention {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.vv-call { animation: attention 2.4s infinite; animation-delay: 0s; }
+.vv-wa   { animation: attention 2.4s infinite; animation-delay: .8s; }
+.vv-sms  { animation: attention 2.4s infinite; animation-delay: 1.6s; }
+
+/* Mobile adjust */
+@media (max-width: 600px) {
+  .vv-quick-contact {
+    bottom: 85px;
+    right: 20px;
+  }
+
+  .vv-float {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+
 
