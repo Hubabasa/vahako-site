@@ -349,11 +349,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </footer>
 
-  <script>
-    // Lightweight year auto-update
-    document.getElementById('vvYear').textContent = new Date().getFullYear();
-  </script>
-
     <!-- Back To Top Button -->
   <button id="backToTop" aria-label="Back to top">
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -361,24 +356,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </svg>
   </button>
 
-  <script>
-    const backToTopBtn = document.getElementById("backToTop");
-
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 300) {
-        backToTopBtn.classList.add("show");
-      } else {
-        backToTopBtn.classList.remove("show");
-      }
-    });
-
-    backToTopBtn.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    });
-  </script>
 
   <!-- Quick Contact Floating Buttons -->
 <!-- Quick Contact (separate from back-to-top) -->
@@ -446,6 +423,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 </body>
 </html>
+
 
 
 
