@@ -137,3 +137,24 @@ document.addEventListener("DOMContentLoaded", () => {
   wireSearch("searchMobile", "resultsMobile");
   wireHamburger();
 });
+
+
+// Prefill WhatsApp & SMS with page title
+const pageTitle = document.title;
+
+const message = `Hello, I am contacting you from page "${pageTitle}" from vahako.com.`;
+
+const encodedMessage = encodeURIComponent(message);
+
+// WhatsApp
+const waBtn = document.getElementById("vvWhatsAppBtn");
+if (waBtn) {
+  waBtn.href = `https://wa.me/94717229666?text=${encodedMessage}`;
+}
+
+// SMS
+const smsBtn = document.getElementById("vvSmsBtn");
+if (smsBtn) {
+  smsBtn.href = `sms:+94717229666?body=${encodedMessage}`;
+}
+
