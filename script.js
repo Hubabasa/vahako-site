@@ -149,13 +149,13 @@ const encodedMessage = encodeURIComponent(message);
 // WhatsApp
 const waBtn = document.getElementById("vvWhatsAppBtn");
 if (waBtn) {
-  waBtn.href = `https://wa.me/94717229666?text=${encodedMessage}`;
+  waBtn.href = `https://wa.me/94703595448?text=${encodedMessage}`;
 }
 
 // SMS
 const smsBtn = document.getElementById("vvSmsBtn");
 if (smsBtn) {
-  smsBtn.href = `sms:+94717229666?body=${encodedMessage}`;
+  smsBtn.href = `sms:+94703595448?body=${encodedMessage}`;
 }
 
 
