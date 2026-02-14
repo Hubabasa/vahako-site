@@ -878,3 +878,11 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   backdrop-filter: blur(2px);
 }
 
+/* Keep desktop quick-contact readable + clickable (no performance impact) */
+@media (min-width: 992px){
+  .vv-bar{
+    background: #0E8282; /* teal/greenish */
+    color: #FDD035;      /* yellow text */
+  }
+  .vv-bar strong{ color: #FDD035; } /* ensure number stays yellow */
+}
