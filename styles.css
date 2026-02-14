@@ -356,7 +356,7 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   background: #0E8282; /* bluish/teal from your image */
   color: rgba(255,255,255,0.92);
   margin-top: 60px;
-  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .vv-footer__accent {
@@ -858,7 +858,7 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 
 /* Modern condensed badge style */
 .vv-sms-text {
-  font-family: "Inter", system-ui, sans-serif;
+ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
