@@ -138,27 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
   wireHamburger();
 });
 
-
-// Prefill WhatsApp & SMS with page title
-const pageTitle = document.title;
-
-const message = `Hello, I am contacting you from page "${pageTitle}" from vahako.com.`;
-
-const encodedMessage = encodeURIComponent(message);
-
-// WhatsApp
-const waBtn = document.getElementById("vvWhatsAppBtn");
-if (waBtn) {
-  waBtn.href = `https://wa.me/94703595448?text=${encodedMessage}`;
-}
-
-// SMS
-const smsBtn = document.getElementById("vvSmsBtn");
-if (smsBtn) {
-  smsBtn.href = `sms:+94703595448?body=${encodedMessage}`;
-}
-
-
 // Run after DOM is fully loaded
 document.addEventListener("DOMContentLoaded", function () {
 
