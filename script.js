@@ -1,6 +1,7 @@
-/* Smart search suggestions (grows as you add more pages) */
+/* =========================
+   SMART SEARCH SUGGESTIONS
+   ========================= */
 const PAGES = [
-  // Add more items as your site grows
   { title: "Home", url: "index.html", keywords: ["vahako", "fabricator", "metal fabrication near me"] },
   { title: "Services", url: "services.html", keywords: ["sheet metal fabrication", "metal work", "stainless steel", "custom woodworking"] },
   { title: "Projects", url: "projects.html", keywords: ["custom machines", "metal work", "fabrication projects"] },
@@ -13,25 +14,30 @@ function normalize(s) {
   return (s || "").toLowerCase().trim();
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function scoreMatch(query, item) {
   const q = normalize(query);
   if (!q) return 0;
 
+  const title = normalize(item.title);
   const hay = normalize(item.title + " " + item.keywords.join(" "));
-  // Simple fast scoring:
-  // - exact title contains -> big score
-  // - startsWith -> extra
-  // - keyword contains -> medium
+
   let score = 0;
 
-  const title = normalize(item.title);
   if (title === q) score += 100;
   if (title.startsWith(q)) score += 60;
   if (title.includes(q)) score += 40;
-
   if (hay.includes(q)) score += 20;
 
-  // bonus for word-by-word
+  // Word-by-word bonus
   const parts = q.split(/\s+/).filter(Boolean);
   let hits = 0;
   for (const p of parts) {
@@ -47,13 +53,11 @@ function buildResults(query) {
   const q = normalize(query);
   if (!q) return [];
 
-  const ranked = PAGES
+  return PAGES
     .map(p => ({ ...p, _score: scoreMatch(q, p) }))
     .filter(p => p._score > 0)
-    .sort((a,b) => b._score - a._score)
+    .sort((a, b) => b._score - a._score)
     .slice(0, 6);
-
-  return ranked;
 }
 
 function renderResults(container, results) {
@@ -78,15 +82,6 @@ function hideResults(container) {
   container.innerHTML = "";
 }
 
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 function wireSearch(inputId, resultsId) {
   const input = document.getElementById(inputId);
   const results = document.getElementById(resultsId);
@@ -97,15 +92,16 @@ function wireSearch(inputId, resultsId) {
   input.addEventListener("input", () => {
     clearTimeout(t);
     t = setTimeout(() => {
-      const q = input.value;
-      const matches = buildResults(q);
+      const matches = buildResults(input.value);
       renderResults(results, matches);
-    }, 80); // tiny debounce for speed
+    }, 80);
   });
 
   input.addEventListener("focus", () => {
-    const matches = buildResults(input.value);
-    if (input.value.trim()) renderResults(results, matches);
+    if (input.value.trim()) {
+      const matches = buildResults(input.value);
+      renderResults(results, matches);
+    }
   });
 
   document.addEventListener("click", (e) => {
@@ -118,29 +114,92 @@ function wireSearch(inputId, resultsId) {
   });
 }
 
-/* Mobile hamburger */
+/* =========================
+   MOBILE HAMBURGER MENU
+   ========================= */
 function wireHamburger() {
   const btn = document.getElementById("hamburger");
   const menu = document.getElementById("mobileMenu");
   if (!btn || !menu) return;
 
-  btn.addEventListener("click", () => {
-    const open = menu.style.display === "block";
-    menu.style.display = open ? "none" : "block";
-    btn.setAttribute("aria-expanded", open ? "false" : "true");
+  function openMenu() {
+    menu.style.display = "block";
+    btn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeMenu() {
+    menu.style.display = "none";
+    btn.setAttribute("aria-expanded", "false");
+  }
+
+  function isOpen() {
+    return menu.style.display === "block";
+  }
+
+  // Toggle on hamburger click
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevents the outside-click handler from immediately closing it
+    if (isOpen()) closeMenu();
+    else openMenu();
+  });
+
+  // Close when user clicks a link inside the mobile menu
+  menu.addEventListener("click", (e) => {
+    const link = e.target.closest("a");
+    if (link) closeMenu();
+  });
+
+  // Close when clicking anywhere outside the menu/hamburger
+  document.addEventListener("click", (e) => {
+    if (!isOpen()) return;
+
+    const clickedInsideMenu = menu.contains(e.target);
+    const clickedHamburger = btn.contains(e.target);
+
+    if (!clickedInsideMenu && !clickedHamburger) {
+      closeMenu();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) closeMenu();
+  });
+
+  // Optional: close if window is resized to desktop
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 860 && isOpen()) closeMenu();
   });
 }
 
-/* Init */
-document.addEventListener("DOMContentLoaded", () => {
-  wireSearch("searchDesktop", "resultsDesktop");
-  wireSearch("searchMobile", "resultsMobile");
-  wireHamburger();
-});
 
-// Run after DOM is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
+/* =========================
+   PREFILL CONTACT BUTTONS
+   ========================= */
+function wirePrefillMessages() {
+  const pageTitle = document.title || "Vahako.com";
+  const message = `Hello, I am contacting you from page "${pageTitle}" from vahako.com.`;
+  const encodedMessage = encodeURIComponent(message);
 
+  // SMS (your HTML has id="vvSmsBtn")
+  const smsBtn = document.getElementById("vvSmsBtn");
+  if (smsBtn) {
+    smsBtn.href = `sms:+94703595448?body=${encodedMessage}`;
+  }
+
+  // WhatsApp (your HTML uses classes, not an id)
+  const waButtons = document.querySelectorAll(".vv-fab--wa, .vv-waDesk");
+  waButtons.forEach(btn => {
+    btn.href = `https://wa.me/94703595448?text=${encodedMessage}`;
+    btn.setAttribute("target", "_blank");
+    btn.setAttribute("rel", "noopener");
+  });
+}
+
+/* =========================
+   FOOTER YEAR + BACK TO TOP
+   ========================= */
+function wireYearAndBackToTop() {
   // Auto update year
   const yearEl = document.getElementById("vvYear");
   if (yearEl) {
@@ -149,23 +208,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Back to top button
   const backToTopBtn = document.getElementById("backToTop");
+  if (!backToTopBtn) return;
 
-  if (backToTopBtn) {
-    window.addEventListener("scroll", function () {
-      if (window.scrollY > 300) {
-        backToTopBtn.classList.add("show");
-      } else {
-        backToTopBtn.classList.remove("show");
-      }
-    });
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) backToTopBtn.classList.add("show");
+    else backToTopBtn.classList.remove("show");
+  });
 
-    backToTopBtn.addEventListener("click", function () {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    });
-  }
+  backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
 
+/* =========================
+   INIT (RUN ON PAGE LOAD)
+   ========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  wireSearch("searchDesktop", "resultsDesktop");
+  wireSearch("searchMobile", "resultsMobile");
+  wireHamburger();
+  wirePrefillMessages();
+  wireYearAndBackToTop();
 });
-
