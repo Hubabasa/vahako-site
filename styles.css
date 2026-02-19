@@ -109,6 +109,62 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   padding: 6px 6px;
 }
 
+/* =========================
+   DESKTOP DROPDOWNS
+   ========================= */
+.menu { align-items: center; }
+
+.dropdown{
+  position: relative;
+  display: inline-flex;
+}
+
+.dropbtn{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 6px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* IMPORTANT: hide submenu by default */
+.dropdown-content{
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 10000;
+  box-shadow: 0 12px 26px rgba(0,0,0,.16);
+}
+
+.dropdown-content a{
+  display: block;
+  padding: 10px 10px;
+  border-radius: 10px;
+  color: #000;
+  text-decoration: none;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dropdown-content a:hover{
+  background: rgba(0,0,0,.06);
+}
+
+/* Show dropdown on hover (desktop) + keyboard focus */
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content{
+  display: block;
+}
+
+
 .search{
   position: relative;
   min-width: 240px;
