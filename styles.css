@@ -125,15 +125,6 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   display: inline-flex;
 }
 
-.dropbtn{
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 700;
-  padding: 6px 6px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
 
 /* IMPORTANT: hide submenu by default */
 .dropdown-content{
