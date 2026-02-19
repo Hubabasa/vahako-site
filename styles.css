@@ -166,8 +166,9 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 .search{
   position: relative;
   min-width: 240px;
-  flex: 1;
+  flex: 0 0 280px; /* ✅ fixed width on desktop */
 }
+
 .search-input{
   width: 100%;
   padding: 10px 10px;
