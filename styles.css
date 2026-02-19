@@ -108,8 +108,8 @@ p{ font-size: var(--p); margin: 0 0 12px; }
 .dropbtn{
   color: var(--text);
   text-decoration:none;
-  font-weight: 700;
-  font-size: 13px;        /* smaller and cleaner */
+  font-weight: 600;
+  font-size: 15px;        /* smaller and cleaner */
   padding: 2px 4px;      /* more breathing space */
   display: inline-flex;
   align-items: center;
