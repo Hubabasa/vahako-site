@@ -109,7 +109,7 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   text-decoration:none;
   font-weight: 700;
   font-size: 12px;        /* smaller and cleaner */
-  padding: 6px 8px;      /* more breathing space */
+  padding: 2px 4px;      /* more breathing space */
   display: inline-flex;
   align-items: center;
 }
