@@ -54,9 +54,10 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   padding: 10px 12px;
   display:flex;
   align-items:center;
-  justify-content: center;
+  justify-content: flex-start; /* ✅ important */
   gap: 12px;
 }
+
 
 .logo img{ display:block; height:auto; }
 
