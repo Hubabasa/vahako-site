@@ -236,6 +236,40 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   border-top: 1px solid rgba(0,0,0,.18);
 }
 
+/* =========================
+   MOBILE DROPDOWNS (details/summary)
+   ========================= */
+.m-drop{
+  border-top: 1px solid rgba(0,0,0,.18);
+}
+
+.m-drop summary{
+  list-style: none;
+  cursor: pointer;
+  padding: 10px 10px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.m-drop summary::-webkit-details-marker{
+  display: none;
+}
+
+.m-drop summary::after{
+  content: "▾";
+  float: right;
+}
+
+.m-drop[open] summary::after{
+  content: "▴";
+}
+
+.m-drop a{
+  padding-left: 22px; /* indent submenu items */
+  border-top: 1px solid rgba(0,0,0,.12);
+}
+
+
 /* Page spacing accounts for sticky header */
 .page{
   max-width: var(--maxw);
