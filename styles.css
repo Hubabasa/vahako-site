@@ -95,13 +95,13 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   fill:#000;
 }
 
-
-
 .menu{
   display:flex;
-  gap: 12px;
+  align-items:center;
+  gap: 18px;          /* more breathing room */
   margin-left: auto;
 }
+
 
 .menu a,
 .dropbtn{
