@@ -1024,3 +1024,14 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   }
   .vv-bar strong{ color: #FDD035; } /* ensure number stays yellow */
 }
+
+
+/* ===== DESKTOP MENU YELLOW ONLY ===== */
+@media (min-width: 861px){
+
+  .header-desktop .menu a,
+  .header-desktop .dropbtn{
+    color: #F7C600 !important;
+  }
+
+}
