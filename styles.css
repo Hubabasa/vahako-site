@@ -108,8 +108,8 @@ p{ font-size: var(--p); margin: 0 0 12px; }
   color: var(--text);
   text-decoration:none;
   font-weight: 700;
-  font-size: 15px;        /* smaller and cleaner */
-  padding: 8px 10px;      /* more breathing space */
+  font-size: 12px;        /* smaller and cleaner */
+  padding: 6px 8px;      /* more breathing space */
   display: inline-flex;
   align-items: center;
 }
