@@ -1147,7 +1147,7 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   width: 100%;
   height: auto;
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 2 / 3; /* updated */
   object-fit: cover;
 }
 
