@@ -1035,3 +1035,11 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   }
 
 }
+
+/* Speed optimization: render only when visible */
+.service-cards,
+.vv-footer,
+.first-into-after-hero-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
