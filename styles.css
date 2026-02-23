@@ -1157,3 +1157,73 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   font-size: 16px;
   font-weight: 700;
 }
+
+
+/* =========================
+   FULL-WIDTH MESSAGE BANNER
+   Teal background + Yellow accent
+   ========================= */
+
+.vv-message-banner{
+  /* Full width background */
+  width: 100%;
+  background: linear-gradient(135deg, #007a7a 0%, #004f4f 100%);
+  color: #fff;
+
+  /* Gives that "full banner" feel */
+  padding: 44px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Yellow accent strip */
+.vv-message-banner::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:10px;
+  background:#ffd200; /* yellow */
+}
+
+/* Subtle yellow glow circle (optional) */
+.vv-message-banner::after{
+  content:"";
+  position:absolute;
+  right:-140px;
+  top:-140px;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(255,210,0,0.22) 0%, rgba(255,210,0,0) 70%);
+  pointer-events:none;
+}
+
+.vv-message-banner__inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-left: 14px; /* breathing room after yellow strip */
+}
+
+.vv-message-banner__title{
+  margin: 0 0 10px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(22px, 2.4vw, 34px);
+  line-height: 1.15;
+}
+
+.vv-message-banner__text{
+  margin: 10px 0 0;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.65;
+  opacity: 0.95;
+}
+
+/* Optional: separate each language nicely */
+.vv-message-banner__text + .vv-message-banner__text{
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.14);
+  margin-top: 14px;
+}
