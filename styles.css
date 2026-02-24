@@ -1241,7 +1241,7 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   display: flex;
   justify-content: center;   /* center whole row */
   align-items: center;
-  gap: 60px;                 /* equal spacing between items */
+  gap: 20px;                 /* equal spacing between items */
   flex-wrap: wrap;
 }
 
