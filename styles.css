@@ -1301,3 +1301,28 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
     font-size: 15px;
   }
 }
+
+/* =========================
+   Mobile Icon Red Circle
+   ========================= */
+@media (max-width: 819px){
+
+  .vv-icon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    background: #e10600;     /* red circle */
+    border-radius: 50%;
+    color: #ffffff;          /* icon color white */
+  }
+
+  .vv-icon svg{
+    width: 24px;
+    height: 24px;
+  }
+
+}
