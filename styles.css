@@ -1326,3 +1326,84 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
   }
 
 }
+
+
+
+/* =========================
+   SOCIAL SECTION
+   ========================= */
+
+.vv-social-section{
+  padding: 50px 16px;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.vv-social-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.vv-social-title{
+  margin: 0 0 8px;
+  font-size: clamp(22px, 2vw, 30px);
+  font-weight: 800;
+}
+
+.vv-social-sub{
+  margin: 0 0 30px;
+  color: #666;
+}
+
+.vv-social-grid{
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 820px){
+  .vv-social-grid{
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.vv-social-card{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  text-decoration: none;
+  color: #111;
+  background: #ffffff;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.vv-social-card:hover{
+  transform: translateY(-3px);
+  border-color: #008080;
+}
+
+.vv-social-icon{
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+}
+
+.vv-social-icon svg{
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.vv-social-text strong{
+  display: block;
+  font-size: 17px;
+}
+
+.vv-social-text small{
+  display: block;
+  font-size: 14px;
+  color: #666;
+}
