@@ -1230,97 +1230,77 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
 
 
 /* =========================
-   LIGHTWEIGHT 3-CTA CONTACT
+   Lightweight Contact Section
    ========================= */
-:root{
-  --vv-teal:#007a7a;
-  --vv-teal-dark:#004f4f;
-  --vv-yellow:#ffd200;
+
+.vv-contact-lite{
+  padding: 24px 16px;
+  background: #ffffff;
 }
 
-.vv-cta{
-  padding: 28px 16px;
-  background: #f6fbfb;
-}
-
-.vv-cta__inner{
+.vv-contact-lite__inner{
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.vv-cta__title{
-  margin: 0 0 6px;
-  font-size: clamp(20px, 2vw, 28px);
-  letter-spacing: -0.02em;
-}
-
-.vv-cta__sub{
+.vv-contact-lite__title{
   margin: 0 0 14px;
-  color: rgba(0,0,0,.68);
-  line-height: 1.5;
-  font-size: 14px;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 800;
 }
 
-.vv-cta__row{
+/* Grid layout */
+.vv-contact-lite__grid{
   display: grid;
-  gap: 12px;
-  grid-template-columns: 1fr; /* mobile: stacked */
+  gap: 10px;
+  grid-template-columns: 1fr;
 }
 
+/* Desktop row */
 @media (min-width: 820px){
-  .vv-cta__row{
-    grid-template-columns: repeat(3, minmax(0, 1fr)); /* desktop: single row */
+  .vv-contact-lite__grid{
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.vv-cta__btn{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 10px;
-  padding: 14px 14px;
-  border-radius: 16px;
-  text-decoration:none;
-  border: 1px solid rgba(0,0,0,.08);
-  background: #fff;
-  box-shadow: 0 10px 24px rgba(0,0,0,.05);
-  color: #0b1f1f;
+/* Contact item */
+.vv-contact-lite__item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #111;
+  transition: background .15s ease;
 }
 
-.vv-cta__btn:focus-visible{
-  outline: 3px solid rgba(255,210,0,.55);
-  outline-offset: 2px;
+.vv-contact-lite__item:hover{
+  background: #f7f7f7;
 }
 
-.vv-cta__label{
-  font-weight: 900;
-  letter-spacing: -0.01em;
+/* Icon */
+.vv-icon{
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
 }
 
-.vv-cta__meta{
+.vv-icon svg{
+  width: 100%;
+  height: 100%;
+}
+
+/* Text */
+.vv-text strong{
+  display: block;
   font-weight: 700;
-  color: rgba(0,0,0,.65);
-  font-size: 14px;
-  display: none; /* hidden by default */
+  font-size: 15px;
 }
 
-/* show number/email on larger screens only */
-@media (min-width: 820px){
-  .vv-cta__meta{ display: inline; }
-}
-
-/* Button accents */
-.vv-cta__btn--wa{
-  border-color: rgba(0,122,122,.25);
-  background: linear-gradient(135deg, rgba(0,122,122,.12), rgba(0,79,79,.06));
-}
-
-.vv-cta__btn--call{
-  border-color: rgba(255,210,0,.45);
-  background: linear-gradient(135deg, rgba(255,210,0,.20), rgba(255,210,0,.06));
-}
-
-.vv-cta__btn--mail{
-  border-color: rgba(0,0,0,.10);
-  background: linear-gradient(135deg, rgba(0,0,0,.04), rgba(0,0,0,.02));
+.vv-text small{
+  display: block;
+  font-size: 13px;
+  color: #555;
 }
