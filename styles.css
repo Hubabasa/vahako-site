@@ -1236,10 +1236,13 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
    ========================= */
 
 /* MOBILE FIRST (default) */
+/* CONTACT ROW LAYOUT */
 .vv-contact-lite__grid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* single row */
-  gap: 10px;
+  display: flex;
+  justify-content: center;   /* center whole row */
+  align-items: center;
+  gap: 60px;                 /* equal spacing between items */
+  flex-wrap: wrap;
 }
 
 .vv-contact-lite__item{
