@@ -1230,41 +1230,63 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
 
 
 /* =========================
-   Responsive Layout Update
+   Responsive Icon + Text Sizing
    ========================= */
 
-/* Default = MOBILE FIRST */
+/* MOBILE FIRST (default) */
 .vv-contact-lite__grid{
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* single row */
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
-/* Make items centered for icon-only view */
 .vv-contact-lite__item{
   justify-content: center;
-  padding: 12px;
+  padding: 16px;
 }
 
-/* Hide text on small screens */
+/* Larger icons for mobile */
+.vv-icon{
+  width: 32px;
+  height: 32px;
+}
+
 .vv-text{
-  display: none;
+  display: none; /* hide text on mobile */
 }
 
-/* Desktop & larger tablets */
+
+/* =========================
+   DESKTOP & LARGER SCREENS
+   ========================= */
 @media (min-width: 820px){
 
   .vv-contact-lite__grid{
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
   }
 
   .vv-contact-lite__item{
     justify-content: flex-start;
-    padding: 12px 14px;
+    padding: 14px 16px;
   }
 
+  /* Smaller icons on desktop */
+  .vv-icon{
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Show text */
   .vv-text{
     display: block;
+  }
+
+  /* Larger text for desktop */
+  .vv-text strong{
+    font-size: 17px;
+  }
+
+  .vv-text small{
+    font-size: 15px;
   }
 }
