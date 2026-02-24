@@ -1265,8 +1265,8 @@ font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Ari
 
   /* Smaller icons on desktop (but not too small) */
   .vv-icon{
-    width: 20px;
-    height: 20px;
+    width: 2px;
+    height: 2px;
   }
 
   /* Show text */
