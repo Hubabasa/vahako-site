@@ -1,17 +1,225 @@
 ---
+import Header from '../components/Header.astro';
 
+const services = [
+  ["Stainless Steel Work", "සුදියකඩ වැඩ", "ஸ்டெயின்லெஸ் ஸ்டீல்", "steel"],
+  ["Wood Work", "වඩු වැඩ", "தச்சு வேலை", "wood"],
+  ["Conveyor Systems", "කන්වේයර් පද්ධති", "கன்வேயர்", "conveyor"],
+  ["Conveyor Accessories", "කන්වේයර් උපාංග", "கன்வேயர் உதிரிபாகங்கள்", "gear"],
+  ["Fence", "වැට", "வேலி", "fence"],
+  ["Fabricated Products", "නිශ්පාදිත භාණ්ඩ", "உற்பத்திப் பொருட்கள்", "box"],
+  ["Iron Work", "යකඩ වැඩ", "இரும்பு வேலை", "iron"],
+  ["Custom Machinery", "විශේෂිත යන්ත්‍රෝපකරණ", "இயந்திரங்கள்", "machine"],
+];
+
+import {
+  Hammer,
+  Trees,
+  Workflow,
+  Settings,
+  Fence,
+  Package,
+  Flame,
+  Cog
+} from 'lucide-astro';
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vahako | Fabrication Services Sri Lanka</title>
+    <meta name="description" content="Vahako provides fabrication services in Sri Lanka including stainless steel work, wood work, conveyor systems, iron work and custom machinery." />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Helvetica, Arial, system-ui, sans-serif;
+        background: #ffffff;
+        color: #0f172a;
+      }
+
+.hero {
+  width: 100%;
+  height: 50vh;
+  min-height: 340px;
+  max-height: 650px;
+  background: #000;
+  overflow: hidden;
+
+  /* adds breathing room */
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  box-sizing: border-box;
+}
+
+.hero picture,
+.hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero img {
+  object-fit: contain;
+  object-position: center center;
+}
+
+      .services-section {
+        padding: 70px 20px;
+        background: #ffffff;
+      }
+
+      .section-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        font-size: clamp(34px, 5vw, 64px);
+        margin: 0 0 40px;
+        color: #000000;
+        font-weight: 900;
+        letter-spacing: -1px;
+        text-align: center;
+      }
+
+      .service-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+      }
+
+      .service-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 32px 20px;
+        border-radius: 22px;
+        background: #FFD600;
+        color: #000;
+        text-decoration: none;
+        min-height: 260px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 35px rgba(0,0,0,0.14);
+      }
+
+      .icon {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #1f2937;
+}
+
+      .si {
+        font-size: 20px;
+        font-weight: 800;
+        margin: 0 0 8px;
+      }
+
+      .en {
+        font-size: 17px;
+        font-weight: 700;
+        margin: 0 0 8px;
+      }
+
+      .ta {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .open-icon {
+        position: absolute;
+        right: 20px;
+        bottom: 18px;
+        font-size: 26px;
+        font-weight: 900;
+      }
+
+      @media (max-width: 1000px) {
+        .service-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .service-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .service-card {
+          background: linear-gradient(180deg, #FFD600 0%, #facc15 100%);
+border: 2px solid rgba(0,0,0,0.06);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <section class="hero" aria-label="Vahako fabrication services hero banner">
+      <picture>
+        <source
+          srcset="/images/hero/mobile-hero.webp"
+          media="(max-width: 700px)"
+          type="image/webp"
+        />
+        <img
+          src="/images/hero/desktop-hero.webp"
+          alt="Vahako fabrication services in Sri Lanka including stainless steel work, wood work, conveyors, fencing, iron work and custom machinery"
+          width="1600"
+          height="914"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </picture>
+    </section>
+
+    <main>
+      <section class="services-section">
+        <div class="section-inner">
+          <h1 class="section-title">Fabricator Services in Sri Lanka</h1>
+
+          <div class="service-grid">
+            {services.map(([en, si, ta, type]) => (
+              <a href="#" class="service-card" aria-label={en}>
+                
+                <div class="icon">
+  {type === "steel" && <Hammer size={72} strokeWidth={2.2} />}
+  {type === "wood" && <Trees size={72} strokeWidth={2.2} />}
+  {type === "conveyor" && <Workflow size={72} strokeWidth={2.2} />}
+  {type === "gear" && <Settings size={72} strokeWidth={2.2} />}
+  {type === "fence" && <Fence size={72} strokeWidth={2.2} />}
+  {type === "box" && <Package size={72} strokeWidth={2.2} />}
+  {type === "iron" && <Flame size={72} strokeWidth={2.2} />}
+  {type === "machine" && <Cog size={72} strokeWidth={2.2} />}
+</div>
+
+                <p class="si">{si}</p>
+                <p class="en">{en}</p>
+                <p class="ta">{ta}</p>
+
+                <span class="open-icon">↗</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
 </html>
