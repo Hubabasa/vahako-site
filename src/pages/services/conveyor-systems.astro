@@ -222,6 +222,14 @@ import Header from "../../components/Header.astro";
 </html>
 
 <style>
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
   body {
     margin: 0;
     font-family: Helvetica, Arial, system-ui, sans-serif;
@@ -236,15 +244,26 @@ import Header from "../../components/Header.astro";
   }
 
   .hero-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: stretch;
-  }
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 60px;
+  align-items: stretch;
+}
+
+.hero-image,
+.hero-content,
+.services-grid,
+.service-card,
+.contact-inner,
+.contact-actions {
+  min-width: 0;
+}
 
   .hero-image {
     width: 100%;
