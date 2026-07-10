@@ -156,37 +156,82 @@ import Header from "../components/Header.astro";
     </main>
 
     <script>
-      const params = new URLSearchParams(window.location.search);
-      const sourcePageInput = document.getElementById("source-page");
-      const form = document.getElementById("quote-form");
-      const successMessage = document.getElementById("success-message");
-      const failureMessage = document.getElementById("failure-message");
+  const params = new URLSearchParams(window.location.search);
 
-      const pageFromUrl = params.get("page")?.trim();
+  const sourcePageInput = document.getElementById("source-page");
+  const form = document.getElementById("quote-form");
+  const submitButton = form.querySelector(".submit-button");
+  const successMessage = document.getElementById("success-message");
+  const failureMessage = document.getElementById("failure-message");
+
+  const pageFromUrl = params.get("page")?.trim();
+
+  sourcePageInput.value =
+    pageFromUrl || document.referrer || "Vahako website";
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    successMessage.hidden = true;
+    failureMessage.hidden = true;
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+
+    const formData = new FormData(form);
+
+    const payload = {
+      sourcePage: String(formData.get("sourcePage") || "").trim(),
+      companyName: String(formData.get("companyName") || "").trim(),
+      contactPerson: String(formData.get("contactPerson") || "").trim(),
+      contactNumber: String(formData.get("contactNumber") || "").trim(),
+      alternativeContactNumber: String(
+        formData.get("alternativeContactNumber") || ""
+      ).trim(),
+      email: String(formData.get("email") || "").trim()
+    };
+
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Submission failed.");
+      }
+
+      successMessage.textContent =
+        result.message || "Successful. You will be contacted soon.";
+
+      successMessage.hidden = false;
+
+      form.reset();
 
       sourcePageInput.value =
         pageFromUrl || document.referrer || "Vahako website";
+    } catch (error) {
+      failureMessage.innerHTML =
+        'Submission failed. Please contact us on WhatsApp at <a href="https://wa.me/94707797770?text=I%20am%20interested%20in%20Vahako%20services" target="_blank" rel="noopener noreferrer">070 779 7770</a>.';
 
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
+      failureMessage.hidden = false;
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit Quote Request";
+    }
+  });
+</script>
 
-        successMessage.hidden = true;
-        failureMessage.hidden = true;
-
-        if (!form.checkValidity()) {
-          form.reportValidity();
-          return;
-        }
-
-        /*
-          We will connect the Google Sheets submission here
-          in the next stage.
-
-          For now, the form design, validation and source-page
-          detection are complete.
-        */
-      });
-    </script>
   </body>
 </html>
 
@@ -322,6 +367,11 @@ import Header from "../components/Header.astro";
   .submit-button:hover {
     background: #c9000b;
   }
+
+.submit-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
 
   .submit-button:focus-visible {
     outline: 3px solid #ffd600;
