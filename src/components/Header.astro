@@ -1,31 +1,394 @@
-<header class="navbar">
-  <div class="nav-inner">
-    <div class="logo">VAHAKO.COM</div>
+---
+import SearchBar from "./SearchBar.astro";
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo-link" aria-label="Vahako home">
+      <img
+        src="/images/vahako-logo-fabrications-in-sri-lanka.webp"
+        alt="Vahako Fabrications"
+        class="logo"
+        width="180"
+        height="60"
+      />
+    </a>
+
+    <div class="desktop-search">
+      <SearchBar currentQuery={Astro.url.searchParams.get("q") || ""} />
+    </div>
+
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      ☰
+    </button>
+
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      
+      <div class="nav-item has-submenu">
+  <button
+    class="submenu-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="services-submenu"
+  >
+    <span>Services</span>
+    <span class="submenu-arrow" aria-hidden="true">▼</span>
+  </button>
+
+  <div id="services-submenu" class="submenu">
+    <a href="/services/conveyor-systems">Conveyor</a>
+  </div>
+</div>
+
+      <a href="/products">Products</a>
+      <a href="/projects">Projects</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="mobile-search">
+      <SearchBar currentQuery={Astro.url.searchParams.get("q") || ""} />
+    </div>
   </div>
 </header>
 
+<script>
+  const menuButton = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".main-nav");
+
+  menuButton?.addEventListener("click", () => {
+    const isOpen = nav.classList.toggle("is-open");
+    menuButton.textContent = isOpen ? "×" : "☰";
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  const submenuToggle = document.querySelector(".submenu-toggle");
+const submenu = document.querySelector(".submenu");
+const submenuArrow = document.querySelector(".submenu-arrow");
+
+submenuToggle?.addEventListener("click", () => {
+  const isOpen = submenu?.classList.toggle("is-open");
+
+  submenuToggle.setAttribute("aria-expanded", String(isOpen));
+  submenuArrow.textContent = isOpen ? "▲" : "▼";
+});
+
+</script>
+
 <style>
-  .navbar {
+  .site-header {
     position: fixed;
-    top: 0;
-    width: 100%;
+    inset: 0 0 auto 0;
     z-index: 1000;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(10px);
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #ffd600;
+    font-family: Helvetica, Arial, system-ui, sans-serif;
   }
 
-  .nav-inner {
-    max-width: 1200px;
+  .header-inner {
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 16px 20px;
-    display: flex;
+    padding: 10px 18px;
+    display: grid;
+    grid-template-columns: auto minmax(380px, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .logo-link {
+    display: inline-flex;
     align-items: center;
   }
 
   .logo {
-    font-weight: 800;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #FFD600;
+    display: block;
+    width: 170px;
+    height: auto;
   }
+
+  .desktop-search {
+    min-width: 0;
+  }
+
+  .mobile-search {
+    display: none;
+  }
+
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .main-nav a {
+    color: #111827;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .main-nav a:hover {
+    color: #e30613;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  :global(.search-form) {
+    position: relative;
+    display: grid;
+    grid-template-columns: 92px 1fr 50px;
+    height: 46px;
+    border: 2px solid #2f2933;
+    border-radius: 999px;
+    background: #ffffff;
+    overflow: visible;
+  }
+
+  :global(.search-category) {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  height: 100%;
+  width: 86px;
+
+  border: 0;
+  border-right: 1px solid #d8d8d8;
+  border-radius: 999px 0 0 999px;
+
+  background-color: #f7f7f7;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20'%3E%3Cpath fill='%23e30613' d='M5.5 7l4.5 5 4.5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 11px;
+
+  padding-left: 12px;
+  padding-right: 24px;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #e30613;
+
+  cursor: pointer;
+  outline: none;
+}
+
+  :global(.search-box) {
+    position: relative;
+    min-width: 0;
+  }
+
+  :global(.search-input) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0 14px;
+    font-size: 15px;
+    color: #111827;
+    background: #ffffff;
+    outline: none;
+  }
+
+  :global(.search-button) {
+    border: 0;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    margin: 2px 2px 2px 6px;
+    background: #e30613;
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  :global(.search-button:hover) {
+    background: #c9000b;
+  }
+
+  :global(.search-suggestions) {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -92px;
+    right: -50px;
+    z-index: 2000;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+  }
+
+  :global(.suggestion-item) {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #111827;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  :global(.suggestion-item:hover) {
+    background: #f8fafc;
+  }
+
+  :global(.suggestion-title) {
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  :global(.suggestion-type) {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: capitalize;
+  }
+
+  @media (max-width: 900px) {
+    .site-header {
+      border-bottom: 0;
+    }
+
+    .header-inner {
+      padding: 9px 14px 10px;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      border-bottom: 1px solid #ffd600;
+    }
+
+    .logo {
+      width: 150px;
+    }
+
+    .desktop-search {
+      display: none;
+    }
+
+    .mobile-search {
+      display: block;
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .menu-toggle {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      background: transparent;
+      font-size: 32px;
+      line-height: 1;
+      color: #111827;
+      cursor: pointer;
+    }
+
+    .main-nav {
+      display: none;
+      grid-column: 1 / -1;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 8px 0 4px;
+      background: #ffffff;
+    }
+
+    .main-nav.is-open {
+      display: flex;
+    }
+
+    .main-nav a {
+      width: 100%;
+      padding: 13px 0;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    :global(.search-form) {
+      grid-template-columns: 78px 1fr 48px;
+      height: 44px;
+    }
+
+    :global(.search-category) {
+      font-size: 13px;
+      padding: 0 6px;
+    }
+
+    :global(.search-input) {
+      font-size: 14px;
+      padding: 0 10px;
+    }
+
+    :global(.search-button) {
+      width: 40px;
+      height: 40px;
+    }
+
+    :global(.search-suggestions) {
+      left: -78px;
+      right: -48px;
+    }
+  }
+
+  .nav-item {
+  position: relative;
+}
+
+.submenu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111827;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submenu-toggle:hover {
+  color: #e30613;
+}
+
+.submenu-arrow {
+  font-size: 9px;
+  color: #e30613;
+  transition: transform 0.15s ease;
+}
+
+.submenu {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 0;
+  display: none;
+  min-width: 180px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-top: 2px solid #ffd600;
+  border-radius: 10px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+}
+
+.submenu.is-open {
+  display: block;
+}
+
+.submenu a {
+  display: block;
+  padding: 11px 13px;
+  border-radius: 7px;
+  white-space: nowrap;
+}
+
+.submenu a:hover {
+  background: #f8f8f8;
+  color: #e30613;
+}
+
 </style>

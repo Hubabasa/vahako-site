@@ -1,0 +1,188 @@
+---
+import Header from "../components/Header.astro";
+import { searchIndex } from "../data/searchIndex.js";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results | Vahako</title>
+    <meta name="robots" content="noindex,follow" />
+  </head>
+
+  <body>
+    <Header />
+
+    <main class="search-page">
+      <section class="search-inner">
+        <h1>Search Results</h1>
+
+        <p id="search-note" class="search-note">Loading search results...</p>
+
+        <div id="result-list" class="result-list"></div>
+      </section>
+    </main>
+
+    <script define:vars={{ searchIndex }}>
+      const params = new URLSearchParams(window.location.search);
+      const query = (params.get("q") || "").trim().toLowerCase();
+
+      const note = document.getElementById("search-note");
+      const list = document.getElementById("result-list");
+
+      document.querySelectorAll(".search-input").forEach((input) => {
+        input.value = query;
+      });
+
+      function normalize(text) {
+        return String(text || "").toLowerCase().trim();
+      }
+
+      function scoreItem(item, query) {
+        const title = normalize(item.title);
+        const description = normalize(item.description);
+        const keywords = normalize((item.keywords || []).join(" "));
+        const headings = normalize((item.headings || []).join(" "));
+
+        let score = 0;
+
+        if (title === query) score += 100;
+        if (title.startsWith(query)) score += 80;
+        if (title.includes(query)) score += 60;
+        if (headings.includes(query)) score += 40;
+        if (keywords.includes(query)) score += 30;
+        if (description.includes(query)) score += 20;
+
+        query.split(/\s+/).filter(Boolean).forEach((word) => {
+          if (title.includes(word)) score += 20;
+          if (headings.includes(word)) score += 12;
+          if (keywords.includes(word)) score += 8;
+          if (description.includes(word)) score += 5;
+        });
+
+        return score;
+      }
+
+      if (!query) {
+        note.textContent = "Please enter a search term.";
+      } else {
+        const results = searchIndex
+          .map((item) => ({
+            ...item,
+            score: scoreItem(item, query)
+          }))
+          .filter((item) => item.score > 0)
+          .sort((a, b) => b.score - a.score);
+
+        note.innerHTML = `Showing results for <strong>${query}</strong>`;
+
+        if (!results.length) {
+          note.innerHTML = `No close results found for <strong>${query}</strong>. Try another word.`;
+        }
+
+        list.innerHTML = results
+          .map((item) => `
+            <a href="${item.url}" class="result-card">
+              <span class="result-type">${item.type || item.category || "Page"}</span>
+              <h2>${item.title}</h2>
+              <p>${item.description || ""}</p>
+              <strong>View →</strong>
+            </a>
+          `)
+          .join("");
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Helvetica, Arial, system-ui, sans-serif;
+    background: #ffffff;
+    color: #111827;
+  }
+
+  .search-page {
+    padding-top: 110px;
+    min-height: 100vh;
+    background: #ffffff;
+  }
+
+  .search-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 50px 20px;
+  }
+
+  h1 {
+    margin: 0 0 14px;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1;
+    letter-spacing: -1px;
+    color: #000000;
+  }
+
+  .search-note {
+    margin: 0 0 28px;
+    font-size: 17px;
+    color: #475569;
+  }
+
+  .result-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .result-card {
+    display: block;
+    padding: 22px;
+    border: 1px solid #e5e7eb;
+    border-left: 5px solid #ffd600;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #111827;
+    background: #ffffff;
+  }
+
+  .result-card:hover {
+    border-color: #e30613;
+    border-left-color: #e30613;
+  }
+
+  .result-type {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #e30613;
+    text-transform: capitalize;
+  }
+
+  .result-card h2 {
+    margin: 0 0 8px;
+    font-size: 23px;
+  }
+
+  .result-card p {
+    margin: 0 0 14px;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  .result-card strong {
+    color: #000000;
+    font-size: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .search-page {
+      padding-top: 135px;
+    }
+
+    .search-inner {
+      padding: 36px 16px;
+    }
+  }
+</style>

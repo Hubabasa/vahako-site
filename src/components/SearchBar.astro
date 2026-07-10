@@ -1,0 +1,112 @@
+---
+import { searchIndex } from "../data/searchIndex.js";
+
+const { currentQuery = "" } = Astro.props;
+---
+
+<form
+  class="search-form"
+  action="/search"
+  method="get"
+  role="search"
+  onsubmit="return this.q.value.trim().length > 0;"
+>
+  <select class="search-category" aria-label="Search category">
+    <option value="all">All</option>
+    <option value="service">Services</option>
+    <option value="product">Products</option>
+    <option value="blog">Blog</option>
+  </select>
+
+  <div class="search-box">
+    <input
+      class="search-input"
+      type="search"
+      name="q"
+      value={currentQuery}
+      placeholder="Search Vahako"
+      autocomplete="off"
+      aria-label="Search Vahako"
+    />
+
+    <div class="search-suggestions" hidden></div>
+  </div>
+
+  <button class="search-button" type="submit" aria-label="Search">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M21 21l-4.35-4.35M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+      />
+    </svg>
+  </button>
+</form>
+
+<script define:vars={{ searchIndex }}>
+  const forms = document.querySelectorAll(".search-form");
+
+  function searchableText(item) {
+    return [
+      item.title,
+      item.description,
+      ...(item.keywords || [])
+    ].join(" ").toLowerCase();
+  }
+
+  forms.forEach((form) => {
+    const input = form.querySelector(".search-input");
+    const suggestions = form.querySelector(".search-suggestions");
+    const category = form.querySelector(".search-category");
+
+    input.addEventListener("input", () => {
+      const query = input.value.trim().toLowerCase();
+
+      if (!query) {
+        suggestions.hidden = true;
+        suggestions.innerHTML = "";
+        return;
+      }
+
+      const selectedType = category.value;
+
+      const matches = searchIndex
+        .filter((item) => {
+          const itemType = item.type || item.category?.toLowerCase() || "page";
+          const typeMatch = selectedType === "all" || itemType === selectedType;
+          return typeMatch && searchableText(item).includes(query);
+        })
+        .slice(0, 6);
+
+      if (!matches.length) {
+        suggestions.hidden = true;
+        suggestions.innerHTML = "";
+        return;
+      }
+
+      suggestions.innerHTML = matches
+        .map((item) => {
+          const label = item.type || item.category || "Page";
+
+          return `
+            <a href="${item.url}" class="suggestion-item">
+              <span class="suggestion-title">${item.title}</span>
+              <span class="suggestion-type">${label}</span>
+            </a>
+          `;
+        })
+        .join("");
+
+      suggestions.hidden = false;
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".search-form")) {
+      document.querySelectorAll(".search-suggestions").forEach((box) => {
+        box.hidden = true;
+      });
+    }
+  });
+</script>

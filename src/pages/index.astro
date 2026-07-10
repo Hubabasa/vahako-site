@@ -39,6 +39,7 @@ import {
         color: #0f172a;
       }
 
+/* Desktop hero */
 .hero {
   width: 100%;
   height: 75vh;
@@ -46,11 +47,8 @@ import {
   max-height: 650px;
   background: #000;
   overflow: hidden;
-
-  /* adds breathing room */
-  padding-top: 0px;
-  padding-bottom: 0px;
-
+  padding: 0;
+  margin-top: 55px;
   box-sizing: border-box;
 }
 
@@ -64,6 +62,21 @@ import {
 .hero img {
   object-fit: contain;
   object-position: center center;
+}
+
+/* Mobile hero */
+@media (max-width: 700px) {
+  .hero {
+    height: 75vh;
+    min-height: 340px;
+    max-height: 650px;
+    padding: 0;
+  }
+
+  .hero img {
+    object-fit: contain;
+    object-position: center center;
+  }
 }
 
       .services-section {
