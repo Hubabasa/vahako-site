@@ -1,0 +1,744 @@
+---
+import Header from "../../components/Header.astro";
+import ContactCTA from "../../components/ContactCTA.astro";
+
+const page = {
+  title: "Designer Room & Lobby Partitions in Sri Lanka",
+
+  seoTitle:
+    "Designer Room & Lobby Partitions in Sri Lanka | Vahako",
+
+  metaDescription:
+    "Vahako designs and fabricates premium designer room and lobby partitions in Sri Lanka for homes, offices, hotels, restaurants and commercial interiors.",
+
+  canonicalUrl:
+    "https://vahako.com/catalog/custom-room-partitions/",
+
+  heroImage:
+    "/images/catalog/custom-room-partitions/designer-lobby-room-partitions-in-sri-lanka.webp",
+
+  heroAlt:
+    "Designer room and lobby partitions fabricated by Vahako in Sri Lanka",
+
+  intro:
+    "Vahako designs and fabricates premium designer room and lobby partitions in Sri Lanka that combine privacy, functionality and modern aesthetics. We manufacture custom partitions for homes, offices, hotels, restaurants, reception areas and commercial interiors using high-quality materials, delivering elegant space division solutions tailored to each project while maintaining durability, style and long-lasting performance.",
+
+  subServices: [
+    {
+      category: "By Material",
+
+      title: "Laser-Cut Metal Partitions",
+
+      image:
+        "/images/catalog/custom-room-partitions/laser-cut-metal-lobby-room-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Laser-cut mild steel and iron room and lobby partitions in Sri Lanka",
+
+      description:
+        "Decorative laser-cut mild steel and iron partitions custom fabricated for modern residential and commercial interiors."
+    },
+
+    {
+      category: "By Material",
+
+      title: "Luxury Stainless Steel Partitions",
+
+      image:
+        "/images/catalog/custom-room-partitions/stainless-steel-room-lobby-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Luxury SS304 stainless steel and gold PVD room partitions in Sri Lanka",
+
+      description:
+        "Premium SS304 stainless steel partitions with polished, brushed and gold PVD finishes for luxury interiors."
+    },
+
+    {
+      category: "By Material",
+
+      title: "Premium Wooden Louver Partitions",
+
+      image:
+        "/images/catalog/custom-room-partitions/plain-office-partition-room-lobby-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Plain office room partitions made from metal or wood",
+
+      description:
+        "Plain office partition made from metal or wood with custom design. From vahako.com "
+    },
+
+    {
+      category: "By Material",
+
+      title: "Architectural Glass & Metal-Framed Screens",
+
+      image:
+        "/images/catalog/custom-room-partitions/glass-and-metal-frame-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Architectural glass and metal-framed room partition screens in Sri Lanka",
+
+      description:
+        "Premium architectural glass and metal-framed screens for offices, lobbies and contemporary interiors."
+    },
+
+    {
+      category: "By Material",
+
+      title: "Premium Wooden Louver Partitions",
+
+      image:
+        "/images/catalog/custom-room-partitions/wooden-frame-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Premium wooden louver room and lobby partitions in Sri Lanka",
+
+      description:
+        "Elegant wooden louver partitions that provide natural warmth, privacy and attractive visual separation."
+    },
+
+    {
+      category: "By Function & Design",
+
+      title: "Sliding & Folding Partition Systems",
+
+      image:
+        "/images/catalog/custom-room-partitions/foldable-sliding-room-lobby-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Sliding and folding room and lobby partition systems in Sri Lanka",
+
+      description:
+        "Flexible sliding and folding partition systems designed for adaptable and efficient interior space management."
+    },
+
+    {
+      category: "By Function & Design",
+
+      title: "Modern Pivot Partitions",
+
+      image:
+        "/images/catalog/custom-room-partitions/pivot-partition-room-lobby-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Modern pivot room and lobby partition systems in Sri Lanka",
+
+      description:
+        "Modern rotating pivot partitions that create elegant, flexible and functional divisions between interior spaces."
+    },
+
+    {
+      category: "By Function & Design",
+
+      title: "Acoustic & Soundproof Movable Walls",
+
+      image:
+        "/images/catalog/custom-room-partitions/movable-sound-proof-room-lobby-partitions-in-sri-lanka.webp",
+
+      alt:
+        "Movable acoustic and soundproof room and lobby partitions in Sri Lanka",
+
+      description:
+        "Movable acoustic wall systems designed to reduce sound transmission while creating flexible private spaces."
+    }
+  ]
+};
+---
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{page.seoTitle}</title>
+
+    <meta
+      name="description"
+      content={page.metaDescription}
+    />
+
+    <link
+      rel="canonical"
+      href={page.canonicalUrl}
+    />
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <!-- Hero Section -->
+
+      <section class="catalog-hero">
+        <div class="catalog-hero-inner">
+          <div class="catalog-hero-image">
+            <img
+              src={page.heroImage}
+              alt={page.heroAlt}
+              width="800"
+              height="800"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+
+          <div class="catalog-hero-content">
+            <h1>{page.title}</h1>
+
+            <p>{page.intro}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Partition Categories -->
+
+      <section
+        class="subservices-section"
+        aria-labelledby="partition-categories-title"
+      >
+        <div class="subservices-inner">
+          <div class="subservices-heading">
+            <p class="subservices-eyebrow">
+              Our Partition Solutions
+            </p>
+
+            <h2 id="partition-categories-title">
+              Explore Our Designer Partition Categories
+            </h2>
+
+            <p class="subservices-intro">
+              Choose from custom partition systems categorized by material,
+              function and design for residential, hospitality, office and
+              commercial interiors.
+            </p>
+          </div>
+
+          <div class="subservices-grid">
+            {
+              page.subServices.map((service) => (
+                <article class="subservice-card">
+                  <div class="subservice-image">
+                    <img
+                      src={service.image}
+                      alt={service.alt}
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+
+                  <div class="subservice-content">
+                    <span class="subservice-category">
+                      {service.category}
+                    </span>
+
+                    <h3>{service.title}</h3>
+
+                    <p>{service.description}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- YouTube Video -->
+
+      <section
+        class="catalog-video-section"
+        aria-labelledby="partition-video-title"
+      >
+        <div class="catalog-video-inner">
+          <div class="catalog-video-heading">
+            <p class="catalog-video-eyebrow">
+              Watch Our Work
+            </p>
+
+            <h2 id="partition-video-title">
+              Designer Room & Lobby Partition Solutions
+            </h2>
+
+            <p class="catalog-video-description">
+              Explore our designer room and lobby partition concepts for homes,
+              offices, hotels, restaurants and commercial interiors.
+            </p>
+          </div>
+
+          <div class="catalog-video-frame">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/CLbJl7ctDG4?rel=0"
+              title="Designer room and lobby partition solutions by Vahako"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reusable Contact CTA -->
+
+      <ContactCTA
+        eyebrow="Discuss your partition requirement"
+        title="Contact Vahako"
+        description="Contact our team for custom designer room and lobby partitions for homes, offices, hotels, restaurants, reception areas and commercial interiors in Sri Lanka."
+        whatsappMessage="Hello Vahako, I am interested in designer room and lobby partitions. Please provide more information."
+        quotePage="Designer Room and Lobby Partitions"
+      />
+    </main>
+  </body>
+</html>
+
+<style>
+  /*
+   * Only html and body are global.
+   * All other styling is scoped to this page and will not interfere
+   * with Header.astro or ContactCTA.astro.
+   */
+
+  :global(html) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    background: #ffffff;
+    color: #111827;
+    text-rendering: optimizeLegibility;
+  }
+
+  main,
+  main *,
+  main *::before,
+  main *::after {
+    box-sizing: border-box;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  main img,
+  main iframe {
+    max-width: 100%;
+  }
+
+  /* Hero Section */
+
+  .catalog-hero {
+    padding: 120px 20px 72px;
+    background: #ffffff;
+  }
+
+  .catalog-hero-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 60px;
+    align-items: center;
+
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .catalog-hero-image,
+  .catalog-hero-content {
+    min-width: 0;
+  }
+
+  .catalog-hero-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f3f4f6;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+  }
+
+  .catalog-hero-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .catalog-hero-content h1 {
+    margin: 0 0 24px;
+
+    color: #e30613;
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .catalog-hero-content p {
+    max-width: 580px;
+    margin: 0;
+
+    color: #111827;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.65;
+  }
+
+  /* Subservice Section */
+
+  .subservices-section {
+    padding: 78px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+  }
+
+  .subservices-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .subservices-heading {
+    max-width: 780px;
+    margin: 0 auto 46px;
+    text-align: center;
+  }
+
+  .subservices-eyebrow {
+    margin: 0 0 10px;
+
+    color: #e30613;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .subservices-heading h2 {
+    margin: 0 0 18px;
+
+    color: #e30613;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .subservices-intro {
+    margin: 0;
+
+    color: #475569;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .subservices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 26px;
+  }
+
+  .subservice-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .subservice-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f3f4f6;
+  }
+
+  .subservice-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transition: transform 0.35s ease;
+  }
+
+  .subservice-content {
+    flex: 1;
+    padding: 22px;
+  }
+
+  .subservice-category {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .subservice-content h3 {
+    margin: 0 0 12px;
+
+    color: #e30613;
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  .subservice-content p {
+    margin: 0;
+
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /*
+   * Hover effects are enabled only on devices that genuinely support hover.
+   * This avoids unnecessary effects on touch devices.
+   */
+
+  @media (hover: hover) and (pointer: fine) {
+    .subservice-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 38px rgba(15, 23, 42, 0.12);
+    }
+
+    .subservice-card:hover .subservice-image img {
+      transform: scale(1.04);
+    }
+  }
+
+  /* Video Section */
+
+  .catalog-video-section {
+    padding: 78px 20px 88px;
+    border-top: 1px solid #e5e7eb;
+    background: #f8fafc;
+
+    /*
+     * The browser may postpone rendering this below-the-fold section
+     * until it approaches the viewport.
+     */
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+
+  .catalog-video-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .catalog-video-heading {
+    max-width: 760px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+
+  .catalog-video-eyebrow {
+    margin: 0 0 10px;
+
+    color: #e30613;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .catalog-video-heading h2 {
+    margin: 0 0 16px;
+
+    color: #e30613;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .catalog-video-description {
+    margin: 0;
+
+    color: #475569;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .catalog-video-frame {
+    width: min(100%, 420px);
+    margin: 0 auto;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+
+    border: 1px solid #d8dee8;
+    border-radius: 22px;
+    background: #000000;
+    box-shadow: 0 22px 55px rgba(15, 23, 42, 0.2);
+  }
+
+  .catalog-video-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* Tablet */
+
+  @media (max-width: 900px) {
+    .catalog-hero {
+      padding-top: 145px;
+      padding-bottom: 52px;
+    }
+
+    .catalog-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .catalog-hero-content {
+      text-align: center;
+    }
+
+    .catalog-hero-content p {
+      margin: 0 auto;
+    }
+
+    .subservices-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Mobile */
+
+  @media (max-width: 600px) {
+    .catalog-hero {
+      padding: 130px 16px 48px;
+    }
+
+    .catalog-hero-inner {
+      gap: 28px;
+    }
+
+    .catalog-hero-image {
+      border-radius: 14px;
+    }
+
+    .catalog-hero-content h1 {
+      margin-bottom: 18px;
+      font-size: clamp(34px, 11vw, 46px);
+    }
+
+    .catalog-hero-content p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .subservices-section {
+      padding: 58px 16px;
+    }
+
+    .subservices-heading {
+      margin-bottom: 34px;
+    }
+
+    .subservices-heading h2 {
+      font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .subservices-intro {
+      font-size: 16px;
+    }
+
+    .subservices-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .subservice-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .catalog-video-section {
+      padding: 58px 16px 68px;
+      contain-intrinsic-size: 780px;
+    }
+
+    .catalog-video-heading {
+      margin-bottom: 30px;
+    }
+
+    .catalog-video-heading h2 {
+      font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .catalog-video-description {
+      font-size: 16px;
+    }
+
+    .catalog-video-frame {
+      width: min(100%, 360px);
+      border-radius: 16px;
+    }
+  }
+
+  /* Reduced Motion Accessibility */
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+
+    .subservice-card,
+    .subservice-image img {
+      transition: none;
+    }
+
+    .subservice-card:hover {
+      transform: none;
+    }
+
+    .subservice-card:hover .subservice-image img {
+      transform: none;
+    }
+  }
+</style>
