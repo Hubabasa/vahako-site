@@ -23,29 +23,73 @@ import SearchBar from "./SearchBar.astro";
     </button>
 
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="/">Home</a>
-      
-      <div class="nav-item has-submenu">
-  <button
-    class="submenu-toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="services-submenu"
-  >
-    <span>Services</span>
-    <span class="submenu-arrow" aria-hidden="true">▼</span>
-  </button>
+  <a href="/">Home</a>
 
-  <div id="services-submenu" class="submenu">
-    <a href="/services/conveyor-systems">Conveyor</a>
+  <!-- Sectors We Serve Dropdown -->
+  <div class="nav-item has-submenu">
+    <button
+      class="submenu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="sectors-submenu"
+    >
+      <span>Sectors We Serve</span>
+
+      <span class="submenu-arrow" aria-hidden="true">
+        ▼
+      </span>
+    </button>
+
+    <div
+      id="sectors-submenu"
+      class="submenu"
+    >
+      <!-- Replace or expand these links when your sector pages are ready -->
+      <a href="/sectors/industrial-manufacturing">
+        Industrial & Manufacturing
+      </a>
+
+      <a href="/sectors/food-and-beverage">
+        Food & Beverage
+      </a>
+
+      <a href="/sectors/warehousing-and-logistics">
+        Warehousing & Logistics
+      </a>
+    </div>
   </div>
-</div>
 
-      <a href="/products">Products</a>
-      <a href="/projects">Projects</a>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-    </nav>
+  <!-- Our Services Dropdown -->
+  <div class="nav-item has-submenu">
+    <button
+      class="submenu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="services-submenu"
+    >
+      <span>Our Services</span>
+
+      <span class="submenu-arrow" aria-hidden="true">
+        ▼
+      </span>
+    </button>
+
+    <div
+      id="services-submenu"
+      class="submenu"
+    >
+      <a href="/services/conveyor-systems">
+        Conveyors
+      </a>
+
+      <a href="/catalog/custom-room-partitions">
+        Partitions
+      </a>
+    </div>
+  </div>
+
+  <a href="/contact">Contact</a>
+</nav>
 
     <div class="mobile-search">
       <SearchBar currentQuery={Astro.url.searchParams.get("q") || ""} />
@@ -56,24 +100,85 @@ import SearchBar from "./SearchBar.astro";
 <script>
   const menuButton = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".main-nav");
+  const submenuItems = document.querySelectorAll(".has-submenu");
+
+  function closeSubmenu(item) {
+    const button = item.querySelector(".submenu-toggle");
+    const submenu = item.querySelector(".submenu");
+    const arrow = item.querySelector(".submenu-arrow");
+
+    submenu?.classList.remove("is-open");
+    button?.setAttribute("aria-expanded", "false");
+
+    if (arrow) {
+      arrow.textContent = "▼";
+    }
+  }
+
+  function closeAllSubmenus(exceptItem = null) {
+    submenuItems.forEach((item) => {
+      if (item !== exceptItem) {
+        closeSubmenu(item);
+      }
+    });
+  }
 
   menuButton?.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("is-open");
+    const isOpen = nav?.classList.toggle("is-open") ?? false;
+
     menuButton.textContent = isOpen ? "×" : "☰";
     menuButton.setAttribute("aria-expanded", String(isOpen));
+
+    if (!isOpen) {
+      closeAllSubmenus();
+    }
   });
 
-  const submenuToggle = document.querySelector(".submenu-toggle");
-const submenu = document.querySelector(".submenu");
-const submenuArrow = document.querySelector(".submenu-arrow");
+  submenuItems.forEach((item) => {
+    const button = item.querySelector(".submenu-toggle");
+    const submenu = item.querySelector(".submenu");
+    const arrow = item.querySelector(".submenu-arrow");
 
-submenuToggle?.addEventListener("click", () => {
-  const isOpen = submenu?.classList.toggle("is-open");
+    button?.addEventListener("click", (event) => {
+      event.stopPropagation();
 
-  submenuToggle.setAttribute("aria-expanded", String(isOpen));
-  submenuArrow.textContent = isOpen ? "▲" : "▼";
-});
+      const willOpen = !submenu?.classList.contains("is-open");
 
+      closeAllSubmenus(item);
+
+      submenu?.classList.toggle("is-open", willOpen);
+      button.setAttribute("aria-expanded", String(willOpen));
+
+      if (arrow) {
+        arrow.textContent = willOpen ? "▲" : "▼";
+      }
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (!(target instanceof Node)) {
+      return;
+    }
+
+    if (!nav?.contains(target)) {
+      closeAllSubmenus();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      nav?.classList.remove("is-open");
+
+      if (menuButton) {
+        menuButton.textContent = "☰";
+        menuButton.setAttribute("aria-expanded", "false");
+      }
+
+      closeAllSubmenus();
+    }
+  });
 </script>
 
 <style>

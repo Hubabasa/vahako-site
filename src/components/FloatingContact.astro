@@ -1,0 +1,845 @@
+---
+const {
+  pageName = "Vahako Services",
+
+  whatsappMessage =
+    "Hello Vahako, I would like more information about your services.",
+
+  quotePage = pageName,
+
+  phoneNumber = "94707797770",
+
+  phoneDisplay = "070 779 7770"
+} = Astro.props;
+
+const whatsappUrl =
+  `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+const quoteUrl =
+  `/get-quote?page=${encodeURIComponent(quotePage)}`;
+---
+
+<div
+  class="floating-contact"
+  data-page-name={pageName}
+  aria-label="Contact and sharing options"
+>
+  <!-- Expandable secondary actions -->
+
+  <div
+    class="floating-extra-actions"
+    id="floating-extra-actions"
+    aria-hidden="true"
+  >
+    <a
+      class="floating-action floating-call"
+      href={`tel:+${phoneNumber}`}
+      aria-label={`Call Vahako on ${phoneDisplay}`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="21"
+        height="21"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.78.65 2.61a2 2 0 0 1-.45 2.11L8.04 9.71a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.83.31 1.71.53 2.61.65A2 2 0 0 1 22 16.92Z" />
+      </svg>
+
+      <span>
+        <strong>Call Us</strong>
+        <small>{phoneDisplay}</small>
+      </span>
+    </a>
+
+    <button
+      class="floating-action floating-share"
+      type="button"
+      aria-label="Share this page"
+      aria-expanded="false"
+      aria-controls="floating-share-options"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="21"
+        height="21"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="18" cy="5" r="3" />
+        <circle cx="6" cy="12" r="3" />
+        <circle cx="18" cy="19" r="3" />
+        <path d="m8.59 13.51 6.83 3.98" />
+        <path d="m15.41 6.51-6.82 3.98" />
+      </svg>
+
+      <span>
+        <strong>Share</strong>
+        <small>Share this page</small>
+      </span>
+    </button>
+  </div>
+
+  <!-- Share fallback panel -->
+
+  <div
+    class="floating-share-options"
+    id="floating-share-options"
+    aria-hidden="true"
+  >
+    <p class="share-panel-title">Share this page</p>
+
+    <button
+      class="share-option copy-link-button"
+      type="button"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect width="14" height="14" x="8" y="8" rx="2" />
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </svg>
+
+      <span class="copy-link-label">Copy link</span>
+    </button>
+
+    <a
+      class="share-option share-whatsapp"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M12.04 2a9.84 9.84 0 0 0-8.53 14.75L2 22l5.38-1.41A9.98 9.98 0 1 0 12.04 2Zm0 17.95a8.03 8.03 0 0 1-4.09-1.12l-.29-.17-3.19.84.85-3.11-.19-.32A8.02 8.02 0 1 1 12.04 19.95Z" />
+      </svg>
+
+      <span>WhatsApp</span>
+    </a>
+
+    <a
+      class="share-option share-email"
+      href="#"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect width="20" height="16" x="2" y="4" rx="2" />
+        <path d="m22 7-10 5L2 7" />
+      </svg>
+
+      <span>Email</span>
+    </a>
+
+    <button
+      class="share-option close-share-button"
+      type="button"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+
+      <span>Close</span>
+    </button>
+  </div>
+
+  <!-- Primary actions -->
+
+  <div class="floating-primary-actions">
+    <a
+      class="floating-action floating-whatsapp"
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Contact Vahako about ${pageName} through WhatsApp`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="23"
+        height="23"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M12.04 2a9.84 9.84 0 0 0-8.53 14.75L2 22l5.38-1.41A9.98 9.98 0 1 0 12.04 2Zm0 17.95a8.03 8.03 0 0 1-4.09-1.12l-.29-.17-3.19.84.85-3.11-.19-.32A8.02 8.02 0 1 1 12.04 19.95Zm4.4-6.01c-.24-.12-1.43-.71-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.64-1.2-1.43-1.34-1.67-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.19-.47-.39-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.51.1.46-.07 1.43-.58 1.63-1.15.2-.57.2-1.06.14-1.16-.06-.1-.22-.16-.46-.28Z" />
+      </svg>
+
+      <span>
+        <strong>WhatsApp</strong>
+        <small>Fastest response</small>
+      </span>
+    </a>
+
+    <a
+      class="floating-action floating-quote"
+      href={quoteUrl}
+      aria-label={`Request a quote for ${quotePage}`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="21"
+        height="21"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+        <path d="M14 2v6h6" />
+        <path d="M8 13h8" />
+        <path d="M8 17h6" />
+      </svg>
+
+      <span>
+        <strong>Get a Quote</strong>
+        <small>Send requirements</small>
+      </span>
+    </a>
+
+    <button
+      class="floating-action floating-more"
+      type="button"
+      aria-expanded="false"
+      aria-controls="floating-extra-actions"
+    >
+      <svg
+        class="more-icon"
+        viewBox="0 0 24 24"
+        width="21"
+        height="21"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="5" cy="12" r="1" />
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="19" cy="12" r="1" />
+      </svg>
+
+      <svg
+        class="close-icon"
+        viewBox="0 0 24 24"
+        width="21"
+        height="21"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+
+      <span>
+        <strong class="more-label">More</strong>
+        <small class="more-description">Call or share</small>
+      </span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const floatingContact = document.querySelector(".floating-contact");
+
+  if (floatingContact) {
+    const moreButton =
+      floatingContact.querySelector(".floating-more");
+
+    const extraActions =
+      floatingContact.querySelector(".floating-extra-actions");
+
+    const shareButton =
+      floatingContact.querySelector(".floating-share");
+
+    const shareOptions =
+      floatingContact.querySelector(".floating-share-options");
+
+    const closeShareButton =
+      floatingContact.querySelector(".close-share-button");
+
+    const copyLinkButton =
+      floatingContact.querySelector(".copy-link-button");
+
+    const copyLinkLabel =
+      floatingContact.querySelector(".copy-link-label");
+
+    const whatsappShare =
+      floatingContact.querySelector(".share-whatsapp");
+
+    const emailShare =
+      floatingContact.querySelector(".share-email");
+
+    const moreLabel =
+      floatingContact.querySelector(".more-label");
+
+    const moreDescription =
+      floatingContact.querySelector(".more-description");
+
+    const pageName =
+      floatingContact.getAttribute("data-page-name") ||
+      document.title;
+
+    function closeShareOptions() {
+      shareOptions?.classList.remove("is-open");
+      shareOptions?.setAttribute("aria-hidden", "true");
+      shareButton?.setAttribute("aria-expanded", "false");
+    }
+
+    function closeExtraActions() {
+      extraActions?.classList.remove("is-open");
+      extraActions?.setAttribute("aria-hidden", "true");
+      moreButton?.setAttribute("aria-expanded", "false");
+
+      floatingContact.classList.remove("is-expanded");
+
+      if (moreLabel) {
+        moreLabel.textContent = "More";
+      }
+
+      if (moreDescription) {
+        moreDescription.textContent = "Call or share";
+      }
+
+      closeShareOptions();
+    }
+
+    moreButton?.addEventListener("click", () => {
+      const willOpen =
+        !extraActions?.classList.contains("is-open");
+
+      extraActions?.classList.toggle("is-open", willOpen);
+      extraActions?.setAttribute(
+        "aria-hidden",
+        String(!willOpen)
+      );
+
+      moreButton.setAttribute(
+        "aria-expanded",
+        String(willOpen)
+      );
+
+      floatingContact.classList.toggle(
+        "is-expanded",
+        willOpen
+      );
+
+      if (moreLabel) {
+        moreLabel.textContent = willOpen ? "Close" : "More";
+      }
+
+      if (moreDescription) {
+        moreDescription.textContent =
+          willOpen ? "Hide options" : "Call or share";
+      }
+
+      if (!willOpen) {
+        closeShareOptions();
+      }
+    });
+
+    shareButton?.addEventListener("click", async () => {
+      const shareData = {
+        title: document.title,
+        text: `View ${pageName} from Vahako`,
+        url: window.location.href
+      };
+
+      if (
+        typeof navigator.share === "function" &&
+        window.matchMedia("(max-width: 900px)").matches
+      ) {
+        try {
+          await navigator.share(shareData);
+          return;
+        } catch (error) {
+          if (
+            error instanceof DOMException &&
+            error.name === "AbortError"
+          ) {
+            return;
+          }
+        }
+      }
+
+      const willOpen =
+        !shareOptions?.classList.contains("is-open");
+
+      shareOptions?.classList.toggle("is-open", willOpen);
+      shareOptions?.setAttribute(
+        "aria-hidden",
+        String(!willOpen)
+      );
+
+      shareButton.setAttribute(
+        "aria-expanded",
+        String(willOpen)
+      );
+    });
+
+    copyLinkButton?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(
+          window.location.href
+        );
+
+        if (copyLinkLabel) {
+          copyLinkLabel.textContent = "Link copied";
+        }
+
+        window.setTimeout(() => {
+          if (copyLinkLabel) {
+            copyLinkLabel.textContent = "Copy link";
+          }
+        }, 1800);
+      } catch {
+        window.prompt(
+          "Copy this link:",
+          window.location.href
+        );
+      }
+    });
+
+    if (whatsappShare instanceof HTMLAnchorElement) {
+      whatsappShare.href =
+        `https://wa.me/?text=${encodeURIComponent(
+          `${document.title} ${window.location.href}`
+        )}`;
+    }
+
+    if (emailShare instanceof HTMLAnchorElement) {
+      emailShare.href =
+        `mailto:?subject=${encodeURIComponent(
+          document.title
+        )}&body=${encodeURIComponent(
+          `View this page from Vahako:\n\n${window.location.href}`
+        )}`;
+    }
+
+    closeShareButton?.addEventListener(
+      "click",
+      closeShareOptions
+    );
+
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+
+      if (
+        target instanceof Node &&
+        !floatingContact.contains(target)
+      ) {
+        closeExtraActions();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeExtraActions();
+        moreButton?.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .floating-contact,
+  .floating-contact *,
+  .floating-contact *::before,
+  .floating-contact *::after {
+    box-sizing: border-box;
+  }
+
+  .floating-contact {
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    z-index: 900;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+
+  .floating-primary-actions,
+  .floating-extra-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .floating-extra-actions {
+    display: none;
+  }
+
+  .floating-extra-actions.is-open {
+    display: flex;
+  }
+
+  .floating-action {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    width: 190px;
+    min-height: 58px;
+    padding: 10px 15px;
+
+    border: 0;
+    border-radius: 14px;
+
+    font: inherit;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      background-color 0.18s ease;
+  }
+
+  .floating-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 17px 36px rgba(15, 23, 42, 0.2);
+  }
+
+  .floating-action:focus-visible,
+  .share-option:focus-visible {
+    outline: 3px solid rgba(227, 6, 19, 0.25);
+    outline-offset: 3px;
+  }
+
+  .floating-action > span {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .floating-action strong {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  .floating-action small {
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 600;
+    opacity: 0.88;
+  }
+
+  .floating-whatsapp {
+    background: #128c4a;
+    color: #ffffff;
+
+    animation: whatsapp-attention 4.5s ease-in-out infinite;
+  }
+
+  .floating-whatsapp:hover {
+    background: #0f7a40;
+  }
+
+  .floating-quote {
+    background: #e30613;
+    color: #ffffff;
+  }
+
+  .floating-quote:hover {
+    background: #c9000b;
+  }
+
+  .floating-more,
+  .floating-call,
+  .floating-share {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+  }
+
+  .floating-more:hover,
+  .floating-call:hover,
+  .floating-share:hover {
+    background: #f8fafc;
+  }
+
+  .close-icon {
+    display: none;
+  }
+
+  .floating-contact.is-expanded .more-icon {
+    display: none;
+  }
+
+  .floating-contact.is-expanded .close-icon {
+    display: block;
+  }
+
+  .floating-share-options {
+    position: absolute;
+    right: 200px;
+    bottom: 0;
+
+    display: none;
+    width: 210px;
+    padding: 12px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  }
+
+  .floating-share-options.is-open {
+    display: block;
+  }
+
+  .share-panel-title {
+    margin: 0 0 9px;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .share-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    width: 100%;
+    padding: 10px;
+
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+
+    color: #111827;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+  .share-option:hover {
+    background: #f8fafc;
+    color: #e30613;
+  }
+
+  @keyframes whatsapp-attention {
+    0%,
+    78%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 12px 30px rgba(18, 140, 74, 0.18);
+    }
+
+    84% {
+      transform: scale(1.025);
+      box-shadow: 0 16px 38px rgba(18, 140, 74, 0.3);
+    }
+
+    90% {
+      transform: scale(1);
+      box-shadow: 0 12px 30px rgba(18, 140, 74, 0.18);
+    }
+  }
+
+  @media (max-width: 900px) {
+    :global(body) {
+      padding-bottom: calc(82px + env(safe-area-inset-bottom));
+    }
+
+    .floating-contact {
+      right: 10px;
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      left: 10px;
+
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .floating-primary-actions {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 0.7fr;
+      gap: 7px;
+
+      width: 100%;
+      padding: 7px;
+
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #e5e7eb;
+      border-radius: 17px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+      backdrop-filter: blur(8px);
+    }
+
+    .floating-action {
+      justify-content: center;
+
+      width: 100%;
+      min-width: 0;
+      min-height: 52px;
+      padding: 8px 6px;
+
+      border-radius: 11px;
+      box-shadow: none;
+    }
+
+    .floating-action > span {
+      align-items: center;
+      text-align: center;
+    }
+
+    .floating-action strong {
+      font-size: 12px;
+    }
+
+    .floating-action small {
+      display: none;
+    }
+
+    .floating-action svg {
+      flex: 0 0 auto;
+    }
+
+    .floating-extra-actions {
+      display: none;
+      width: 100%;
+      padding: 8px;
+
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 15px;
+      box-shadow: 0 14px 36px rgba(15, 23, 42, 0.18);
+    }
+
+    .floating-extra-actions.is-open {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .floating-call,
+    .floating-share {
+      min-height: 50px;
+    }
+
+    .floating-share-options {
+      position: static;
+
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .floating-share-options.is-open {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .share-panel-title {
+      grid-column: 1 / -1;
+    }
+
+    .share-option {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .floating-primary-actions {
+      grid-template-columns: 1.15fr 1fr 0.65fr;
+      padding: 6px;
+      gap: 5px;
+    }
+
+    .floating-action {
+      gap: 5px;
+      padding-right: 4px;
+      padding-left: 4px;
+    }
+
+    .floating-action svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    .floating-action strong {
+      font-size: 11px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .floating-action {
+      transition: none;
+    }
+
+    .floating-action:hover {
+      transform: none;
+    }
+
+    .floating-whatsapp {
+      animation: none;
+    }
+  }
+</style>
