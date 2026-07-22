@@ -1,0 +1,327 @@
+---
+import Header from "../../components/Header.astro";
+import ContactCTA from "../../components/ContactCTA.astro";
+import FloatingContact from "../../components/FloatingContact.astro";
+
+const page = {
+  title: "Custom Shelving & Racks Fabrication in Sri Lanka",
+
+  seoTitle:
+    "Custom Shelving & Racks Fabrication in Sri Lanka | Vahako",
+
+  metaDescription:
+    "Vahako designs and fabricates premium custom shelving and rack systems in Sri Lanka including showroom racks, warehouse storage racks, retail display racks, book shelves, bathroom racks, decorative shelving, office storage systems and heavy-duty industrial racks.",
+
+  canonicalUrl:
+    "https://vahako.com/catalog/custom-racks/",
+
+  heroImage:
+    "/images/catalog/custom-racks/racks-display-shop-sri-lanka.webp",
+
+  heroAlt:
+    "Custom shelving and rack fabrication by Vahako in Sri Lanka",
+
+  intro:
+    "Vahako designs, fabricates and installs premium custom shelving and rack systems for businesses and homes throughout Sri Lanka. From luxury showroom display racks and warehouse storage systems to office shelving, book shelves, bathroom racks and decorative display units, we create solutions that perfectly suit your space and business. Every project begins with a site visit where our team studies your requirements before designing and manufacturing durable, attractive shelving using stainless steel, mild steel, iron, wood, glass or a combination of premium materials."
+};
+---
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{page.seoTitle}</title>
+
+    <meta
+      name="description"
+      content={page.metaDescription}
+    />
+
+    <link
+      rel="canonical"
+      href={page.canonicalUrl}
+    />
+  </head>
+
+  <body>
+
+    <Header />
+
+    <main>
+
+      <!-- Hero -->
+
+      <section class="catalog-hero">
+
+        <div class="catalog-hero-inner">
+
+          <div class="catalog-hero-image">
+
+            <img
+              src={page.heroImage}
+              alt={page.heroAlt}
+              width="800"
+              height="800"
+              loading="eager"
+              fetchpriority="high"
+            />
+
+          </div>
+
+          <div class="catalog-hero-content">
+
+            <h1>{page.title}</h1>
+
+            <p>
+              {page.intro}
+            </p>
+
+            <ul class="hero-highlights">
+              <li>✓ Showroom Display Racks</li>
+              <li>✓ Warehouse Storage Systems</li>
+              <li>✓ Book Shelves & Library Shelving</li>
+              <li>✓ Bathroom & Decorative Racks</li>
+              <li>✓ Stainless Steel, Wood & Glass Designs</li>
+              <li>✓ Site Visit, Fabrication & Installation</li>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <ContactCTA
+        eyebrow="Discuss your shelving project"
+        title="Contact Vahako"
+        description="Talk to our fabrication team about your custom shelving and rack requirements anywhere in Sri Lanka."
+        whatsappMessage="Hello Vahako, I am interested in custom shelving and rack fabrication. Please provide more information."
+        quotePage="Custom Shelving & Racks"
+      />
+
+      <FloatingContact
+        pageName="Custom Shelving & Racks"
+        whatsappMessage="Hello Vahako, I am interested in custom shelving and rack fabrication. Please provide more information."
+        quotePage="Custom Shelving & Racks"
+      />
+
+    </main>
+
+  </body>
+
+</html>
+
+<style>
+
+:global(html){
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+}
+
+:global(body){
+    margin:0;
+    overflow-x:hidden;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Arial,
+      sans-serif;
+    background:#fff;
+    color:#111827;
+}
+
+main,
+main *,
+main *::before,
+main *::after{
+    box-sizing:border-box;
+}
+
+.catalog-hero{
+
+    padding:120px 20px 80px;
+
+    background:#fff;
+
+}
+
+.catalog-hero-inner{
+
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:60px;
+    align-items:center;
+
+    width:100%;
+    max-width:1200px;
+    margin:auto;
+
+}
+
+.catalog-hero-image{
+
+    overflow:hidden;
+
+    aspect-ratio:1/1;
+
+    border-radius:20px;
+
+    background:#f3f4f6;
+
+    box-shadow:0 18px 45px rgba(15,23,42,.10);
+
+}
+
+.catalog-hero-image img{
+
+    display:block;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.catalog-hero-content h1{
+
+    margin:0 0 24px;
+
+    color:#e30613;
+
+    font-size:clamp(40px,5vw,64px);
+
+    line-height:1.05;
+
+    font-weight:900;
+
+    letter-spacing:-.03em;
+
+}
+
+.catalog-hero-content p{
+
+    margin:0 0 30px;
+
+    max-width:600px;
+
+    font-size:18px;
+
+    line-height:1.75;
+
+    color:#334155;
+
+}
+
+.hero-highlights{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,minmax(0,1fr));
+
+    gap:14px 30px;
+
+    margin:0;
+
+    padding:0;
+
+    list-style:none;
+
+}
+
+.hero-highlights li{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+@media(max-width:900px){
+
+.catalog-hero{
+
+    padding-top:145px;
+
+    padding-bottom:60px;
+
+}
+
+.catalog-hero-inner{
+
+    grid-template-columns:1fr;
+
+    gap:35px;
+
+}
+
+.catalog-hero-content{
+
+    text-align:center;
+
+}
+
+.catalog-hero-content p{
+
+    margin-left:auto;
+    margin-right:auto;
+
+}
+
+.hero-highlights{
+
+    grid-template-columns:1fr;
+
+    text-align:left;
+
+    max-width:420px;
+
+    margin:auto;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.catalog-hero{
+
+    padding:130px 16px 55px;
+
+}
+
+.catalog-hero-content h1{
+
+    font-size:clamp(34px,10vw,48px);
+
+}
+
+.catalog-hero-content p{
+
+    font-size:16px;
+
+}
+
+.catalog-hero-image{
+
+    border-radius:16px;
+
+}
+
+}
+
+</style>
