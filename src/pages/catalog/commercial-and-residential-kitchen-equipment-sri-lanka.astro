@@ -1,0 +1,728 @@
+---
+import Header from "../../components/Header.astro";
+import ContactCTA from "../../components/ContactCTA.astro";
+import FloatingContact from "../../components/FloatingContact.astro";
+
+const page = {
+  title: "Commercial & Residential Kitchen Equipment in Sri Lanka",
+
+  seoTitle:
+    "Commercial Kitchen Equipment Sri Lanka | Vahako",
+
+  metaDescription:
+    "Vahako designs and manufactures commercial kitchen equipment in Sri Lanka, including stainless steel hotel, restaurant, bakery, catering and residential kitchen solutions.",
+
+  canonicalUrl:
+    "https://vahako.com/catalog/commercial-and-residential-kitchen-equipment-sri-lanka/",
+
+  heroImage:
+    "/images/catalog/Commercial-Residential-Kitchen-Solutions/commercial-and-residential-kitchen-equipment-sri-lanka.webp",
+
+  heroAlt:
+    "Commercial and residential stainless steel kitchen equipment manufactured by Vahako in Sri Lanka",
+
+  intro:
+    "Vahako designs, manufactures and installs commercial and residential kitchen equipment in Sri Lanka for hotels, restaurants, bakeries, catering businesses, food factories and modern homes. As experienced stainless steel kitchen equipment manufacturers in Sri Lanka, we provide durable cooking stations, preparation tables, wash sinks, exhaust systems, storage units and custom-built kitchen solutions. Our team handles complete restaurant kitchen design and fabrication in Colombo and across Sri Lanka, delivering hygienic, space-efficient and heavy-duty equipment tailored to each project.",
+
+  subServices: [
+    {
+      category: "Preparation & Washing",
+
+      title: "Commercial Prep Workstations & Sinks",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Stainless-steel-sink-price-in-Sri-Lanka.webp",
+
+      alt:
+        "Commercial stainless steel preparation tables and kitchen sinks manufactured in Sri Lanka",
+
+      description:
+        "Heavy-duty stainless steel preparation tables, mobile workstations and deep single, double or triple-bowl utility sinks. Contact Vahako for a competitive stainless steel sink price in Sri Lanka and custom stainless steel prep table solutions in Sri Lanka."
+    },
+
+    {
+      category: "Extraction & Ventilation",
+
+      title: "Exhaust Canopies & Ventilation Systems",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Kitchen-exhaust-system-Sri-Lanka.webp",
+
+      alt:
+        "Commercial kitchen exhaust canopy and ventilation system manufactured in Sri Lanka",
+
+      description:
+        "Custom exhaust canopies with grease filters, drip trays, stainless steel ducting and extraction systems for high-heat commercial kitchens. We manufacture complete kitchen exhaust systems in Sri Lanka and provide commercial kitchen exhaust canopy prices in Sri Lanka based on project requirements."
+    },
+
+    {
+      category: "Food Warming & Display",
+
+      title: "Food Warming & Bain-Marie Counters",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Bain-marie-price-in-Sri-Lanka.webp",
+
+      alt:
+        "Stainless steel Bain-Marie counter and heated food display cabinet in Sri Lanka",
+
+      description:
+        "Custom hot food display counters, rice and curry units, heated buffet counters and temperature-controlled serving stations. Contact us for the latest Bain-Marie price in Sri Lanka and custom food display cabinet prices in Sri Lanka."
+    },
+
+    {
+      category: "Cleaning & Waste Management",
+
+      title: "Dishwashing & Waste Handling Stations",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Grease-trap-price-in-Sri-Lanka.webp",
+
+      alt:
+        "Commercial dishwashing station and stainless steel grease trap manufactured in Sri Lanka",
+
+      description:
+        "Hygienic dishwashing, waste-scraping and drainage stations with deep sinks, sorting areas and grease-management systems. Ask Vahako for a custom grease trap price in Sri Lanka or a purpose-built commercial dishwasher station in Sri Lanka."
+    },
+
+    {
+      category: "Kitchen Storage",
+
+      title: "Overhead Hanging Racks & Storage",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Commercial-kitchen-storage-racks-Sri-Lanka.webp",
+
+      alt:
+        "Commercial kitchen storage racks and overhead hanging kitchen rack in Sri Lanka",
+
+      description:
+        "Industrial ceiling-mounted and wall-mounted stainless steel racks for pans, cooking utensils, spices and kitchen accessories. We fabricate commercial kitchen storage racks in Sri Lanka and custom overhead hanging racks for kitchens in Sri Lanka."
+    },
+
+    {
+      category: "Live Food Preparation",
+
+      title: "Live Cooking Stations",
+
+      image:
+        "/images/catalog/Commercial-Residential-Kitchen-Solutions/Commercial-kitchen-storage-racks-Sri-Lanka.webp",
+
+      alt:
+        "Mobile live cooking station and live hopper station manufactured in Sri Lanka",
+
+      description:
+        "Mobile or fixed cooking stations for hotel buffets, restaurant displays, outdoor events, BBQ service and traditional food preparation. We manufacture custom live cooking stations in Sri Lanka, including live hopper stations for hotels and catering businesses."
+    }
+  ]
+};
+---
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{page.seoTitle}</title>
+
+    <meta
+      name="description"
+      content={page.metaDescription}
+    />
+
+    <link
+      rel="canonical"
+      href={page.canonicalUrl}
+    />
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <!-- Commercial and Residential Kitchen Equipment Hero -->
+
+      <section
+        class="catalog-hero"
+        aria-labelledby="kitchen-equipment-title"
+      >
+        <div class="catalog-hero-inner">
+          <div class="catalog-hero-image">
+            <img
+              src={page.heroImage}
+              alt={page.heroAlt}
+              width="800"
+              height="800"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+
+          <div class="catalog-hero-content">
+            <p class="catalog-hero-eyebrow">
+              Custom Designed • Manufactured • Installed
+            </p>
+
+            <h1 id="kitchen-equipment-title">
+              {page.title}
+            </h1>
+
+            <p class="catalog-hero-description">
+              {page.intro}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kitchen Fabrication Services -->
+
+      <section
+        class="subservices-section"
+        aria-labelledby="kitchen-services-title"
+      >
+        <div class="subservices-inner">
+          <div class="subservices-heading">
+            <p class="subservices-eyebrow">
+              Our Kitchen Solutions
+            </p>
+
+            <h2 id="kitchen-services-title">
+              Explore Our Designer Kitchen Fabrication Services
+            </h2>
+
+            <p class="subservices-intro">
+              Explore our custom-designed stainless steel kitchen equipment for
+              hotels, restaurants, bakeries, catering businesses, food
+              production facilities and residential kitchens. Every unit can
+              be manufactured according to your available space, workflow,
+              capacity, hygiene requirements and preferred configuration.
+            </p>
+          </div>
+
+          <div class="subservices-grid">
+            {
+              page.subServices.map((service) => (
+                <article class="subservice-card">
+                  <div class="subservice-image">
+                    <img
+                      src={service.image}
+                      alt={service.alt}
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+
+                  <div class="subservice-content">
+                    <span class="subservice-category">
+                      {service.category}
+                    </span>
+
+                    <h3>{service.title}</h3>
+
+                    <p>{service.description}</p>
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+
+          <div class="custom-made-message">
+  <div class="custom-made-icon" aria-hidden="true">
+    ✓
+  </div>
+
+  <div>
+    <p class="custom-made-eyebrow">
+      Made Specifically for You
+    </p>
+
+    <h2>
+      We Craft What the Client Wants
+    </h2>
+
+    <p>
+      Tell us what you need to prepare, cook or serve, where the equipment will be installed and the workflow you prefer. Our team can visit your location, take measurements, recommend materials and fabricate a completely custom solution using stainless steel, mild steel, glass, wood or a combination of materials.
+    </p>
+  </div>
+</div>
+
+        </div>
+      </section>
+
+      
+            <!-- Reusable Contact CTA -->
+
+      <ContactCTA
+        eyebrow="Discuss your Kitchen requirement"
+        title="Contact Vahako"
+        description="Contact our team for custom designer Kitchen equipments for homes, hotels and restaurants in Sri Lanka."
+        whatsappMessage="Hello Vahako, I am interested in Kitchen equipment. Please provide more information."
+        quotePage="Commercial and residential kitchen equipment"
+      />
+
+      <FloatingContact
+  pageName="Commercial and residential kitchen equipment"
+  whatsappMessage="Hello Vahako, I am interested in Commercial and residential kitchen equipment. Please provide more information."
+  quotePage="Commercial and residential kitchen equipment"
+/>
+    </main>
+  </body>
+</html>
+
+<style>
+  /*
+   * Only html and body are global.
+   * All other styling is scoped to this page.
+   */
+
+  :global(html) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    background: #ffffff;
+    color: #111827;
+    text-rendering: optimizeLegibility;
+  }
+
+  main,
+  main *,
+  main *::before,
+  main *::after {
+    box-sizing: border-box;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  main img {
+    max-width: 100%;
+  }
+
+  /* Hero Section */
+
+  .catalog-hero {
+    padding: 120px 20px 72px;
+    background: #ffffff;
+  }
+
+  .catalog-hero-inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 60px;
+    align-items: center;
+
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .catalog-hero-image,
+  .catalog-hero-content {
+    min-width: 0;
+  }
+
+  .catalog-hero-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+
+    border-radius: 18px;
+    background: #f3f4f6;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+  }
+
+  .catalog-hero-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .catalog-hero-eyebrow {
+    margin: 0 0 14px;
+
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .catalog-hero-content h1 {
+    margin: 0 0 24px;
+
+    color: #e30613;
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .catalog-hero-description {
+    max-width: 600px;
+    margin: 0;
+
+    color: #111827;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.65;
+  }
+
+  /* Kitchen Fabrication Services */
+
+  .subservices-section {
+    padding: 78px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+  }
+
+  .subservices-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .subservices-heading {
+    max-width: 820px;
+    margin: 0 auto 46px;
+    text-align: center;
+  }
+
+  .subservices-eyebrow {
+    margin: 0 0 10px;
+
+    color: #e30613;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .subservices-heading h2 {
+    margin: 0 0 18px;
+
+    color: #e30613;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .subservices-intro {
+    margin: 0;
+
+    color: #475569;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .subservices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 26px;
+  }
+
+  .subservice-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .subservice-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f3f4f6;
+  }
+
+  .subservice-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transition: transform 0.35s ease;
+  }
+
+  .subservice-content {
+    flex: 1;
+    padding: 22px;
+  }
+
+  .subservice-category {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .subservice-content h3 {
+    margin: 0 0 12px;
+
+    color: #e30613;
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  .subservice-content p {
+    margin: 0;
+
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /*
+   * Hover effects only run on devices with a mouse or trackpad.
+   * Touchscreen devices will not receive unnecessary hover animation.
+   */
+
+  @media (hover: hover) and (pointer: fine) {
+    .subservice-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 38px rgba(15, 23, 42, 0.12);
+    }
+
+    .subservice-card:hover .subservice-image img {
+      transform: scale(1.04);
+    }
+  }
+
+  /* Tablet */
+
+  @media (max-width: 900px) {
+    .catalog-hero {
+      padding-top: 145px;
+      padding-bottom: 52px;
+    }
+
+    .catalog-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .catalog-hero-content {
+      text-align: center;
+    }
+
+    .catalog-hero-description {
+      margin: 0 auto;
+    }
+
+    .subservices-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Mobile */
+
+  @media (max-width: 600px) {
+    .catalog-hero {
+      padding: 130px 16px 48px;
+    }
+
+    .catalog-hero-inner {
+      gap: 28px;
+    }
+
+    .catalog-hero-image {
+      border-radius: 14px;
+    }
+
+    .catalog-hero-eyebrow {
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+
+    .catalog-hero-content h1 {
+      margin-bottom: 18px;
+      font-size: clamp(34px, 11vw, 46px);
+    }
+
+    .catalog-hero-description {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .subservices-section {
+      padding: 58px 16px;
+    }
+
+    .subservices-heading {
+      margin-bottom: 34px;
+    }
+
+    .subservices-heading h2 {
+      font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .subservices-intro {
+      font-size: 16px;
+    }
+
+    .subservices-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .subservice-content {
+      padding: 20px;
+      text-align: center;
+    }
+  }
+
+  /* Reduced Motion Accessibility */
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+
+    .subservice-card,
+    .subservice-image img {
+      transition: none;
+    }
+
+    .subservice-card:hover {
+      transform: none;
+    }
+
+    .subservice-card:hover .subservice-image img {
+      transform: none;
+    }
+  }
+
+
+  /* Custom-made Callout Box */
+
+.custom-made-message {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  align-items: flex-start;
+
+  margin-top: 48px;
+  padding: 34px;
+
+  border: 1px solid rgba(227, 6, 19, 0.16);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(227, 6, 19, 0.055),
+      rgba(255, 214, 0, 0.08)
+    );
+
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.07);
+}
+
+.custom-made-icon {
+  display: grid;
+  place-items: center;
+
+  width: 58px;
+  height: 58px;
+
+  border-radius: 16px;
+  background: #e30613;
+
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.custom-made-eyebrow {
+  margin: 0 0 7px;
+
+  color: #e30613;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.custom-made-message h2 {
+  margin: 0 0 12px;
+
+  color: #111827;
+  font-size: clamp(27px, 3vw, 38px);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.custom-made-message p:last-child {
+  max-width: 930px;
+  margin: 0;
+
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* Mobile Media Query */
+
+@media (max-width: 600px) {
+  .custom-made-message {
+    grid-template-columns: 1fr;
+    gap: 18px;
+
+    margin-top: 36px;
+    padding: 25px 21px;
+
+    text-align: center;
+  }
+
+  .custom-made-icon {
+    margin: 0 auto;
+  }
+}
+</style>
