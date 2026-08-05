@@ -1,0 +1,564 @@
+---
+import Header from "../../components/Header.astro";
+import FloatingContact from "../../components/FloatingContact.astro";
+
+const page = {
+  title: "Custom Hotel Fabrication Services in Sri Lanka",
+
+  seoTitle:
+    "Hotel Fabrication Services Sri Lanka | Vahako",
+
+  metaDescription:
+    "Vahako provides custom hotel fabrication services in Sri Lanka, including stainless steel kitchens, racks, partitions, counters and hospitality equipment.",
+
+  canonicalUrl:
+    "https://vahako.com/sectors/hotels/",
+
+  heroImage:
+    "/images/sectors/hotels/Hotel-fabrication-services-Sri-Lanka.webp",
+
+  heroAlt:
+    "Custom hotel fabrication services for hospitality projects in Sri Lanka",
+
+  eyebrow:
+    "Designed • Fabricated • Installed",
+
+  intro:
+    "Vahako designs and fabricates premium custom solutions for hotels, resorts, villas and hospitality properties across Sri Lanka. From commercial kitchens and stainless steel equipment to reception counters, decorative partitions, storage racks and guest-area fittings, every solution is manufactured to suit your space, design standards and daily operations.",
+
+  whatsappMessage:
+    "Hello Vahako, I am interested in custom fabrication services for a hotel or hospitality project. Please provide more information."
+};
+
+const whatsappNumber = "947XXXXXXXX";
+
+const whatsappUrl =
+  `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    page.whatsappMessage
+  )}`;
+---
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{page.seoTitle}</title>
+
+    <meta
+      name="description"
+      content={page.metaDescription}
+    />
+
+    <link
+      rel="canonical"
+      href={page.canonicalUrl}
+    />
+
+    <meta
+      property="og:title"
+      content={page.seoTitle}
+    />
+
+    <meta
+      property="og:description"
+      content={page.metaDescription}
+    />
+
+    <meta
+      property="og:type"
+      content="website"
+    />
+
+    <meta
+      property="og:url"
+      content={page.canonicalUrl}
+    />
+
+    <meta
+      property="og:image"
+      content={`https://vahako.com${page.heroImage}`}
+    />
+
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <!-- Hotel Fabrication Hero Section -->
+
+      <section
+        class="hotel-hero"
+        aria-labelledby="hotel-hero-title"
+      >
+        <div
+          class="hotel-hero-media"
+          aria-hidden="true"
+        >
+          <img
+            src={page.heroImage}
+            alt=""
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+
+        <div class="hotel-hero-overlay"></div>
+
+        <div class="hotel-hero-inner">
+          <div class="hotel-hero-content">
+            <p class="hotel-hero-eyebrow">
+              {page.eyebrow}
+            </p>
+
+            <h1 id="hotel-hero-title">
+              {page.title}
+            </h1>
+
+            <p class="hotel-hero-description">
+              {page.intro}
+            </p>
+
+            <div class="hotel-hero-actions">
+              <a
+                class="hero-button hero-button-primary"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contact Vahako on WhatsApp about hotel fabrication services"
+              >
+                <span>Contact Us</span>
+
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+
+              <a
+                class="hero-button hero-button-secondary"
+                href="/get-quote/?page=Hotel%20Fabrication%20Services"
+              >
+                <span>Get a Quote</span>
+
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <FloatingContact
+        pageName="Hotel Fabrication Services"
+        whatsappMessage={page.whatsappMessage}
+        quotePage="Hotel Fabrication Services"
+      />
+    </main>
+  </body>
+</html>
+
+<style>
+  /*
+   * Only the document-level rules are global.
+   * All hotel hero styling remains scoped to this page.
+   */
+
+  :global(html) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+
+    background: #ffffff;
+    color: #111827;
+    text-rendering: optimizeLegibility;
+  }
+
+  main,
+  main *,
+  main *::before,
+  main *::after {
+    box-sizing: border-box;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  /* Hotel Hero */
+
+  .hotel-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    isolation: isolate;
+
+    width: 100%;
+    min-height: 760px;
+    padding: 150px 24px 90px;
+    overflow: hidden;
+
+    background: #f8f5f0;
+  }
+
+  .hotel-hero-media,
+  .hotel-hero-overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hotel-hero-media {
+    z-index: -3;
+  }
+
+  .hotel-hero-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /*
+   * The white fade is strongest behind the text and gradually
+   * reveals the hotel image toward the right side.
+   */
+
+  .hotel-hero-overlay {
+    z-index: -2;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.95) 25%,
+        rgba(255, 255, 255, 0.82) 43%,
+        rgba(255, 255, 255, 0.42) 62%,
+        rgba(255, 255, 255, 0.1) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.04) 65%,
+        rgba(255, 255, 255, 0.18) 100%
+      );
+  }
+
+  .hotel-hero-inner {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .hotel-hero-content {
+    width: min(100%, 690px);
+  }
+
+  .hotel-hero-eyebrow {
+    margin: 0 0 20px;
+
+    color: #e30613;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hotel-hero-content h1 {
+    max-width: 680px;
+    margin: 0 0 26px;
+
+    color: #111111;
+    font-size: clamp(46px, 6vw, 80px);
+    line-height: 1.02;
+    font-weight: 900;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .hotel-hero-description {
+    max-width: 650px;
+    margin: 0;
+
+    color: #252525;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.7;
+  }
+
+  .hotel-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-top: 36px;
+  }
+
+  .hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    min-height: 56px;
+    padding: 15px 24px;
+    border-radius: 7px;
+
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 850;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .hero-button svg {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 auto;
+  }
+
+  .hero-button-primary {
+    border: 2px solid #e30613;
+    background: #e30613;
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(227, 6, 19, 0.2);
+  }
+
+  .hero-button-secondary {
+    border: 2px solid #111111;
+    background: rgba(255, 255, 255, 0.78);
+    color: #111111;
+    backdrop-filter: blur(5px);
+  }
+
+  .hero-button:focus-visible {
+    outline: 3px solid rgba(227, 6, 19, 0.3);
+    outline-offset: 4px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-button:hover {
+      transform: translateY(-3px);
+    }
+
+    .hero-button-primary:hover {
+      border-color: #bd0711;
+      background: #bd0711;
+      box-shadow: 0 14px 30px rgba(227, 6, 19, 0.25);
+    }
+
+    .hero-button-secondary:hover {
+      border-color: #e30613;
+      background: #ffffff;
+      color: #e30613;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+  }
+
+  /* Smaller Desktop */
+
+  @media (max-width: 1100px) {
+    .hotel-hero {
+      min-height: 720px;
+    }
+
+    .hotel-hero-content {
+      width: min(100%, 620px);
+    }
+
+    .hotel-hero-overlay {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(255, 255, 255, 0.94) 38%,
+          rgba(255, 255, 255, 0.68) 62%,
+          rgba(255, 255, 255, 0.2) 100%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.16)
+        );
+    }
+  }
+
+  /* Tablet */
+
+  @media (max-width: 850px) {
+    .hotel-hero {
+      align-items: flex-end;
+      min-height: 800px;
+      padding: 150px 20px 70px;
+    }
+
+    .hotel-hero-media img {
+      object-position: 64% center;
+    }
+
+    .hotel-hero-overlay {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.14) 0%,
+          rgba(255, 255, 255, 0.36) 30%,
+          rgba(255, 255, 255, 0.92) 62%,
+          rgba(255, 255, 255, 0.99) 100%
+        );
+    }
+
+    .hotel-hero-content {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .hotel-hero-content h1 {
+      max-width: 620px;
+    }
+
+    .hotel-hero-description {
+      max-width: 620px;
+    }
+  }
+
+  /* Mobile */
+
+  @media (max-width: 600px) {
+    .hotel-hero {
+      min-height: 760px;
+      padding: 130px 16px 52px;
+    }
+
+    .hotel-hero-media img {
+      object-position: 67% center;
+    }
+
+    .hotel-hero-overlay {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.28) 28%,
+          rgba(255, 255, 255, 0.9) 57%,
+          rgba(255, 255, 255, 1) 100%
+        );
+    }
+
+    .hotel-hero-eyebrow {
+      margin-bottom: 15px;
+      font-size: 12px;
+      letter-spacing: 0.075em;
+    }
+
+    .hotel-hero-content h1 {
+      margin-bottom: 20px;
+      font-size: clamp(38px, 12vw, 54px);
+      line-height: 1.04;
+    }
+
+    .hotel-hero-description {
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .hotel-hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 13px;
+      margin-top: 28px;
+    }
+
+    .hero-button {
+      width: 100%;
+      min-height: 54px;
+    }
+  }
+
+  /* Very Small Mobile */
+
+  @media (max-width: 380px) {
+    .hotel-hero {
+      min-height: 790px;
+    }
+
+    .hotel-hero-content h1 {
+      font-size: 36px;
+    }
+  }
+
+  /* Reduced Motion */
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto;
+    }
+
+    .hero-button {
+      transition: none;
+    }
+
+    .hero-button:hover {
+      transform: none;
+    }
+  }
+</style>
