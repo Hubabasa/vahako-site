@@ -1,0 +1,722 @@
+
+---
+import Header from '../../components/Header.astro';
+import FloatingContact from '../../components/FloatingContact.astro';
+import { ShoppingBasket, ArrowLeft, Trash2, Plus, Minus, MessageCircle, ClipboardList } from 'lucide-astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopping Basket & Checkout | Vahako Sri Lanka</title>
+  <meta name="description" content="Review your Vahako shopping basket and proceed with your order or WhatsApp enquiry." />
+  <meta name="robots" content="noindex,follow" />
+</head>
+
+<body>
+  <Header />
+
+  <main class="checkout-page">
+    <div class="page-heading">
+      <p class="eyebrow">VAHAKO ONLINE SHOP</p>
+      <h1>Your Shopping Basket</h1>
+      <p>Review your products and configurations before proceeding.</p>
+    </div>
+
+    <div id="basketLoading" class="basket-loading">
+      Loading your basket...
+    </div>
+
+    <section id="emptyBasket" class="empty-basket" hidden>
+      <ShoppingBasket size={56} strokeWidth={1.4} />
+      <h2>Your basket is empty</h2>
+      <p>Explore our products and add something to your basket.</p>
+      <a href="/shop/" class="primary-link">Browse Products</a>
+    </section>
+
+    <div id="basketContent" class="basket-layout" hidden>
+      <section class="basket-products" aria-label="Basket products">
+        <div class="section-heading">
+          <h2>Basket Items <span id="itemCount"></span></h2>
+          <button type="button" id="clearBasketButton" class="clear-button">
+            <Trash2 size={16} /> Clear Basket
+          </button>
+        </div>
+
+        <div id="basketItems"></div>
+
+        <a href="/shop/" class="continue-shopping">
+          <ArrowLeft size={17} /> Continue Shopping
+        </a>
+      </section>
+
+      <aside class="order-summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Items</span>
+          <strong id="summaryQuantity">0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong id="summarySubtotal">LKR 0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span>To be confirmed</span>
+        </div>
+
+        <div class="summary-total">
+          <span>Product Total</span>
+          <strong id="summaryTotal">LKR 0</strong>
+        </div>
+
+        <p class="summary-note">
+          Delivery charges, availability and final order details will be
+          confirmed before payment.
+        </p>
+
+        <button type="button" id="websiteCheckout" class="website-checkout">
+          <ClipboardList size={20} />
+          Place Order on Website
+        </button>
+
+        <button type="button" id="whatsappCheckout" class="whatsapp-checkout">
+          <MessageCircle size={20} />
+          Checkout via WhatsApp
+        </button>
+
+        <p id="checkoutNotice" class="checkout-notice" role="status" hidden></p>
+
+        <div class="checkout-benefits">
+          <p>✓ Custom fabrication available</p>
+          <p>✓ Sri Lankan customer support</p>
+          <p>✓ Order details confirmed before payment</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <FloatingContact
+    pageName="Shopping Basket"
+    whatsappMessage="Hello Vahako, I need assistance with my shopping basket."
+    quotePage="Shopping Basket"
+  />
+</body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #172033;
+    background: #f8fafc;
+  }
+
+  .checkout-page,
+  .checkout-page * {
+    box-sizing: border-box;
+  }
+
+  .checkout-page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 130px 24px 90px;
+    min-height: 75vh;
+  }
+
+  .page-heading {
+    margin-bottom: 35px;
+  }
+
+  .eyebrow {
+    color: #d7192d;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+
+  .page-heading h1 {
+    font-size: clamp(29px, 4vw, 42px);
+    margin: 10px 0;
+    letter-spacing: -1px;
+  }
+
+  .page-heading > p:last-child {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .basket-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    align-items: start;
+    gap: 28px;
+  }
+
+  .basket-layout[hidden],
+  .empty-basket[hidden],
+  .basket-loading[hidden] {
+    display: none;
+  }
+
+  .basket-products,
+  .order-summary {
+    min-width: 0;
+    padding: 25px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 18px;
+    margin-bottom: 8px;
+  }
+
+  .section-heading h2,
+  .order-summary h2 {
+    margin: 0;
+    font-size: 21px;
+  }
+
+  .section-heading h2 span {
+    color: #64748b;
+    font-size: 15px;
+  }
+
+  .clear-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: transparent;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  :global(.basket-product) {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) auto;
+    gap: 20px;
+    padding: 25px 0;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  :global(.basket-product-image) {
+    display: block;
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    border: 1px solid #eee;
+    border-radius: 9px;
+    background: #fafafa;
+  }
+
+  :global(.basket-product-title) {
+    display: block;
+    margin-bottom: 8px;
+    color: #172033;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+
+  :global(.basket-product-title:hover) {
+    color: #d7192d;
+  }
+
+  :global(.basket-sku) {
+    color: #94a3b8;
+    font-size: 12px;
+  }
+
+  :global(.basket-options) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 12px 0;
+  }
+
+  :global(.basket-option) {
+    padding: 6px 9px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+  }
+
+  :global(.basket-unit-price) {
+    margin: 12px 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  :global(.basket-quantity-controls) {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #dce2e9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  :global(.basket-quantity-controls button) {
+    width: 35px;
+    height: 35px;
+    border: 0;
+    background: #f8fafc;
+    font-size: 19px;
+    cursor: pointer;
+  }
+
+  :global(.basket-quantity-controls button:hover) {
+    background: #e2e8f0;
+  }
+
+  :global(.basket-quantity-controls button:disabled) {
+    opacity: .4;
+    cursor: not-allowed;
+  }
+
+  :global(.basket-quantity-controls span) {
+    min-width: 38px;
+    padding: 0 5px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  :global(.basket-product-right) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  :global(.basket-line-total) {
+    font-size: 17px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  :global(.basket-remove) {
+    padding: 5px;
+    border: 0;
+    background: transparent;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .continue-shopping {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .continue-shopping:hover {
+    color: #d7192d;
+  }
+
+  .order-summary h2 {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+  }
+
+  .summary-row,
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .summary-row span:first-child {
+    color: #64748b;
+  }
+
+  .summary-total {
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .summary-note {
+    margin: 0 0 23px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .website-checkout,
+  .whatsapp-checkout,
+  .primary-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    padding: 13px 15px;
+    border: 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .website-checkout,
+  .primary-link {
+    background: #d7192d;
+    color: #fff;
+  }
+
+  .website-checkout:hover,
+  .primary-link:hover {
+    background: #b91c2b;
+  }
+
+  .whatsapp-checkout {
+    margin-top: 12px;
+    background: #16a34a;
+    color: #fff;
+  }
+
+  .whatsapp-checkout:hover {
+    background: #15803d;
+  }
+
+  .checkout-notice {
+    padding: 13px;
+    margin-top: 15px;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .checkout-benefits {
+    padding-top: 20px;
+    margin-top: 25px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .checkout-benefits p {
+    margin: 10px 0;
+    color: #475569;
+    font-size: 12px;
+  }
+
+  .empty-basket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 75px 25px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    text-align: center;
+  }
+
+  .empty-basket > h2 {
+    font-size: 25px;
+  }
+
+  .empty-basket > p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .empty-basket .primary-link {
+    width: auto;
+    padding: 14px 28px;
+    margin-top: 15px;
+  }
+
+  .basket-loading {
+    padding: 35px;
+    text-align: center;
+    color: #64748b;
+  }
+
+  @media (max-width: 900px) {
+    .basket-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .checkout-page {
+      padding: 115px 15px 55px;
+    }
+
+    .basket-products,
+    .order-summary {
+      padding: 17px;
+    }
+
+    :global(.basket-product) {
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    :global(.basket-product-image) {
+      width: 78px;
+      height: 78px;
+    }
+
+    :global(.basket-product-right) {
+      grid-column: 2;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    :global(.basket-product-title) {
+      font-size: 14px;
+    }
+
+    :global(.basket-line-total) {
+      font-size: 15px;
+    }
+
+    .section-heading h2 {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<script>
+  import {
+    getBasket,
+    getBasketCount,
+    getBasketTotal,
+    updateBasketQuantity,
+    removeFromBasket,
+    clearBasket,
+    BASKET_CHANGED
+  } from '../../lib/basket';
+
+  type BasketEntry = ReturnType<typeof getBasket>[number];
+
+  const basketLoading = document.querySelector<HTMLElement>('#basketLoading');
+  const emptyBasket = document.querySelector<HTMLElement>('#emptyBasket');
+  const basketContent = document.querySelector<HTMLElement>('#basketContent');
+  const basketItems = document.querySelector<HTMLElement>('#basketItems');
+
+  const money = (amount: number, currency = 'LKR') => {
+    try {
+      return new Intl.NumberFormat('en-LK', {
+        style: 'currency',
+        currency,
+        maximumFractionDigits: 0
+      }).format(amount);
+    } catch {
+      return `LKR ${amount.toLocaleString('en-LK')}`;
+    }
+  };
+
+  function createElement<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className?: string,
+    text?: string
+  ): HTMLElementTagNameMap[K] {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function createBasketProduct(item: BasketEntry): HTMLElement {
+    const article = createElement('article', 'basket-product');
+
+    const imageLink = createElement('a');
+    imageLink.href = item.url || '/shop/';
+
+    const image = createElement('img', 'basket-product-image');
+    image.src = item.image || '/images/vahako-logo-fabrications-in-sri-lanka.webp';
+    image.alt = item.title;
+    image.loading = 'lazy';
+    image.width = 110;
+    image.height = 110;
+    imageLink.appendChild(image);
+
+    const details = createElement('div', 'basket-product-details');
+
+    const title = createElement('a', 'basket-product-title', item.title);
+    title.href = item.url || '/shop/';
+    details.appendChild(title);
+
+    if (item.sku) {
+      details.appendChild(createElement('div', 'basket-sku', `SKU: ${item.sku}`));
+    }
+
+    if (item.options && Object.keys(item.options).length > 0) {
+      const options = createElement('div', 'basket-options');
+
+      Object.entries(item.options).forEach(([name, value]) => {
+        options.appendChild(
+          createElement('span', 'basket-option', `${name}: ${value}`)
+        );
+      });
+
+      details.appendChild(options);
+    }
+
+    details.appendChild(
+      createElement('p', 'basket-unit-price', `Unit price: ${money(item.unitPrice, item.currency)}`)
+    );
+
+    const controls = createElement('div', 'basket-quantity-controls');
+
+    const minus = createElement('button', undefined, '−');
+    minus.type = 'button';
+    minus.setAttribute('aria-label', `Decrease quantity of ${item.title}`);
+    minus.disabled = item.quantity <= 1;
+    minus.addEventListener('click', () => {
+      updateBasketQuantity(item.key, item.quantity - 1);
+    });
+
+    const quantity = createElement('span', undefined, String(item.quantity));
+
+    const plus = createElement('button', undefined, '+');
+    plus.type = 'button';
+    plus.setAttribute('aria-label', `Increase quantity of ${item.title}`);
+    plus.disabled = item.quantity >= 999;
+    plus.addEventListener('click', () => {
+      updateBasketQuantity(item.key, item.quantity + 1);
+    });
+
+    controls.append(minus, quantity, plus);
+    details.appendChild(controls);
+
+    const right = createElement('div', 'basket-product-right');
+
+    right.appendChild(
+      createElement('strong', 'basket-line-total', money(item.unitPrice * item.quantity, item.currency))
+    );
+
+    const remove = createElement('button', 'basket-remove', 'Remove');
+    remove.type = 'button';
+    remove.setAttribute('aria-label', `Remove ${item.title} from basket`);
+    remove.addEventListener('click', () => {
+      removeFromBasket(item.key);
+    });
+
+    right.appendChild(remove);
+    article.append(imageLink, details, right);
+
+    return article;
+  }
+
+  function renderBasket() {
+    const basket = getBasket();
+
+    if (basketLoading) basketLoading.hidden = true;
+
+    if (emptyBasket) emptyBasket.hidden = basket.length > 0;
+    if (basketContent) basketContent.hidden = basket.length === 0;
+
+    if (!basketItems) return;
+
+    basketItems.replaceChildren();
+
+    basket.forEach((item) => {
+      basketItems.appendChild(createBasketProduct(item));
+    });
+
+    const count = getBasketCount();
+    const total = getBasketTotal();
+
+    const itemCount = document.querySelector<HTMLElement>('#itemCount');
+    const summaryQuantity = document.querySelector<HTMLElement>('#summaryQuantity');
+    const summarySubtotal = document.querySelector<HTMLElement>('#summarySubtotal');
+    const summaryTotal = document.querySelector<HTMLElement>('#summaryTotal');
+
+    if (itemCount) itemCount.textContent = `(${count})`;
+    if (summaryQuantity) summaryQuantity.textContent = String(count);
+    if (summarySubtotal) summarySubtotal.textContent = money(total);
+    if (summaryTotal) summaryTotal.textContent = money(total);
+  }
+
+  document.querySelector<HTMLButtonElement>('#clearBasketButton')
+    ?.addEventListener('click', () => {
+      if (confirm('Remove all products from your basket?')) {
+        clearBasket();
+      }
+    });
+
+  document.querySelector<HTMLButtonElement>('#whatsappCheckout')
+    ?.addEventListener('click', () => {
+      const basket = getBasket();
+      if (!basket.length) return;
+
+      const lines = [
+        'Hello Vahako, I would like to place an order for the following products:',
+        ''
+      ];
+
+      basket.forEach((item, index) => {
+        lines.push(`${index + 1}. ${item.title}`);
+        if (item.sku) lines.push(`SKU: ${item.sku}`);
+
+        Object.entries(item.options || {}).forEach(([name, value]) => {
+          lines.push(`${name}: ${value}`);
+        });
+
+        lines.push(`Quantity: ${item.quantity}`);
+        lines.push(`Unit Price: ${money(item.unitPrice, item.currency)}`);
+        lines.push(`Line Total: ${money(item.unitPrice * item.quantity, item.currency)}`);
+        lines.push('');
+      });
+
+      lines.push(`PRODUCT TOTAL: ${money(getBasketTotal())}`);
+      lines.push('Delivery charges and final availability to be confirmed.');
+      lines.push('');
+      lines.push('Please confirm my order and provide payment/delivery details.');
+
+      const message = lines.join('\n');
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(message)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+    });
+
+  document.querySelector<HTMLButtonElement>('#websiteCheckout')
+  ?.addEventListener('click', () => {
+    if (getBasket().length === 0) return;
+    window.location.href = '/checkout/details/';
+  });
+
+  window.addEventListener(BASKET_CHANGED, renderBasket);
+  window.addEventListener('storage', renderBasket);
+
+  renderBasket();
+</script>

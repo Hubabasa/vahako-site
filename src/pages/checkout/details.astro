@@ -1,0 +1,293 @@
+
+---
+import Header from '../../components/Header.astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout Details | Vahako</title>
+  <meta name="robots" content="noindex,follow" />
+</head>
+<body>
+  <Header />
+
+  <main class="checkout-details">
+    <a href="/checkout/" class="back-link">← Back to Basket</a>
+
+    <h1>Checkout Details</h1>
+    <p class="intro">Complete your details to continue with your order.</p>
+
+    <div class="checkout-grid">
+      <section class="customer-card">
+        <h2>Customer Information</h2>
+        <p id="accountStatus" class="account-status">
+          You can continue as a guest.
+        </p>
+
+        <form id="customerForm">
+          <div class="field">
+            <label for="customerName">Full Name *</label>
+            <input id="customerName" name="name" required autocomplete="name" maxlength="120" />
+          </div>
+
+          <div class="field">
+            <label for="customerEmail">Email Address *</label>
+            <input id="customerEmail" name="email" type="email" required autocomplete="email" maxlength="254" />
+          </div>
+
+          <div class="field">
+            <label for="customerPhone">Mobile Number *</label>
+            <input id="customerPhone" name="phone" type="tel" required autocomplete="tel" maxlength="20" placeholder="07XXXXXXXX" />
+          </div>
+
+          <div class="field">
+            <label for="customerAddress">Delivery Address *</label>
+            <textarea id="customerAddress" name="address" rows="3" required maxlength="500" autocomplete="street-address"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="customerCity">City / Town *</label>
+            <input id="customerCity" name="city" required maxlength="100" autocomplete="address-level2" />
+          </div>
+
+          <div class="field">
+            <label for="customerNotes">Order Notes (Optional)</label>
+            <textarea id="customerNotes" name="notes" rows="3" maxlength="1000" placeholder="Delivery instructions or special requirements"></textarea>
+          </div>
+
+          <button type="submit" class="continue-button">
+            Continue to Review Order →
+          </button>
+        </form>
+      </section>
+
+      <aside class="summary-card">
+        <h2>Your Order</h2>
+        <p><span>Items</span><strong id="orderCount">0</strong></p>
+        <p><span>Product Total</span><strong id="orderTotal">LKR 0</strong></p>
+        <p class="delivery-note">Delivery charges will be confirmed before payment.</p>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    color: #172033;
+  }
+
+  .checkout-details,
+  .checkout-details * {
+    box-sizing: border-box;
+  }
+
+  .checkout-details {
+    max-width: 1120px;
+    margin: auto;
+    padding: 130px 24px 80px;
+    min-height: 80vh;
+  }
+
+  .back-link {
+    color: #64748b;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  h1 {
+    margin: 25px 0 8px;
+    font-size: clamp(28px, 4vw, 40px);
+  }
+
+  .intro {
+    color: #64748b;
+    margin-bottom: 30px;
+  }
+
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 25px;
+    align-items: start;
+  }
+
+  .customer-card,
+  .summary-card {
+    padding: 28px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin: 0 0 22px;
+  }
+
+  .account-status {
+    padding: 12px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 19px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .field input,
+  .field textarea {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    background: white;
+    color: #172033;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: 2px solid #d7192d;
+    outline-offset: 1px;
+  }
+
+  .continue-button {
+    width: 100%;
+    padding: 16px;
+    background: #c51e2b;
+    color: white;
+    border: 0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .continue-button:hover {
+    background: #a51823;
+  }
+
+  .summary-card > p:not(.delivery-note) {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+  }
+
+  .delivery-note {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 800px) {
+    .checkout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .checkout-details {
+      padding: 115px 15px 50px;
+    }
+
+    .customer-card,
+    .summary-card {
+      padding: 19px;
+    }
+  }
+</style>
+
+<script>
+  import { getBasket, getBasketCount, getBasketTotal } from '../../lib/basket';
+  import { auth } from '../../lib/firebase';
+  import { onAuthStateChanged } from 'firebase/auth';
+
+  const basket = getBasket();
+
+  if (basket.length === 0) {
+    window.location.replace('/checkout/');
+  }
+
+  const formatter = new Intl.NumberFormat('en-LK', {
+    style: 'currency',
+    currency: 'LKR',
+    maximumFractionDigits: 0
+  });
+
+  const count = document.querySelector<HTMLElement>('#orderCount');
+  const total = document.querySelector<HTMLElement>('#orderTotal');
+
+  if (count) count.textContent = String(getBasketCount());
+  if (total) total.textContent = formatter.format(getBasketTotal());
+
+  onAuthStateChanged(auth, (user) => {
+    const status = document.querySelector<HTMLElement>('#accountStatus');
+    const name = document.querySelector<HTMLInputElement>('#customerName');
+    const email = document.querySelector<HTMLInputElement>('#customerEmail');
+
+    if (user) {
+      if (status) status.textContent = 'Signed in. Your account details have been prefilled where available.';
+      if (name && !name.value) name.value = user.displayName || '';
+      if (email && !email.value) email.value = user.email || '';
+    } else {
+      if (status) status.textContent = 'Guest checkout — no account required.';
+    }
+  });
+
+  document.querySelector<HTMLFormElement>('#customerForm')
+    ?.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      if (getBasket().length === 0) {
+        window.location.href = '/checkout/';
+        return;
+      }
+
+      const name = document.querySelector<HTMLInputElement>('#customerName')?.value.trim() || '';
+      const email = document.querySelector<HTMLInputElement>('#customerEmail')?.value.trim() || '';
+      const phone = document.querySelector<HTMLInputElement>('#customerPhone')?.value.trim() || '';
+      const address = document.querySelector<HTMLTextAreaElement>('#customerAddress')?.value.trim() || '';
+      const city = document.querySelector<HTMLInputElement>('#customerCity')?.value.trim() || '';
+      const notes = document.querySelector<HTMLTextAreaElement>('#customerNotes')?.value.trim() || '';
+
+      if (!name || !email || !phone || !address || !city) return;
+
+      const customerDetails = {
+        name,
+        email,
+        phone,
+        address,
+        city,
+        notes
+      };
+
+      sessionStorage.setItem(
+        'vahako-checkout-details',
+        JSON.stringify(customerDetails)
+      );
+
+      window.location.href = '/checkout/review/';
+    });
+</script>

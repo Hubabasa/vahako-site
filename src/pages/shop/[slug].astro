@@ -1,0 +1,586 @@
+---
+import { getCollection, render } from 'astro:content';
+import Header from '../../components/Header.astro';
+import FloatingContact from '../../components/FloatingContact.astro';
+import { ShoppingCart, MessageCircle } from 'lucide-astro';
+
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  return products.map((product) => ({ params: { slug: product.id }, props: { product } }));
+}
+
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const data = product.data;
+
+const categorySlug = (name: string) => {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .replace(/-in-sri-lanka$/, '') + '-in-sri-lanka';
+};
+
+const productCategories = [
+  ...new Map(
+    (data.categories ?? []).map((name: string) => [
+      categorySlug(name),
+      name.trim()
+    ])
+  ).entries()
+].map(([slug, name]) => ({
+  name,
+  url: `/category/${slug}/`
+}));
+
+
+const { title, description, price, salePrice, currency, primaryCategory: category, image, images, sku, availability, taglines, seoTitle, seoDescription, options, specifications, videos, relatedProducts, priceOnRequest } = data;
+const productUrl = `https://vahako.com/shop/${product.id}/`;
+const galleryImages = [...new Set([image, ...images].filter(Boolean))];
+const hasSale = salePrice !== undefined && !priceOnRequest;
+const money = (amount: number) => new Intl.NumberFormat('en-LK', { style: 'currency', currency, maximumFractionDigits: 0 }).format(amount);
+const availabilityLabel = { 'in-stock': 'In Stock', 'out-of-stock': 'Out of Stock', 'made-to-order': 'Made to Order' }[availability];
+const products = await getCollection('products');
+const manualRelated = relatedProducts.map((id) => products.find((p) => p.id === id)).filter((p): p is (typeof products)[number] => Boolean(p) && p.id !== product.id);
+const automaticRelated = products.filter((p) => p.id !== product.id && p.data.primaryCategory === category && !manualRelated.some((m) => m.id === p.id));
+const related = [...manualRelated, ...automaticRelated].slice(0, 12);
+const productSchema = {
+  '@context': 'https://schema.org', '@type': 'Product', name: title, description,
+  image: galleryImages.map((src) => new URL(src, 'https://vahako.com').href), sku,
+  brand: { '@type': 'Brand', name: 'Vahako' },
+  ...(!priceOnRequest ? { offers: { '@type': 'Offer', url: productUrl, priceCurrency: currency, price: salePrice ?? price,
+    availability: availability === 'in-stock' ? 'https://schema.org/InStock' : availability === 'out-of-stock' ? 'https://schema.org/OutOfStock' : 'https://schema.org/PreOrder' } } : {}),
+};
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{seoTitle ?? `${title} | Vahako`}</title>
+  <meta name="description" content={seoDescription ?? description} />
+  <link rel="canonical" href={productUrl} />
+  <meta property="og:type" content="product" />
+  <meta property="og:title" content={seoTitle ?? title} />
+  <meta property="og:description" content={seoDescription ?? description} />
+  <meta property="og:url" content={productUrl} />
+  <meta property="og:image" content={new URL(image, 'https://vahako.com').href} />
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+</head>
+<body>
+  <Header />
+  <main class="product-page">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span>/</span><a href="/shop/">Shop</a><span>/</span><span aria-current="page">{title}</span>
+    </nav>
+    <section class="product-layout" aria-label="Product information">
+      <div class="product-gallery">
+        <div class="main-image"><img id="mainProductImage" src={image} alt={title} width="800" height="800" fetchpriority="high" decoding="async" /></div>
+        {galleryImages.length > 1 && <div class="gallery-thumbnails" aria-label="Product images">
+          {galleryImages.map((src, i) => <button type="button" class:list={['thumbnail', { selected: i === 0 }]} data-image={src} aria-label={`View image ${i + 1}`} aria-pressed={i === 0}>
+            <img src={src} alt={`${title}, view ${i + 1}`} width="90" height="90" loading="lazy" />
+          </button>)}
+        </div>}
+      </div>
+      <div class="product-information">
+        <p class="product-category">{category}</p>
+        <h1>{title}</h1>
+        <div class="product-pricing" aria-live="polite" aria-atomic="true">
+  {priceOnRequest ? <span class="current-price">Price on Request</span> : <>
+    {hasSale && <span class="regular-price" id="mainRegularPrice">{money(price)}</span>}
+    <span class="current-price" id="mainCurrentPrice">{money(salePrice ?? price)}</span>
+  </>}
+</div>
+
+<!-- PRODUCT CATEGORIES -->
+{productCategories.length > 0 && (
+  <div class="product-categories">
+    <span class="categories-label">Categories</span>
+
+    <div class="category-links">
+      {productCategories.map((item, index) => (
+        <a
+          href={item.url}
+          class:list={['category-link', { 'extra-category': index >= 3 }]}
+        >
+          {item.name}
+        </a>
+      ))}
+
+      {productCategories.length > 3 && (
+        <button
+          type="button"
+          id="toggleCategories"
+          class="categories-toggle"
+          aria-expanded="false"
+        >
+          + {productCategories.length - 3} More
+        </button>
+      )}
+    </div>
+  </div>
+)}
+
+{taglines.length > 0 && <div class="product-taglines">{taglines.map((tag) => <span class="tagline">{tag}</span>)}</div>}
+
+        <p class="product-description">{description}</p>
+        <p class="availability"><span class:list={['availability-dot', { unavailable: availability === 'out-of-stock' }]}></span>{availabilityLabel}</p>
+
+        {options.length > 0 && <section class="product-configurator" id="product-configurator" data-price={price} data-sale-price={salePrice ?? ''} data-currency={currency}>
+          <h2>Customize Your Product</h2>
+          <p>Choose your preferred options. Prices update instantly.</p>
+          {options.map((option) => <div class="config-option">
+            <label for={`config-${option.name}`}>{option.label}</label>
+            <select id={`config-${option.name}`} class="config-select" data-option-name={option.name}>
+              {option.choices.map((choice) => <option value={choice.value} data-adjustment={choice.priceAdjustment} data-sale-adjustment={choice.saleAdjustment ?? choice.priceAdjustment}>{choice.label}</option>)}
+            </select>
+          </div>)}
+          {!priceOnRequest && <div class="configured-price" aria-live="polite" aria-atomic="true">
+            <span>Configured price</span><div>
+              {hasSale && <span id="configuredRegularPrice"></span>}
+              <strong id="configuredFinalPrice"></strong>
+            </div>
+          </div>}
+        </section>}
+
+        <div class="quantity-control"><label for="quantity">Quantity</label><input id="quantity" type="number" min="1" max="999" step="1" value="1" inputmode="numeric" /></div>
+        <div class="product-actions">
+  <button
+    type="button"
+    class="add-to-basket"
+    id="addToBasket"
+    disabled={availability === 'out-of-stock' || priceOnRequest}
+  >
+    <ShoppingCart size={19} strokeWidth={2.2} aria-hidden="true" />
+    <span>Add to Basket</span>
+  </button>
+
+  <a
+    class="whatsapp-button"
+    id="whatsappInquiry"
+    href={`https://wa.me/?text=${encodeURIComponent(
+      `Hello Vahako, I am interested in ${title}. ${productUrl}`
+    )}`}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <MessageCircle size={19} strokeWidth={2.2} aria-hidden="true" />
+    <span>Inquire on WhatsApp</span>
+  </a>
+</div>
+
+        <p class="product-sku">SKU: {sku}</p>
+        <p class="basket-note" id="basketNote" role="status" hidden>Basket functionality will be connected in the next stage.</p>
+      </div>
+    </section>
+
+    <section class="product-details" aria-label="Product details and videos">
+      <div class="product-tabs" role="tablist" aria-label="Product information">
+        <button type="button" class="product-tab active" id="details-tab" role="tab" aria-selected="true" aria-controls="details-panel" tabindex="0">Product Details &amp; Specifications</button>
+        {videos.length > 0 && <button type="button" class="product-tab" id="videos-tab" role="tab" aria-selected="false" aria-controls="videos-panel" tabindex="-1">Videos ({videos.length})</button>}
+      </div>
+      <div id="details-panel" class="tab-panel" role="tabpanel" aria-labelledby="details-tab" tabindex="0">
+        <div class="product-content"><Content /></div>
+        {specifications.length > 0 && <table class="specifications-table"><tbody>{specifications.map((spec) => <tr><th scope="row">{spec.label}</th><td>{spec.value}</td></tr>)}</tbody></table>}
+      </div>
+      {videos.length > 0 && <div id="videos-panel" class="tab-panel" role="tabpanel" aria-labelledby="videos-tab" tabindex="0" hidden>
+        <div class="product-videos">{videos.map((video) => <article class="video-card">
+          <div class="video-frame"><button type="button" class="video-play" data-youtube-id={video.youtubeId} aria-label={`Play ${video.title}`}>
+            <img src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`} alt="" width="480" height="360" loading="lazy" decoding="async" />
+            <span class="play-symbol" aria-hidden="true">▶</span>
+          </button></div>
+          <h3>{video.title}</h3><p>{video.description}</p>
+        </article>)}</div>
+      </div>}
+    </section>
+
+    {related.length > 0 && <section class="related-products" aria-labelledby="related-heading">
+      <div class="related-heading"><h2 id="related-heading">Related Products</h2><div class="carousel-controls"><button type="button" class="carousel-prev" aria-label="Scroll related products left">←</button><button type="button" class="carousel-next" aria-label="Scroll related products right">→</button></div></div>
+      <div class="related-track">{related.map((item) => <a class="related-card" href={`/shop/${item.id}/`}>
+        <img src={item.data.image} alt={item.data.title} width="320" height="320" loading="lazy" decoding="async" />
+        <span class="related-card-title">{item.data.title}</span>
+        <span class="related-card-price">{item.data.priceOnRequest ? 'Request Price' : money(item.data.salePrice ?? item.data.price)}</span>
+      </a>)}</div>
+    </section>}
+  </main>
+
+  <FloatingContact
+  pageName={title}
+  whatsappMessage={`Hello Vahako, I am interested in ${title} (SKU: ${sku}). Please provide more information. Product: ${productUrl}`}
+  quotePage={title}
+/>
+
+  <script define:vars={{
+  id: product.id,
+  title,
+  productUrl,
+  sku,
+  image,
+  currency,
+  price,
+  salePrice,
+  priceOnRequest
+}} is:inline>
+
+    // No sensitive pricing or customer data is trusted from this client-side script.
+    window.vahakoProduct = {
+  id,
+  title,
+  productUrl,
+  sku,
+  image,
+  currency,
+  price,
+  salePrice,
+  priceOnRequest
+};
+
+  </script>
+</body>
+</html>
+
+<style>
+  :global(html) {
+  width: 100%;
+  overflow-x: clip;
+}
+
+:global(body) {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+  font-family: Arial, sans-serif;
+  color: #171717;
+  background: #fff;
+}
+
+/* Apply sizing only to the product section */
+.product-page,
+.product-page * {
+  box-sizing: border-box;
+}
+  .product-page {
+  width: 100%;
+  max-width: 1240px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 120px 24px 80px;
+}
+
+  .breadcrumbs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:35px;font-size:13px;color:#777}
+  .breadcrumbs a{color:inherit;text-decoration:none}.breadcrumbs a:hover{color:#c51e2b}
+.product-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 60px;
+  align-items: start;
+  min-width: 0;
+}
+
+.product-gallery,
+.product-information {
+  min-width: 0;
+}
+  .main-image{background:#f7f7f7;border:1px solid #eee;border-radius:12px;overflow:hidden;aspect-ratio:1}
+  .main-image img{display:block;width:100%;height:100%;object-fit:contain}
+  .gallery-thumbnails{display:flex;gap:12px;margin-top:15px;overflow-x:auto;padding-bottom:5px}
+  .thumbnail{width:80px;height:80px;flex-shrink:0;padding:5px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer}
+  .thumbnail.selected{border:2px solid #c51e2b}.thumbnail img{width:100%;height:100%;object-fit:contain}
+  .product-category{margin:0 0 12px;color:#c51e2b;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+  .product-information h1{margin:0 0 22px;font-size:clamp(30px,3vw,44px);line-height:1.15;letter-spacing:-.03em}
+  .product-pricing{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:22px}
+  .regular-price{color:#888;text-decoration:line-through;font-size:20px}.current-price{font-size:32px;font-weight:800}
+  .product-taglines{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  .tagline{padding:7px 11px;background:#f5f5f5;border-radius:6px;font-size:12px;font-weight:600}
+  .product-description{color:#555;font-size:16px;line-height:1.7}
+  .availability{display:flex;align-items:center;gap:8px;margin:22px 0;font-size:13px;font-weight:600}
+  .availability-dot{width:8px;height:8px;background:#1a9b55;border-radius:50%}.availability-dot.unavailable{background:#c51e2b}
+  .product-configurator{margin:28px 0;padding:22px;border:1px solid #e8e8e8;border-radius:12px;background:#fafafa}
+  .product-configurator h2{margin:0 0 8px;font-size:20px}.product-configurator>p{margin:0 0 22px;color:#666;font-size:13px;line-height:1.6}
+  .config-option{margin-bottom:20px}.config-option label{display:block;margin-bottom:9px;font-size:13px;font-weight:700}
+  .config-select{width:100%;padding:13px;border:1px solid #ddd;border-radius:7px;background:#fff;color:#222;font-size:14px}
+  .config-select:focus-visible,.product-tab:focus-visible,.video-play:focus-visible,.thumbnail:focus-visible{outline:2px solid #c51e2b;outline-offset:2px}
+  .configured-price{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-top:18px;border-top:1px solid #ddd}
+  .configured-price>span{font-size:13px;font-weight:700}.configured-price>div{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  #configuredRegularPrice{color:#888;text-decoration:line-through;font-size:14px}#configuredFinalPrice{font-size:24px;font-weight:800}
+  .quantity-control{display:flex;align-items:center;gap:15px;margin:24px 0}.quantity-control input{width:80px;padding:11px;border:1px solid #ddd;border-radius:7px}
+  .product-actions{display:grid;gap:12px}.add-to-basket,.whatsapp-button{display:flex;align-items:center;justify-content:center;min-height:54px;padding:14px;border-radius:8px;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}
+  .add-to-basket{background:#c51e2b;color:#fff;border:0}.whatsapp-button{background:#fff;color:#171717;border:1px solid #ddd}
+  .add-to-basket:hover{background:#a51823}.whatsapp-button:hover{background:#f5f5f5}.add-to-basket:disabled{opacity:.5;cursor:not-allowed}
+  .product-sku{margin-top:20px;font-size:12px;color:#888}.basket-note{color:#555;font-size:13px}
+  .product-details{margin-top:85px;border-top:1px solid #eee;padding-top:28px}
+  .product-tabs{display:flex;gap:25px;overflow-x:auto;border-bottom:1px solid #e5e5e5;margin-bottom:30px}
+  .product-tab{padding:15px 0;border:0;border-bottom:3px solid transparent;background:none;font-size:15px;font-weight:700;white-space:nowrap;cursor:pointer;color:#777}
+  .product-tab.active{color:#c51e2b;border-bottom-color:#c51e2b}.tab-panel[hidden]{display:none}
+  .product-content{color:#444;line-height:1.8}.product-content :global(h2){font-size:23px;line-height:1.3;margin:28px 0 12px;color:#171717}.product-content :global(h3){font-size:18px;margin:22px 0 10px;color:#171717}
+  .product-content :global(p),.product-content :global(li){font-size:15px}.product-content :global(ul){padding-left:23px}
+  .specifications-table{width:100%;border-collapse:collapse;margin-top:30px;font-size:14px}
+  .specifications-table th,.specifications-table td{padding:15px;border-bottom:1px solid #eee;text-align:left}.specifications-table th{width:35%;background:#fafafa}
+  .product-videos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:25px}.video-card{min-width:0}
+  .video-frame{aspect-ratio:16/9;overflow:hidden;border-radius:10px;background:#111}.video-play{position:relative;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#111}
+  .video-play img{display:block;width:100%;height:100%;object-fit:cover}.play-symbol{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:65px;height:46px;border-radius:12px;background:#e30613;color:#fff;font-size:23px}
+  .video-card h3{margin:14px 0 8px;font-size:17px}.video-card p{margin:0;color:#666;font-size:14px;line-height:1.6}
+  .related-products{margin-top:70px;padding-top:30px;border-top:1px solid #eee}.related-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.related-heading h2{margin:0;font-size:25px}
+  .carousel-controls{display:flex;gap:8px}.carousel-controls button{width:38px;height:38px;border:1px solid #ddd;border-radius:50%;background:#fff;cursor:pointer;font-size:19px}
+  .related-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:12px;scrollbar-width:thin}
+  .related-card{flex:0 0 calc((100% - 48px)/4);min-width:0;scroll-snap-align:start;text-decoration:none;color:inherit;border:1px solid #eee;border-radius:10px;overflow:hidden;padding-bottom:14px}
+  .related-card img{display:block;width:100%;aspect-ratio:1;object-fit:contain;background:#f7f7f7}
+  .related-card-title,.related-card-price{display:block;padding:0 12px}.related-card-title{margin-top:12px;font-size:14px;font-weight:700;line-height:1.4}.related-card-price{margin-top:8px;font-size:14px;font-weight:800}
+  @media(max-width:900px){.product-layout{gap:30px}.related-card{flex-basis:calc((100% - 32px)/3)}}
+  @media(max-width:800px){.product-page{padding:100px 16px 50px}.product-layout{grid-template-columns:1fr;gap:30px}.product-information h1{font-size:30px}.current-price{font-size:27px}.product-details{margin-top:55px}}
+  @media(max-width:650px){.product-videos{grid-template-columns:1fr}.product-tab{font-size:13px}.related-card{flex-basis:calc((100% - 16px)/2)}}
+  @media(max-width:400px){.product-configurator{padding:17px}#configuredFinalPrice{font-size:21px}.related-card{flex-basis:80%}}
+
+.add-to-basket,
+.whatsapp-button {
+  gap: 10px;
+}
+
+.add-to-basket svg,
+.whatsapp-button svg {
+  flex-shrink: 0;
+}
+
+/* Product category links */
+.product-categories {
+  margin: 0 0 24px;
+}
+
+.categories-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.category-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.category-link:hover {
+  background: #fff1f2;
+  border-color: #e30613;
+  color: #e30613;
+}
+
+.extra-category {
+  display: none;
+}
+
+.product-categories.expanded .extra-category {
+  display: inline-flex;
+}
+
+.categories-toggle {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #e30613;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+</style>
+
+<script>
+import { addToBasket } from '../../lib/basket';
+
+  document.querySelectorAll<HTMLButtonElement>('.thumbnail').forEach((button) => {
+    button.addEventListener('click', () => {
+      const mainImage = document.querySelector<HTMLImageElement>('#mainProductImage');
+      const next = button.dataset.image;
+      if (mainImage && next) { mainImage.src = next; mainImage.alt = button.querySelector('img')?.alt || mainImage.alt; }
+      document.querySelectorAll('.thumbnail').forEach((thumb) => { thumb.classList.toggle('selected', thumb === button); thumb.setAttribute('aria-pressed', String(thumb === button)); });
+    });
+  });
+
+  const configurator = document.querySelector<HTMLElement>('#product-configurator');
+  const inquiry = document.querySelector<HTMLAnchorElement>('#whatsappInquiry');
+  const productInfo = (window as Window & { vahakoProduct?: { title: string; productUrl: string; sku: string } }).vahakoProduct;
+  const quantityInput = document.querySelector<HTMLInputElement>('#quantity');
+  if (configurator) {
+    const basePrice = Number(configurator.dataset.price || 0);
+    const rawSale = configurator.dataset.salePrice;
+    const hasSale = rawSale !== undefined && rawSale !== '';
+    const saleBase = hasSale ? Number(rawSale) : basePrice;
+    const formatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: configurator.dataset.currency || 'LKR', maximumFractionDigits: 0 });
+    const selects = [...configurator.querySelectorAll<HTMLSelectElement>('.config-select')];
+    const update = () => {
+      let regular = basePrice;
+      let final = saleBase;
+      const choices: string[] = [];
+      selects.forEach((select) => {
+        const option = select.selectedOptions[0];
+        if (!option) return;
+        regular += Number(option.dataset.adjustment ?? 0);
+        final += Number(option.dataset.saleAdjustment ?? option.dataset.adjustment ?? 0);
+        choices.push(`${select.dataset.optionName}: ${option.textContent?.trim() ?? option.value}`);
+      });
+      const mainRegular = document.querySelector<HTMLElement>('#mainRegularPrice');
+      const mainFinal = document.querySelector<HTMLElement>('#mainCurrentPrice');
+      const configuredRegular = document.querySelector<HTMLElement>('#configuredRegularPrice');
+      const configuredFinal = document.querySelector<HTMLElement>('#configuredFinalPrice');
+      if (mainRegular) mainRegular.textContent = formatter.format(regular);
+      if (mainFinal) mainFinal.textContent = formatter.format(final);
+      if (configuredRegular) configuredRegular.textContent = formatter.format(regular);
+      if (configuredFinal) configuredFinal.textContent = formatter.format(final);
+      configurator.dataset.configuredPrice = String(final);
+      if (inquiry && productInfo) {
+        const message = `Hello Vahako, I am interested in ${productInfo.title}.\n${choices.join('\n')}\nQuantity: ${Math.max(1, Number(quantityInput?.value) || 1)}\nDisplayed unit price: ${formatter.format(final)} (subject to confirmation)\n${productInfo.productUrl}`;
+        inquiry.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      }
+    };
+    selects.forEach((select) => select.addEventListener('change', update));
+    quantityInput?.addEventListener('change', update);
+    update();
+  }
+
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.product-tab')];
+  const panels = [...document.querySelectorAll<HTMLElement>('.tab-panel')];
+  const activateTab = (active: HTMLButtonElement) => {
+    tabs.forEach((tab) => { const selected = tab === active; tab.classList.toggle('active', selected); tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1; });
+    panels.forEach((panel) => { panel.hidden = panel.id !== active.getAttribute('aria-controls'); });
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateTab(tab));
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return;
+      event.preventDefault();
+      const nextIndex = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      const next = tabs[nextIndex];
+      if (next) { activateTab(next); next.focus(); }
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.video-play').forEach((button) => {
+    button.addEventListener('click', () => {
+      const id = button.dataset.youtubeId;
+      if (!id || !/^[a-zA-Z0-9_-]{11}$/.test(id)) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+      iframe.title = button.getAttribute('aria-label') || 'Product video';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      iframe.style.cssText = 'width:100%;height:100%;border:0;';
+      button.replaceWith(iframe);
+    });
+  });
+
+  const track = document.querySelector<HTMLElement>('.related-track');
+  document.querySelector<HTMLButtonElement>('.carousel-prev')?.addEventListener('click', () => track?.scrollBy({ left: -(track.clientWidth * .8), behavior: 'smooth' }));
+  document.querySelector<HTMLButtonElement>('.carousel-next')?.addEventListener('click', () => track?.scrollBy({ left: track.clientWidth * .8, behavior: 'smooth' }));
+  
+document.querySelector<HTMLButtonElement>('#addToBasket')
+  ?.addEventListener('click', () => {
+    const product = (window as Window & {
+      vahakoProduct?: {
+        id: string;
+        title: string;
+        productUrl: string;
+        sku: string;
+        image: string;
+        currency: string;
+        price: number;
+        salePrice?: number;
+        priceOnRequest: boolean;
+      };
+    }).vahakoProduct;
+
+    const note = document.querySelector<HTMLElement>('#basketNote');
+    const quantityInput =
+      document.querySelector<HTMLInputElement>('#quantity');
+
+    if (!product || product.priceOnRequest) return;
+
+    const quantity = Number(quantityInput?.value);
+
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 999) {
+      if (note) {
+        note.hidden = false;
+        note.textContent = 'Please enter a quantity between 1 and 999.';
+      }
+      return;
+    }
+
+    const configurator =
+      document.querySelector<HTMLElement>('#product-configurator');
+
+    const options: Record<string, string> = {};
+
+    configurator?.querySelectorAll<HTMLSelectElement>('.config-select')
+      .forEach((select) => {
+        const name = select.dataset.optionName;
+        if (name) {
+          options[name] =
+            select.selectedOptions[0]?.textContent?.trim() || select.value;
+        }
+      });
+
+    const unitPrice = configurator
+      ? Number(configurator.dataset.configuredPrice)
+      : Number(product.salePrice ?? product.price);
+
+    const success = addToBasket({
+      id: product.id,
+      title: product.title,
+      sku: product.sku,
+      image: product.image,
+      url: product.productUrl,
+      currency: product.currency,
+      unitPrice,
+      quantity,
+      options
+    });
+
+    if (note) {
+      note.hidden = false;
+      note.textContent = success
+        ? 'Product added to your basket successfully!'
+        : 'Unable to save your basket. Please try again.';
+    }
+  });
+
+  const toggleCategories = document.querySelector<HTMLButtonElement>('#toggleCategories');
+
+toggleCategories?.addEventListener('click', () => {
+  const container = toggleCategories.closest('.product-categories');
+
+  if (!container) return;
+
+  const expanded = container.classList.toggle('expanded');
+
+  toggleCategories.setAttribute('aria-expanded', String(expanded));
+
+  const hiddenCount = container.querySelectorAll('.extra-category').length;
+
+  toggleCategories.textContent = expanded
+    ? 'Show Less'
+    : `+ ${hiddenCount} More`;
+});
+
+</script>

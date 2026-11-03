@@ -1,6 +1,15 @@
 ---
 import SearchBar from "./SearchBar.astro";
 
+import {
+  UserRound,
+  ShoppingBasket,
+  LogIn,
+  UserPlus,
+  LogOut,
+  ChevronDown
+} from 'lucide-astro';
+
 const currentQuery = Astro.url.searchParams.get("q") || "";
 ---
 
@@ -21,6 +30,67 @@ const currentQuery = Astro.url.searchParams.get("q") || "";
     <div class="desktop-search">
       <SearchBar currentQuery={currentQuery} />
     </div>
+
+    <div class="header-actions">
+
+  <!-- Account -->
+  <div class="account-menu">
+    <button
+      type="button"
+      class="header-icon-button account-toggle"
+      aria-label="Account options"
+      aria-expanded="false"
+      aria-controls="account-dropdown"
+    >
+      <UserRound size={23} strokeWidth={1.9} />
+    </button>
+
+    <div id="account-dropdown" class="account-dropdown">
+      <div class="account-dropdown-heading">
+        <UserRound size={20} />
+        <strong id="account-dropdown-title">Welcome to Vahako</strong>
+      </div>
+
+      <a href="/my-account/" data-auth="signed-in">
+        <UserRound size={17} />
+        My Account
+      </a>
+
+      <a href="/my-account/?action=signin" data-auth="signed-out">
+        <LogIn size={17} />
+        Sign In
+      </a>
+
+      <a href="/my-account/?action=signup" data-auth="signed-out">
+        <UserPlus size={17} />
+        Create Account
+      </a>
+
+      <button
+  type="button"
+  id="header-signout"
+  class="account-signout"
+  hidden
+>
+  <LogOut size={17} />
+  Sign Out
+</button>
+    </div>
+  </div>
+
+  <!-- Shopping Basket -->
+  <a
+    href="/checkout/"
+    class="header-icon-button basket-button is-empty"
+    aria-label="Shopping basket, 0 items"
+    title="Shopping Basket"
+  >
+    <ShoppingBasket size={23} strokeWidth={1.9} />
+
+    <span class="basket-count" hidden>0</span>
+  </a>
+
+</div>
 
     <button
       class="menu-toggle"
@@ -125,6 +195,27 @@ const currentQuery = Astro.url.searchParams.get("q") || "";
         </div>
       </div>
 
+      <div class="nav-item has-submenu">
+  <button
+    class="submenu-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="shop-submenu"
+  >
+    <span>Shop Online</span>
+
+    <span class="submenu-arrow" aria-hidden="true">
+      ▼
+    </span>
+  </button>
+
+  <div id="shop-submenu" class="submenu">
+    <a href="/shop/">Shop</a>
+    <a href="/my-account/">My Account</a>
+    <a href="/checkout/">Basket</a>
+  </div>
+</div>
+
       <a class="main-nav-link" href="/contact">
         Contact
       </a>
@@ -142,6 +233,10 @@ const currentQuery = Astro.url.searchParams.get("q") || "";
 ></div>
 
 <script>
+
+import { getBasketCount, BASKET_CHANGED } from '../lib/basket';
+
+
   const menuButton = document.querySelector(".menu-toggle");
   const menuCloseButton = document.querySelector(".mobile-menu-close");
   const menuBackdrop = document.querySelector(".menu-backdrop");
@@ -279,6 +374,140 @@ const currentQuery = Astro.url.searchParams.get("q") || "";
       closeMobileMenu();
     }
   });
+
+
+  const accountToggle =
+  document.querySelector<HTMLButtonElement>('.account-toggle');
+
+const accountDropdown =
+  document.querySelector<HTMLElement>('.account-dropdown');
+
+function closeAccountMenu() {
+  accountDropdown?.classList.remove('is-open');
+  accountToggle?.setAttribute('aria-expanded', 'false');
+}
+
+accountToggle?.addEventListener('click', (event) => {
+  event.stopPropagation();
+
+  const willOpen = !accountDropdown?.classList.contains('is-open');
+
+  accountDropdown?.classList.toggle('is-open', willOpen);
+  accountToggle.setAttribute('aria-expanded', String(willOpen));
+});
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+
+  if (
+    target instanceof Node &&
+    !accountDropdown?.contains(target) &&
+    !accountToggle?.contains(target)
+  ) {
+    closeAccountMenu();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeAccountMenu();
+  }
+});
+
+
+
+  // Firebase account dropdown integration
+  import { onAuthStateChanged, signOut } from 'firebase/auth';
+  import { auth } from '../lib/firebase';
+
+  const signedInLinks =
+    document.querySelectorAll<HTMLElement>('[data-auth="signed-in"]');
+
+  const signedOutLinks =
+    document.querySelectorAll<HTMLElement>('[data-auth="signed-out"]');
+
+  const headerSignout =
+    document.querySelector<HTMLButtonElement>('#header-signout');
+
+  // Keep account controls hidden until Firebase determines login status.
+  signedInLinks.forEach((link) => { link.hidden = true; });
+  signedOutLinks.forEach((link) => { link.hidden = true; });
+
+  onAuthStateChanged(auth, (user) => {
+    const accountIcon =
+  document.querySelector<HTMLElement>('.account-toggle');
+
+accountIcon?.classList.toggle('is-signed-in', !!user);
+    const accountDropdownTitle =
+  document.querySelector<HTMLElement>('#account-dropdown-title');
+
+if (accountDropdownTitle) {
+  accountDropdownTitle.textContent = user
+    ? 'My Account'
+    : 'Welcome to Vahako';
+}
+    signedInLinks.forEach((link) => {
+      link.hidden = !user;
+    });
+
+    signedOutLinks.forEach((link) => {
+      link.hidden = !!user;
+    });
+
+    if (headerSignout) {
+      headerSignout.hidden = !user;
+    }
+  });
+
+  headerSignout?.addEventListener('click', async () => {
+    headerSignout.disabled = true;
+
+    try {
+      await signOut(auth);
+      closeAccountMenu();
+
+      if (window.location.pathname.startsWith('/my-account')) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Unable to sign out:', error);
+      alert('Unable to sign out. Please try again.');
+    } finally {
+      headerSignout.disabled = false;
+    }
+  });
+
+
+// Update the basket icon and quantity
+function updateHeaderBasket() {
+  const count = getBasketCount();
+
+  const basketButton =
+    document.querySelector<HTMLElement>('.basket-button');
+
+  const basketCount =
+    document.querySelector<HTMLElement>('.basket-count');
+
+  if (!basketButton || !basketCount) return;
+
+  basketButton.classList.toggle('is-empty', count === 0);
+  basketButton.classList.toggle('has-items', count > 0);
+
+  basketButton.setAttribute(
+    'aria-label',
+    `Shopping basket, ${count} item${count === 1 ? '' : 's'}`
+  );
+
+  basketCount.textContent = count > 99 ? '99+' : String(count);
+  basketCount.hidden = count === 0;
+}
+
+updateHeaderBasket();
+
+window.addEventListener(BASKET_CHANGED, updateHeaderBasket);
+window.addEventListener('storage', updateHeaderBasket);
+
+
 </script>
 
 <style>
@@ -951,4 +1180,250 @@ border-left: 1px solid #e5e7eb;
       transition: none;
     }
   }
+
+  /* =========================================
+   ACCOUNT & BASKET HEADER CONTROLS
+========================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.header-icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #334155;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+.header-icon-button:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.header-icon-button:focus-visible {
+  outline: 3px solid rgba(227, 6, 19, .25);
+  outline-offset: 3px;
+}
+
+/* Basket */
+
+.basket-button.is-empty {
+  color: #94a3b8;
+}
+
+.basket-button.has-items {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.basket-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #15803d;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.basket-count[hidden] {
+  display: none;
+}
+
+/* Account */
+
+.account-menu {
+  position: relative;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 2100;
+  display: none;
+  width: 230px;
+  padding: 9px;
+  border: 1px solid #e5e7eb;
+  border-top: 2px solid #ffd600;
+  border-radius: 13px;
+  background: white;
+  box-shadow: 0 15px 40px rgba(0,0,0,.14);
+}
+
+.account-dropdown.is-open {
+  display: block;
+}
+
+.account-dropdown-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 7px;
+  color: #111827;
+  font-size: 14px;
+}
+
+.account-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 13px;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.account-dropdown a:hover {
+  background: #f8fafc;
+  color: #e30613;
+}
+
+/* Desktop header layout */
+
+@media (min-width: 901px) {
+  .header-inner {
+    grid-template-columns: auto minmax(180px, 1fr) auto auto;
+    gap: 14px;
+  }
+
+  .header-actions {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .main-nav {
+    grid-column: 4;
+    grid-row: 1;
+  }
+}
+
+/* Mobile header layout */
+
+@media (max-width: 900px) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+  }
+
+  .header-actions {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 8px;
+  }
+
+  .menu-toggle {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .mobile-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .header-icon-button {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 420px) {
+  .header-actions {
+    gap: 6px;
+  }
+
+  .header-icon-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .header-actions svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+
+
+/* Firebase account dropdown controls */
+
+.account-dropdown [hidden] {
+  display: none !important;
+}
+
+.account-signout {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 12px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #b91c1c;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-signout:hover {
+  background: #fef2f2;
+}
+
+.account-signout:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* Account icon authentication status */
+
+/* Signed out - grey */
+.account-toggle {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+}
+
+/* Signed in - green */
+.account-toggle.is-signed-in {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+/* Signed in hover */
+.account-toggle.is-signed-in:hover {
+  background: #bbf7d0;
+  color: #166534;
+  border-color: #4ade80;
+}
+
 </style>

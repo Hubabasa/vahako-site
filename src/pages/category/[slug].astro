@@ -1,0 +1,486 @@
+
+---
+import { getCollection, render } from 'astro:content';
+import Header from '../../components/Header.astro';
+import FloatingContact from '../../components/FloatingContact.astro';
+import * as categoryModule from '../../lib/categories.ts';
+
+export async function getStaticPaths() {
+  console.log('CATEGORY MODULE EXPORTS:', Object.keys(categoryModule));
+
+const categories = await categoryModule.getAllCategories();
+
+  return categories.map((category) => ({
+    params: { slug: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const categoryContent = await getCollection('categories');
+const override = categoryContent.find(
+  (item) => item.id === category.contentId
+);
+
+let CategoryContent;
+if (override) {
+  const rendered = await render(override);
+  CategoryContent = rendered.Content;
+}
+
+const title = category.seoTitle ??
+  `${category.name} in Sri Lanka | Vahako`;
+
+const description = category.seoDescription ??
+  `Explore ${category.name.toLowerCase()} in Sri Lanka at Vahako. Browse available products, custom fabrication options and contact our team for more information.`;
+
+const canonical = `https://vahako.com/category/${category.slug}/`;
+const money = (value: number, currency: string) =>
+  new Intl.NumberFormat('en-LK', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const indexable = category.indexable ?? true;
+
+// Related categories based on products shared with this category.
+const allCategories = await categoryModule.getAllCategories();
+
+const relatedCategories = allCategories
+  .filter((candidate) => candidate.slug !== category.slug)
+  .map((candidate) => {
+    const currentProductIds = new Set(
+      category.products.map((product) => product.id)
+    );
+
+    const sharedProducts = candidate.products.filter((product) =>
+      currentProductIds.has(product.id)
+    ).length;
+
+    return {
+      slug: candidate.slug,
+      name: candidate.name,
+      sharedProducts,
+    };
+  })
+  .filter((candidate) => candidate.sharedProducts > 0)
+  .sort(
+    (a, b) =>
+      b.sharedProducts - a.sharedProducts ||
+      a.name.localeCompare(b.name)
+  )
+  .slice(0, 6);
+
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {!indexable && <meta name="robots" content="noindex,follow" />}
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+</head>
+
+<body>
+  <Header />
+
+  <main class="category-page">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/shop/">Shop</a>
+      <span>/</span>
+      <span aria-current="page">{category.name}</span>
+    </nav>
+
+    <header class="category-heading">
+      <p class="eyebrow">VAHAKO PRODUCT CATEGORIES</p>
+      <h1>{category.name} in Sri Lanka</h1>
+      <p>{description}</p>
+    </header>
+
+    {category.image && (
+      <div class="category-banner">
+        <img
+          src={category.image}
+          alt={`${category.name} in Sri Lanka`}
+          width="1200"
+          height="450"
+          loading="eager"
+        />
+      </div>
+    )}
+
+    
+
+    <section class="category-products" aria-labelledby="products-title">
+      <div class="section-heading">
+        <h2 id="products-title">Explore Products</h2>
+        <span>{category.products.length} products</span>
+      </div>
+
+      <div class="product-grid">
+        {category.products.map((product) => (
+          <a class="product-card" href={`/shop/${product.id}/`}>
+            <div class="product-image">
+              <img
+                src={product.data.image}
+                alt={product.data.title}
+                width="500"
+                height="500"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="product-card-body">
+              <h3>{product.data.title}</h3>
+
+              <p class="product-description">
+                {product.data.description}
+              </p>
+
+              <div class="product-price">
+                {product.data.priceOnRequest
+                  ? 'Price on Request'
+                  : money(
+                      product.data.salePrice ?? product.data.price,
+                      product.data.currency
+                    )}
+              </div>
+
+              <span class="view-product">
+                View Product →
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    {CategoryContent && (
+      <section class="category-introduction">
+        <CategoryContent />
+      </section>
+    )}
+
+    {relatedCategories.length > 0 && (
+  <section
+    class="related-categories"
+    aria-labelledby="related-categories-title"
+  >
+    <h2 id="related-categories-title">
+      Explore Related Categories
+    </h2>
+
+    <div class="related-category-links">
+      {relatedCategories.map((item) => (
+        <a href={`/category/${item.slug}/`}>
+          {item.name}
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+  </main>
+
+  <FloatingContact
+    pageName={category.name}
+    whatsappMessage={`Hello Vahako, I am interested in ${category.name}. Please provide more information. ${canonical}`}
+    quotePage={category.name}
+  />
+</body>
+</html>
+
+<style>
+  :global(html) {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  :global(body) {
+    margin: 0;
+    width: 100%;
+    overflow-x: clip;
+    font-family: Arial, sans-serif;
+    background: #fff;
+    color: #171717;
+  }
+
+  .category-page,
+  .category-page * {
+    box-sizing: border-box;
+  }
+
+  .category-page {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 120px 24px 85px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 38px;
+    font-size: 13px;
+    color: #777;
+  }
+
+  .breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover {
+    color: #c51e2b;
+  }
+
+  .category-heading {
+    max-width: 850px;
+    margin-bottom: 40px;
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: #c51e2b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+
+  .category-heading h1 {
+    margin: 0 0 18px;
+    font-size: clamp(34px, 4.5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+
+  .category-heading > p:last-child {
+    color: #555;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .category-banner {
+    width: 100%;
+    margin-bottom: 40px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #f5f5f5;
+  }
+
+  .category-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 450px;
+    object-fit: cover;
+  }
+
+  .category-introduction {
+  margin: 55px 0;
+  padding-top: 30px;
+  border-top: 1px solid #eee;
+  max-width: 950px;
+  line-height: 1.8;
+  color: #444;
+}
+
+  .category-introduction :global(h2) {
+    margin: 28px 0 12px;
+    font-size: 25px;
+    color: #171717;
+  }
+
+  .category-introduction :global(p) {
+    font-size: 16px;
+  }
+
+  .category-products {
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 28px;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    font-size: 27px;
+  }
+
+  .section-heading span {
+    color: #777;
+    font-size: 13px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+  }
+
+  .product-image {
+    aspect-ratio: 1;
+    background: #f7f7f7;
+    overflow: hidden;
+  }
+
+  .product-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .product-card h3 {
+    margin: 0 0 12px;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .product-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin: 0 0 18px;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .product-price {
+    margin-top: auto;
+    font-size: 19px;
+    font-weight: 800;
+    color: #c51e2b;
+  }
+
+  .view-product {
+    margin-top: 15px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #171717;
+  }
+
+  @media (max-width: 1000px) {
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 750px) {
+    .category-page {
+      padding: 105px 16px 60px;
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .product-card-body {
+      padding: 13px;
+    }
+
+    .product-card h3 {
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .product-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Related category navigation */
+
+.related-categories {
+  margin-top: 55px;
+  padding-top: 30px;
+  border-top: 1px solid #eee;
+}
+
+.related-categories h2 {
+  margin: 0 0 22px;
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.3;
+  color: #171717;
+}
+
+.related-category-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.related-category-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s, border-color .2s;
+}
+
+.related-category-links a:hover {
+  background: #fff1f2;
+  border-color: #c51e2b;
+  color: #c51e2b;
+}
+
+.related-category-links a:focus-visible {
+  outline: 2px solid #c51e2b;
+  outline-offset: 3px;
+}
+
+</style>

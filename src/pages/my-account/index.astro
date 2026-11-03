@@ -1,0 +1,655 @@
+
+---
+import Header from '../../components/Header.astro';
+import {
+  UserRound,
+  Mail,
+  LockKeyhole,
+  LogIn,
+  UserPlus,
+  LogOut,
+  ShieldCheck
+} from 'lucide-astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Account | Vahako</title>
+  <meta name="description" content="Sign in or create your Vahako customer account to manage your profile and access your shopping account." />
+  <meta name="robots" content="noindex,follow" />
+</head>
+
+<body>
+  <Header />
+
+  <main class="account-page">
+    <div class="account-layout">
+
+      <div class="account-intro">
+        <span class="eyebrow">VAHAKO CUSTOMER ACCOUNT</span>
+        <h1>Welcome to Vahako</h1>
+        <p>
+          Sign in or create an account to enjoy a simpler
+          shopping experience.
+        </p>
+      </div>
+
+      <div class="account-card">
+
+        <div id="auth-loading" class="loading">
+          Checking your account...
+        </div>
+
+        <section id="auth-panel" hidden>
+          <div class="auth-tabs">
+            <button type="button" id="signin-tab" class="active">
+              <LogIn size={17} /> Sign In
+            </button>
+            <button type="button" id="signup-tab">
+              <UserPlus size={17} /> Create Account
+            </button>
+          </div>
+
+          <h2 id="form-title">Sign in to your account</h2>
+
+          <button type="button" id="google-button" class="google-button">
+            <svg width="21" height="21" viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.28 5.48-4.83 7.18l7.73 6C44.35 38.03 46.98 31.89 46.98 24.55z"/>
+              <path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.2A23.87 23.87 0 0 0 0 24c0 3.87.93 7.51 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <div class="separator"><span>or continue with email</span></div>
+
+          <form id="auth-form">
+            <div id="name-field" class="field" hidden>
+              <label for="customer-name">Full Name</label>
+              <div class="input-wrap">
+                <UserRound size={19} />
+                <input id="customer-name" type="text" autocomplete="name" placeholder="Your full name" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="customer-email">Email Address</label>
+              <div class="input-wrap">
+                <Mail size={19} />
+                <input id="customer-email" type="email" autocomplete="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="customer-password">Password</label>
+              <div class="input-wrap">
+                <LockKeyhole size={19} />
+                <input id="customer-password" type="password" autocomplete="current-password" minlength="6" placeholder="Enter your password" required />
+              </div>
+            </div>
+
+            <div class="form-options">
+              <button type="button" id="forgot-password" class="text-button">
+                Forgot password?
+              </button>
+            </div>
+
+            <button type="submit" id="submit-button" class="primary-button">
+              Sign In
+            </button>
+          </form>
+
+          <p class="form-footer" id="auth-footer">
+            New to Vahako?
+            <button type="button" id="switch-mode">Create an account</button>
+          </p>
+        </section>
+
+        <section id="dashboard" hidden>
+          <div class="profile-top">
+            <div class="profile-avatar"><UserRound size={34} /></div>
+            <div>
+              <span class="eyebrow">MY ACCOUNT</span>
+              <h2 id="profile-name">Welcome!</h2>
+              <p id="profile-email"></p>
+            </div>
+          </div>
+
+          <div class="profile-detail">
+            <ShieldCheck size={20} />
+            <div>
+              <strong>Email verification</strong>
+              <p id="verification-status"></p>
+              <button type="button" id="verify-email" class="text-button" hidden>
+                Send verification email
+              </button>
+            </div>
+          </div>
+
+          <div class="profile-detail">
+            <UserRound size={20} />
+            <div>
+              <strong>My Orders</strong>
+              <p>Order history will be available when checkout is connected.</p>
+            </div>
+          </div>
+
+          <button type="button" id="signout-button" class="signout-button">
+            <LogOut size={18} /> Sign Out
+          </button>
+        </section>
+
+        <p id="auth-message" class="auth-message" role="status" aria-live="polite" hidden></p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    import {
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signInWithPopup,
+      updateProfile,
+      sendEmailVerification,
+      sendPasswordResetEmail,
+      signOut
+    } from 'firebase/auth';
+
+    import { auth, googleProvider } from '../../lib/firebase';
+
+    const el = (id: string) => document.getElementById(id)!;
+    const loading = el('auth-loading');
+    const panel = el('auth-panel');
+    const dashboard = el('dashboard');
+    const form = el('auth-form') as HTMLFormElement;
+    const nameInput = el('customer-name') as HTMLInputElement;
+    const emailInput = el('customer-email') as HTMLInputElement;
+    const passwordInput = el('customer-password') as HTMLInputElement;
+    const message = el('auth-message');
+
+    let mode: 'signin' | 'signup' = 'signin';
+    let busy = false;
+
+    function showMessage(text: string, error = false) {
+      message.textContent = text;
+      message.classList.toggle('error', error);
+      message.hidden = false;
+    }
+
+    function clearMessage() {
+      message.hidden = true;
+      message.textContent = '';
+    }
+
+    function setBusy(value: boolean) {
+      busy = value;
+      (el('submit-button') as HTMLButtonElement).disabled = value;
+      (el('google-button') as HTMLButtonElement).disabled = value;
+      (el('signout-button') as HTMLButtonElement).disabled = value;
+    }
+
+    function setMode(next: 'signin' | 'signup') {
+      mode = next;
+      clearMessage();
+
+      el('signin-tab').classList.toggle('active', mode === 'signin');
+      el('signup-tab').classList.toggle('active', mode === 'signup');
+
+      el('name-field').hidden = mode !== 'signup';
+      nameInput.required = mode === 'signup';
+
+      el('forgot-password').hidden = mode === 'signup';
+
+      el('form-title').textContent =
+        mode === 'signin' ? 'Sign in to your account' : 'Create your account';
+
+      el('submit-button').textContent =
+        mode === 'signin' ? 'Sign In' : 'Create Account';
+
+      el('auth-footer').firstChild!.textContent =
+        mode === 'signin' ? 'New to Vahako? ' : 'Already have an account? ';
+
+      el('switch-mode').textContent =
+        mode === 'signin' ? 'Create an account' : 'Sign In';
+
+      passwordInput.autocomplete =
+        mode === 'signin' ? 'current-password' : 'new-password';
+    }
+
+    function friendlyError(error: unknown): string {
+      const code = (error as { code?: string })?.code;
+
+      const errors: Record<string, string> = {
+        'auth/email-already-in-use': 'This email is already registered. Please sign in.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/weak-password': 'Please choose a stronger password.',
+        'auth/invalid-credential': 'Incorrect email or password.',
+        'auth/too-many-requests': 'Too many attempts. Please try again later.',
+        'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
+        'auth/popup-blocked': 'Your browser blocked the sign-in popup.',
+        'auth/unauthorized-domain': 'This website domain is not authorized in Firebase.',
+        'auth/account-exists-with-different-credential': 'This email uses another sign-in method. Please sign in using that method.'
+      };
+
+      return errors[code || ''] || 'Something went wrong. Please try again.';
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      loading.hidden = true;
+      clearMessage();
+
+      if (user) {
+        panel.hidden = true;
+        dashboard.hidden = false;
+
+        el('profile-name').textContent = user.displayName || 'Vahako Customer';
+        el('profile-email').textContent = user.email || '';
+
+        el('verification-status').textContent =
+          user.emailVerified ? 'Verified' : 'Not yet verified';
+
+        el('verify-email').hidden = user.emailVerified;
+      } else {
+        dashboard.hidden = true;
+        panel.hidden = false;
+      }
+    }, () => {
+      loading.hidden = true;
+      showMessage('Unable to check your account. Please refresh the page.', true);
+    });
+
+    el('signin-tab').addEventListener('click', () => setMode('signin'));
+    el('signup-tab').addEventListener('click', () => setMode('signup'));
+
+    el('switch-mode').addEventListener('click', () => {
+      setMode(mode === 'signin' ? 'signup' : 'signin');
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (busy) return;
+
+      clearMessage();
+      setBusy(true);
+
+      try {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (mode === 'signup') {
+          const name = nameInput.value.trim();
+          if (!name) {
+            showMessage('Please enter your full name.', true);
+            return;
+          }
+
+          const result = await createUserWithEmailAndPassword(auth, email, password);
+          await updateProfile(result.user, { displayName: name });
+          await sendEmailVerification(result.user);
+          el('profile-name').textContent = name;
+          showMessage('Account created! Please check your email to verify your address.');
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+
+        passwordInput.value = '';
+      } catch (error) {
+        showMessage(friendlyError(error), true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    el('google-button').addEventListener('click', async () => {
+      if (busy) return;
+
+      clearMessage();
+      setBusy(true);
+
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (error) {
+        showMessage(friendlyError(error), true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    el('forgot-password').addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        showMessage('Enter your email address above, then click Forgot password.', true);
+        emailInput.focus();
+        return;
+      }
+
+      if (busy) return;
+      setBusy(true);
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showMessage('If this email is registered, a password reset email will be sent.');
+      } catch (error) {
+        showMessage(friendlyError(error), true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    el('verify-email').addEventListener('click', async () => {
+      if (!auth.currentUser || busy) return;
+      setBusy(true);
+
+      try {
+        await sendEmailVerification(auth.currentUser);
+        showMessage('Verification email sent. Please check your inbox.');
+      } catch (error) {
+        showMessage(friendlyError(error), true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    el('signout-button').addEventListener('click', async () => {
+      if (busy) return;
+      setBusy(true);
+
+      try {
+        await signOut(auth);
+        setMode('signin');
+      } catch (error) {
+        showMessage(friendlyError(error), true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    const requestedAction = new URLSearchParams(window.location.search).get('action');
+    if (requestedAction === 'signup') setMode('signup');
+  </script>
+</body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f8fa;
+    color: #172033;
+  }
+
+  .account-page, .account-page * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  .account-page {
+    min-height: 100vh;
+    padding: 145px 20px 90px;
+  }
+
+  .account-layout {
+    max-width: 540px;
+    margin: auto;
+  }
+
+  .account-intro {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .eyebrow {
+    color: #d71920;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+
+  .account-intro h1 {
+    font-size: clamp(30px, 5vw, 43px);
+    letter-spacing: -1.4px;
+    margin: 12px 0;
+  }
+
+  .account-intro p {
+    color: #667085;
+    line-height: 1.7;
+  }
+
+  .account-card {
+    background: #fff;
+    padding: 35px;
+    border: 1px solid #e9edf2;
+    border-radius: 22px;
+    box-shadow: 0 15px 45px rgba(15,23,42,.055);
+  }
+
+  .loading {
+    text-align: center;
+    padding: 35px 0;
+    color: #64748b;
+  }
+
+  .auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #f2f4f7;
+    border-radius: 12px;
+    padding: 5px;
+    gap: 5px;
+    margin-bottom: 28px;
+  }
+
+  .auth-tabs button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    padding: 13px 8px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #667085;
+  }
+
+  .auth-tabs button.active {
+    background: white;
+    color: #111827;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+  }
+
+  .account-card h2 {
+    font-size: 23px;
+    margin: 0 0 23px;
+    letter-spacing: -.5px;
+  }
+
+  .google-button {
+    width: 100%;
+    min-height: 49px;
+    border: 1px solid #d9dfe8;
+    border-radius: 11px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .google-button:hover { background: #f8fafc; }
+
+  .separator {
+    text-align: center;
+    margin: 25px 0;
+    border-bottom: 1px solid #e5e7eb;
+    height: 1px;
+  }
+
+  .separator span {
+    position: relative;
+    top: -9px;
+    background: white;
+    padding: 0 14px;
+    color: #98a2b3;
+    font-size: 12px;
+  }
+
+  .field { margin-bottom: 20px; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 9px;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid #d9dfe8;
+    border-radius: 11px;
+    padding: 0 14px;
+    color: #98a2b3;
+  }
+
+  .input-wrap:focus-within {
+    border-color: #d71920;
+    box-shadow: 0 0 0 3px rgba(215,25,32,.08);
+  }
+
+  .input-wrap input {
+    width: 100%;
+    height: 49px;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    font-size: 14px;
+    background: transparent;
+    color: #111827;
+  }
+
+  .form-options {
+    text-align: right;
+    margin: -3px 0 23px;
+  }
+
+  .text-button {
+    border: 0;
+    background: none;
+    color: #d71920;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .primary-button {
+    width: 100%;
+    min-height: 51px;
+    background: #d71920;
+    color: white;
+    border: 0;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .primary-button:hover { background: #b9151c; }
+  button:disabled { opacity: .6; cursor: wait; }
+
+  .form-footer {
+    text-align: center;
+    font-size: 13px;
+    margin: 26px 0 0;
+    color: #667085;
+  }
+
+  .form-footer button {
+    background: none;
+    border: 0;
+    color: #d71920;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .profile-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+
+  .profile-avatar {
+    display: grid;
+    place-items: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 18px;
+    background: #fff3f3;
+    color: #d71920;
+    flex-shrink: 0;
+  }
+
+  .profile-top h2 { margin: 5px 0; }
+  .profile-top p { margin: 0; color: #667085; overflow-wrap: anywhere; }
+
+  .profile-detail {
+    display: flex;
+    gap: 15px;
+    padding: 19px 0;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .profile-detail > svg { flex-shrink: 0; color: #64748b; }
+  .profile-detail strong { font-size: 14px; }
+  .profile-detail p { color: #667085; font-size: 13px; line-height: 1.6; }
+  .profile-detail .text-button { padding: 0; }
+
+  .signout-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid #fecaca;
+    border-radius: 11px;
+    background: #fff5f5;
+    color: #b91c1c;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .auth-message {
+    margin: 20px 0 0;
+    padding: 13px;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .auth-message.error {
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+
+  @media (max-width: 600px) {
+    .account-page { padding: 135px 14px 50px; }
+    .account-card { padding: 23px 18px; border-radius: 17px; }
+    .account-intro h1 { font-size: 32px; }
+  }
+</style>
