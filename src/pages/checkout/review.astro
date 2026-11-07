@@ -347,6 +347,7 @@ import Header from '../../components/Header.astro';
 
 <script>
   import { getBasket, getBasketCount, getBasketTotal } from '../../lib/basket';
+  import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
   type Customer = {
     name: string;
@@ -392,16 +393,25 @@ import Header from '../../components/Header.astro';
       if (!raw) return null;
 
       const data = JSON.parse(raw);
+      
       if (
         !data ||
         !data.name ||
         !data.email ||
-        !data.phone ||
+        typeof data.phone !== 'string' ||
         !data.address ||
         !data.city
       ) return null;
 
+      const parsed = parsePhoneNumberFromString(data.phone);
+
+      if (!parsed || !parsed.isValid() ||
+          parsed.number !== data.phone) {
+        return null;
+      }
+
       return data as Customer;
+
     } catch {
       return null;
     }

@@ -38,10 +38,33 @@ import Header from '../../components/Header.astro';
             <input id="customerEmail" name="email" type="email" required autocomplete="email" maxlength="254" />
           </div>
 
-          <div class="field">
-            <label for="customerPhone">Mobile Number *</label>
-            <input id="customerPhone" name="phone" type="tel" required autocomplete="tel" maxlength="20" placeholder="07XXXXXXXX" />
-          </div>
+          
+<div class="field">
+  <label for="customerCountry">Country / Calling Code *</label>
+  <select id="customerCountry" name="country" required>
+    <option value="LK">Sri Lanka (+94)</option>
+  </select>
+</div>
+
+<div class="field">
+  <label for="customerPhone">Mobile / WhatsApp Number *</label>
+  <input
+    id="customerPhone"
+    name="phone"
+    type="tel"
+    required
+    autocomplete="tel-national"
+    maxlength="25"
+    inputmode="tel"
+    placeholder="0771234567"
+    aria-describedby="phoneHint phoneError"
+  />
+  <p id="phoneHint" class="phone-hint">
+    Sri Lanka is selected by default. Enter your local number.
+  </p>
+  <p id="phoneError" class="phone-error" role="alert" hidden></p>
+</div>
+
 
           <div class="field">
             <label for="customerAddress">Delivery Address *</label>
@@ -152,7 +175,8 @@ import Header from '../../components/Header.astro';
   }
 
   .field input,
-  .field textarea {
+.field textarea,
+.field select {
     display: block;
     width: 100%;
     padding: 13px;
@@ -165,7 +189,8 @@ import Header from '../../components/Header.astro';
   }
 
   .field input:focus,
-  .field textarea:focus {
+.field textarea:focus,
+.field select:focus {
     outline: 2px solid #d7192d;
     outline-offset: 1px;
   }
@@ -201,6 +226,30 @@ import Header from '../../components/Header.astro';
     line-height: 1.7;
   }
 
+  
+.phone-hint {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.phone-error {
+  margin: 7px 0 0;
+  color: #b91c1c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.phone-error[hidden] {
+  display: none;
+}
+
+.field select {
+  cursor: pointer;
+}
+
+
   @media (max-width: 800px) {
     .checkout-grid {
       grid-template-columns: 1fr;
@@ -219,10 +268,18 @@ import Header from '../../components/Header.astro';
   }
 </style>
 
+
 <script>
   import { getBasket, getBasketCount, getBasketTotal } from '../../lib/basket';
   import { auth } from '../../lib/firebase';
   import { onAuthStateChanged } from 'firebase/auth';
+
+  import {
+    getCountries,
+    getCountryCallingCode,
+    parsePhoneNumberFromString,
+    type CountryCode
+  } from 'libphonenumber-js';
 
   const basket = getBasket();
 
@@ -242,17 +299,139 @@ import Header from '../../components/Header.astro';
   if (count) count.textContent = String(getBasketCount());
   if (total) total.textContent = formatter.format(getBasketTotal());
 
+  const countrySelect =
+    document.querySelector<HTMLSelectElement>('#customerCountry');
+
+  const phoneInput =
+    document.querySelector<HTMLInputElement>('#customerPhone');
+
+  const phoneHint =
+    document.querySelector<HTMLElement>('#phoneHint');
+
+  const phoneError =
+    document.querySelector<HTMLElement>('#phoneError');
+
+  const countryNames = new Intl.DisplayNames(['en'], {
+    type: 'region'
+  });
+
+  const countries = getCountries().sort((a, b) => {
+    const nameA = countryNames.of(a) || a;
+    const nameB = countryNames.of(b) || b;
+    return nameA.localeCompare(nameB);
+  });
+
+  if (countrySelect) {
+    countrySelect.replaceChildren();
+
+    countries.forEach(country => {
+      const callingCode = getCountryCallingCode(country);
+      const name = countryNames.of(country) || country;
+
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = `${name} (+${callingCode})`;
+
+      countrySelect.appendChild(option);
+    });
+
+    // Sri Lanka is always the default for a new checkout.
+    countrySelect.value = 'LK';
+  }
+
+  function showPhoneError(message: string) {
+    if (!phoneError) return;
+
+    phoneError.textContent = message;
+    phoneError.hidden = !message;
+
+    phoneInput?.setCustomValidity(message);
+  }
+
+  function updateCountryHint() {
+    const country = (countrySelect?.value || 'LK') as CountryCode;
+    const callingCode = getCountryCallingCode(country);
+    const name = countryNames.of(country) || country;
+
+    if (phoneHint) {
+      phoneHint.textContent =
+        `${name} (+${callingCode}). Enter your phone number without the country code.`;
+    }
+
+    if (phoneInput) {
+      phoneInput.placeholder = country === 'LK'
+        ? '0771234567'
+        : 'Local phone number';
+    }
+
+    showPhoneError('');
+  }
+
+  countrySelect?.addEventListener('change', () => {
+    if (phoneInput) phoneInput.value = '';
+    updateCountryHint();
+  });
+
+  phoneInput?.addEventListener('input', () => {
+    showPhoneError('');
+  });
+
+  updateCountryHint();
+
+  // Restore details when returning from the review page.
+  try {
+    const saved = JSON.parse(
+      sessionStorage.getItem('vahako-checkout-details') || 'null'
+    );
+
+    if (saved && typeof saved === 'object') {
+      const fields: Record<string, string> = {
+        customerName: saved.name || '',
+        customerEmail: saved.email || '',
+        customerAddress: saved.address || '',
+        customerCity: saved.city || '',
+        customerNotes: saved.notes || ''
+      };
+
+      Object.entries(fields).forEach(([id, value]) => {
+        const field = document.getElementById(id) as
+          HTMLInputElement | HTMLTextAreaElement | null;
+
+        if (field) field.value = value;
+      });
+
+      if (typeof saved.phone === 'string' && saved.phone) {
+        const parsed = parsePhoneNumberFromString(saved.phone);
+
+        if (parsed?.country && countrySelect && phoneInput) {
+          countrySelect.value = parsed.country;
+          phoneInput.value = parsed.formatNational();
+        }
+      }
+
+      updateCountryHint();
+    }
+  } catch {
+    // Ignore invalid session data.
+  }
+
   onAuthStateChanged(auth, (user) => {
     const status = document.querySelector<HTMLElement>('#accountStatus');
     const name = document.querySelector<HTMLInputElement>('#customerName');
     const email = document.querySelector<HTMLInputElement>('#customerEmail');
 
     if (user) {
-      if (status) status.textContent = 'Signed in. Your account details have been prefilled where available.';
+      if (status) {
+        status.textContent =
+          'Signed in. Your account details have been prefilled where available.';
+      }
+
       if (name && !name.value) name.value = user.displayName || '';
       if (email && !email.value) email.value = user.email || '';
     } else {
-      if (status) status.textContent = 'Guest checkout — no account required.';
+      if (status) {
+        status.textContent = 'Guest checkout — no account required.';
+      }
     }
   });
 
@@ -265,19 +444,48 @@ import Header from '../../components/Header.astro';
         return;
       }
 
-      const name = document.querySelector<HTMLInputElement>('#customerName')?.value.trim() || '';
-      const email = document.querySelector<HTMLInputElement>('#customerEmail')?.value.trim() || '';
-      const phone = document.querySelector<HTMLInputElement>('#customerPhone')?.value.trim() || '';
-      const address = document.querySelector<HTMLTextAreaElement>('#customerAddress')?.value.trim() || '';
-      const city = document.querySelector<HTMLInputElement>('#customerCity')?.value.trim() || '';
-      const notes = document.querySelector<HTMLTextAreaElement>('#customerNotes')?.value.trim() || '';
+      const name =
+        document.querySelector<HTMLInputElement>('#customerName')?.value.trim() || '';
 
-      if (!name || !email || !phone || !address || !city) return;
+      const email =
+        document.querySelector<HTMLInputElement>('#customerEmail')?.value.trim() || '';
+
+      const rawPhone = phoneInput?.value.trim() || '';
+
+      const address =
+        document.querySelector<HTMLTextAreaElement>('#customerAddress')?.value.trim() || '';
+
+      const city =
+        document.querySelector<HTMLInputElement>('#customerCity')?.value.trim() || '';
+
+      const notes =
+        document.querySelector<HTMLTextAreaElement>('#customerNotes')?.value.trim() || '';
+
+      const country = (countrySelect?.value || 'LK') as CountryCode;
+
+      showPhoneError('');
+
+      // A customer enters the national number.
+      // Convert it to the international E.164 format.
+      const parsed = parsePhoneNumberFromString(rawPhone, country);
+
+      if (!parsed || !parsed.isValid() || parsed.country !== country) {
+        showPhoneError(
+          'Please enter a valid phone number for the selected country.'
+        );
+
+        phoneInput?.focus();
+        return;
+      }
+
+      if (!name || !email || !address || !city) {
+        return;
+      }
 
       const customerDetails = {
         name,
         email,
-        phone,
+        phone: parsed.number,
         address,
         city,
         notes

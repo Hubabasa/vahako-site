@@ -14,6 +14,7 @@
   "dependencies": {
     "astro": "^6.2.2",
     "firebase": "^13.2.0",
+    "libphonenumber-js": "^1.13.15",
     "lucide-astro": "^0.556.0"
   }
 }
