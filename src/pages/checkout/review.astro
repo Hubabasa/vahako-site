@@ -1,0 +1,611 @@
+
+---
+import Header from '../../components/Header.astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,follow" />
+  <title>Review Your Order | Vahako</title>
+</head>
+<body>
+  <Header />
+
+  <main class="review-page">
+    <a href="/checkout/details/" class="back-link">← Edit Customer Details</a>
+
+    <h1>Review Your Order</h1>
+    <p class="intro">
+      Please check your information and products before submitting your order.
+    </p>
+
+    <div id="loading">Loading your order...</div>
+
+    <div id="reviewContent" class="review-grid" hidden>
+      <div class="main-column">
+        <section class="card">
+          <div class="section-heading">
+            <h2>Customer Information</h2>
+            <a href="/checkout/details/">Edit</a>
+          </div>
+
+          <div id="customerInformation"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <h2>Products</h2>
+            <a href="/checkout/">Edit Basket</a>
+          </div>
+
+          <div id="reviewProducts"></div>
+        </section>
+      </div>
+
+      <aside class="card summary-card">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Total Items</span>
+          <strong id="itemCount">0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Product Total</span>
+          <strong id="productTotal">LKR 0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Delivery</span>
+          <strong>To be confirmed</strong>
+        </div>
+
+        <div class="summary-total">
+          <span>Product Total</span>
+          <strong id="finalTotal">LKR 0</strong>
+        </div>
+
+        <p class="notice">
+          No payment is required now. Vahako will contact you to confirm
+          your order, delivery charges and payment arrangements.
+        </p>
+
+        <button id="confirmOrder" type="button">
+          Confirm & Submit Order
+        </button>
+
+        <p id="submissionStatus" role="status" aria-live="polite"></p>
+
+        <p class="secure-note">
+          Your order will be recorded as Pending Confirmation.
+        </p>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8fafc;
+    color: #172033;
+  }
+
+  .review-page,
+  .review-page * {
+    box-sizing: border-box;
+  }
+
+  .review-page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 130px 24px 80px;
+    min-height: 80vh;
+  }
+
+  .back-link {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  h1 {
+    margin: 25px 0 8px;
+    font-size: clamp(28px, 4vw, 40px);
+  }
+
+  .intro {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 25px;
+    align-items: start;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  .main-column {
+    display: grid;
+    gap: 22px;
+    min-width: 0;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 26px;
+    min-width: 0;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin: 0;
+  }
+
+  .section-heading a {
+    font-size: 13px;
+    font-weight: bold;
+    color: #c51e2b;
+    text-decoration: none;
+  }
+
+  .customer-line {
+    margin: 11px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .customer-line strong {
+    display: inline-block;
+    min-width: 95px;
+    color: #475569;
+  }
+
+  .product {
+    display: grid;
+    grid-template-columns: 85px minmax(0, 1fr) auto;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .product:last-child {
+    border-bottom: 0;
+  }
+
+  .product img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+
+  .product-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #172033;
+    text-decoration: none;
+  }
+
+  .product-meta {
+    font-size: 12px;
+    color: #64748b;
+    margin: 7px 0;
+    line-height: 1.6;
+  }
+
+  .product-price {
+    font-size: 13px;
+    margin-top: 10px;
+  }
+
+  .line-total {
+    font-weight: 800;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+
+  .summary-card h2 {
+    margin-bottom: 25px;
+  }
+
+  .summary-row,
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    font-size: 14px;
+  }
+
+  .summary-row {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .summary-row span {
+    color: #64748b;
+  }
+
+  .summary-total {
+    font-size: 17px;
+    font-weight: 800;
+    margin-top: 10px;
+  }
+
+  .notice {
+    padding: 13px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 20px 0;
+  }
+
+  #confirmOrder {
+    width: 100%;
+    padding: 16px;
+    background: #c51e2b;
+    color: white;
+    border: 0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  #confirmOrder:hover {
+    background: #a51823;
+  }
+
+  #confirmOrder:disabled {
+    opacity: .6;
+    cursor: wait;
+  }
+
+  #submissionStatus {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 14px 0;
+  }
+
+  #submissionStatus.error {
+    color: #b91c1c;
+  }
+
+  #submissionStatus.success {
+    color: #15803d;
+  }
+
+  .secure-note {
+    color: #64748b;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  #loading {
+    color: #64748b;
+    padding: 35px 0;
+  }
+
+  @media (max-width: 850px) {
+    .review-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .review-page {
+      padding: 115px 15px 50px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .product {
+      grid-template-columns: 65px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .product img {
+      width: 65px;
+      height: 65px;
+    }
+
+    .line-total {
+      grid-column: 2;
+    }
+  }
+</style>
+
+<script>
+  import { getBasket, getBasketCount, getBasketTotal } from '../../lib/basket';
+
+  type Customer = {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    notes: string;
+  };
+
+  const money = (value: number) =>
+    new Intl.NumberFormat('en-LK', {
+      style: 'currency',
+      currency: 'LKR',
+      maximumFractionDigits: 0
+    }).format(value);
+
+  const detailsKey = 'vahako-checkout-details';
+  const pendingKey = 'vahako-pending-order';
+  const confirmedKey = 'vahako-confirmed-order';
+
+  const loading = document.querySelector<HTMLElement>('#loading');
+  const content = document.querySelector<HTMLElement>('#reviewContent');
+  const customerBox = document.querySelector<HTMLElement>('#customerInformation');
+  const productsBox = document.querySelector<HTMLElement>('#reviewProducts');
+  const confirmButton = document.querySelector<HTMLButtonElement>('#confirmOrder');
+  const status = document.querySelector<HTMLElement>('#submissionStatus');
+
+  function element<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className?: string,
+    text?: string
+  ): HTMLElementTagNameMap[K] {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function readCustomer(): Customer | null {
+    try {
+      const raw = sessionStorage.getItem(detailsKey);
+      if (!raw) return null;
+
+      const data = JSON.parse(raw);
+      if (
+        !data ||
+        !data.name ||
+        !data.email ||
+        !data.phone ||
+        !data.address ||
+        !data.city
+      ) return null;
+
+      return data as Customer;
+    } catch {
+      return null;
+    }
+  }
+
+  function addCustomerLine(label: string, value: string) {
+    if (!customerBox || !value) return;
+
+    const row = element('p', 'customer-line');
+    const strong = element('strong', undefined, label);
+    const text = document.createTextNode(value);
+
+    row.append(strong, text);
+    customerBox.appendChild(row);
+  }
+
+  function render() {
+    const basket = getBasket();
+    const customer = readCustomer();
+
+    if (!basket.length) {
+      window.location.replace('/checkout/');
+      return;
+    }
+
+    if (!customer) {
+      window.location.replace('/checkout/details/');
+      return;
+    }
+
+    if (!customerBox || !productsBox) return;
+
+    customerBox.replaceChildren();
+    productsBox.replaceChildren();
+
+    addCustomerLine('Name:', customer.name);
+    addCustomerLine('Email:', customer.email);
+    addCustomerLine('Phone:', customer.phone);
+    addCustomerLine('Address:', customer.address);
+    addCustomerLine('City:', customer.city);
+    addCustomerLine('Notes:', customer.notes || '');
+
+    basket.forEach(item => {
+      const product = element('article', 'product');
+
+      const image = element('img');
+      image.src = item.image || '/images/vahako-logo-fabrications-in-sri-lanka.webp';
+      image.alt = item.title;
+      image.loading = 'lazy';
+
+      const info = element('div');
+
+      const title = element('a', 'product-title', item.title);
+      title.href = item.url || '/shop/';
+      info.appendChild(title);
+
+      if (item.sku) {
+        info.appendChild(element('p', 'product-meta', `SKU: ${item.sku}`));
+      }
+
+      Object.entries(item.options || {}).forEach(([name, value]) => {
+        info.appendChild(
+          element('p', 'product-meta', `${name}: ${value}`)
+        );
+      });
+
+      info.appendChild(
+        element('p', 'product-price',
+          `Quantity: ${item.quantity} × ${money(item.unitPrice)}`
+        )
+      );
+
+      const lineTotal = element(
+        'strong',
+        'line-total',
+        money(item.quantity * item.unitPrice)
+      );
+
+      product.append(image, info, lineTotal);
+      productsBox.appendChild(product);
+    });
+
+    const count = document.querySelector<HTMLElement>('#itemCount');
+    const total = document.querySelector<HTMLElement>('#productTotal');
+    const finalTotal = document.querySelector<HTMLElement>('#finalTotal');
+
+    if (count) count.textContent = String(getBasketCount());
+    if (total) total.textContent = money(getBasketTotal());
+    if (finalTotal) finalTotal.textContent = money(getBasketTotal());
+
+    if (loading) loading.hidden = true;
+    if (content) content.hidden = false;
+  }
+
+  let submitting = false;
+
+  confirmButton?.addEventListener('click', async () => {
+    if (submitting) return;
+
+    const basket = getBasket();
+    const customer = readCustomer();
+
+    if (!basket.length || !customer) {
+      render();
+      return;
+    }
+
+    const orderData = {
+      customer,
+      items: basket.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+        options: item.options,
+        unitPrice: item.unitPrice
+      }))
+    };
+
+    const fingerprint = JSON.stringify(orderData);
+
+    let requestId = '';
+
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(pendingKey) || 'null');
+
+      if (
+        saved &&
+        saved.fingerprint === fingerprint &&
+        typeof saved.requestId === 'string'
+      ) {
+        requestId = saved.requestId;
+      }
+    } catch {
+      // Invalid stored request data will be replaced.
+    }
+
+    if (!requestId) {
+      requestId = 'ORDER_' + crypto.randomUUID().replace(/-/g, '');
+      sessionStorage.setItem(
+        pendingKey,
+        JSON.stringify({ fingerprint, requestId })
+      );
+    }
+
+    submitting = true;
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Submitting Order...';
+
+    if (status) {
+      status.className = '';
+      status.textContent = 'Please wait. Do not close this page.';
+    }
+
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestId,
+          ...orderData
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success || !result.orderNumber) {
+        throw new Error(
+          result.message || 'Unable to submit your order.'
+        );
+      }
+
+      sessionStorage.setItem(
+        confirmedKey,
+        JSON.stringify({
+          orderNumber: result.orderNumber,
+          productTotal: result.productTotal,
+          orderStatus: result.orderStatus,
+          paymentStatus: result.paymentStatus,
+          customerName: customer.name
+        })
+      );
+
+      sessionStorage.removeItem(pendingKey);
+
+      if (status) {
+        status.className = 'success';
+        status.textContent = 'Order submitted successfully!';
+      }
+
+      window.location.href = '/checkout/success/';
+
+    } catch (error) {
+      if (status) {
+        status.className = 'error';
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : 'Unable to submit your order. Please try again.';
+      }
+
+      submitting = false;
+      confirmButton.disabled = false;
+      confirmButton.textContent = 'Try Again';
+    }
+  });
+
+  render();
+</script>
