@@ -348,6 +348,7 @@ import Header from '../../components/Header.astro';
 <script>
   import { getBasket, getBasketCount, getBasketTotal } from '../../lib/basket';
   import { parsePhoneNumberFromString } from 'libphonenumber-js';
+  import { auth } from '../../lib/firebase';
 
   type Customer = {
     name: string;
@@ -565,12 +566,20 @@ import Header from '../../components/Header.astro';
     }
 
     try {
+      // Wait for Firebase to restore a previous login before deciding guest status.
+      await auth.authStateReady();
+      const signedInUser = auth.currentUser;
+      const firebaseIdToken = signedInUser
+        ? await signedInUser.getIdToken()
+        : null;
+
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           requestId,
-          ...orderData
+          ...orderData,
+          ...(firebaseIdToken ? { firebaseIdToken } : {})
         })
       });
 
