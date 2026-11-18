@@ -23,3 +23,11 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Cloudflare Wrangler local development files
+.wrangler/
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
