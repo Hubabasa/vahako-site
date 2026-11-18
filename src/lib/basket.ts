@@ -7,7 +7,7 @@ export interface BasketItem {
   image: string;
   url: string;
   currency: string;
-  unitPrice: number;
+  unitPrice: number | null;
   quantity: number;
   options: Record<string, string>;
 }
@@ -30,9 +30,14 @@ export function getBasket(): BasketItem[] {
       typeof item.key === 'string' &&
       typeof item.id === 'string' &&
       typeof item.title === 'string' &&
-      typeof item.unitPrice === 'number' &&
-      Number.isFinite(item.unitPrice) &&
-      item.unitPrice >= 0 &&
+      (
+  item.unitPrice === null ||
+  (
+    typeof item.unitPrice === 'number' &&
+    Number.isFinite(item.unitPrice) &&
+    item.unitPrice >= 0
+  )
+) &&
       Number.isInteger(item.quantity) &&
       item.quantity >= 1 &&
       item.quantity <= MAX_QUANTITY &&
@@ -62,8 +67,13 @@ export function addToBasket(
     !Number.isInteger(item.quantity) ||
     item.quantity < 1 ||
     item.quantity > MAX_QUANTITY ||
-    !Number.isFinite(item.unitPrice) ||
-    item.unitPrice < 0
+    !(
+  item.unitPrice === null ||
+  (
+    Number.isFinite(item.unitPrice) &&
+    item.unitPrice >= 0
+  )
+)
   ) {
     return false;
   }
@@ -124,7 +134,7 @@ export function getBasketCount(): number {
 
 export function getBasketTotal(): number {
   return getBasket().reduce(
-    (total, item) => total + item.unitPrice * item.quantity,
+    (total, item) => total + (item.unitPrice ?? 0) * item.quantity,
     0
   );
 }

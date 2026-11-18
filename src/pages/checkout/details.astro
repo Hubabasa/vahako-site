@@ -8,24 +8,24 @@ import Header from '../../components/Header.astro';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checkout Details | Vahako</title>
+  <title>Your Contact Information | Vahako</title>
   <meta name="robots" content="noindex,follow" />
 </head>
 <body>
   <Header />
 
   <main class="checkout-details">
-    <a href="/checkout/" class="back-link">← Back to Basket</a>
+    <a href="/checkout/" class="back-link">← Inquiry List</a>
 
-    <h1>Checkout Details</h1>
-    <p class="intro">Complete your details to continue with your order.</p>
+<h1>Your Contact Information</h1>
+<p class="intro">Provide your contact details so our team can review your inquiry and get in touch to discuss your requirements.</p>
 
     <div class="checkout-grid">
       <section class="customer-card">
-        <h2>Customer Information</h2>
+        <h2>Your Details</h2>
         <p id="accountStatus" class="account-status">
-          You can continue as a guest.
-        </p>
+  You can submit an inquiry without creating an account.
+</p>
 
         <form id="customerForm">
           <div class="field">
@@ -67,7 +67,7 @@ import Header from '../../components/Header.astro';
 
 
           <div class="field">
-            <label for="customerAddress">Delivery Address *</label>
+            <label for="customerAddress">Your Address *</label>
             <textarea id="customerAddress" name="address" rows="3" required maxlength="500" autocomplete="street-address"></textarea>
           </div>
 
@@ -77,21 +77,35 @@ import Header from '../../components/Header.astro';
           </div>
 
           <div class="field">
-            <label for="customerNotes">Order Notes (Optional)</label>
-            <textarea id="customerNotes" name="notes" rows="3" maxlength="1000" placeholder="Delivery instructions or special requirements"></textarea>
+            <label for="customerNotes">Additional Requirements (Optional)</label>
+            <textarea id="customerNotes" name="notes" rows="3" maxlength="1000" placeholder="Product specifications, custom sizes or other requirements"></textarea>
           </div>
 
           <button type="submit" class="continue-button">
-            Continue to Review Order →
+            Continue to Final Check →
           </button>
         </form>
       </section>
 
       <aside class="summary-card">
-        <h2>Your Order</h2>
+        <h2>Your Inquiry</h2>
         <p><span>Items</span><strong id="orderCount">0</strong></p>
-        <p><span>Product Total</span><strong id="orderTotal">LKR 0</strong></p>
-        <p class="delivery-note">Delivery charges will be confirmed before payment.</p>
+        <p><span id="orderTotalLabel">Estimated Total</span><strong id="orderTotal">LKR 0</strong></p>
+        <p class="delivery-note">
+  Displayed amounts include only products with known prices.
+  Products marked "Ask for Price", final pricing and delivery
+  charges will be confirmed by our team after reviewing your inquiry.
+  Submitting an inquiry does not confirm an order.
+</p>
+
+<button
+  type="submit"
+  form="customerForm"
+  class="continue-button"
+>
+  Continue to Final Check →
+</button>
+
       </aside>
     </div>
   </main>
@@ -293,11 +307,33 @@ import Header from '../../components/Header.astro';
     maximumFractionDigits: 0
   });
 
-  const count = document.querySelector<HTMLElement>('#orderCount');
-  const total = document.querySelector<HTMLElement>('#orderTotal');
+const count = document.querySelector<HTMLElement>('#orderCount');
+const total = document.querySelector<HTMLElement>('#orderTotal');
+const totalLabel = document.querySelector<HTMLElement>('#orderTotalLabel');
 
-  if (count) count.textContent = String(getBasketCount());
-  if (total) total.textContent = formatter.format(getBasketTotal());
+const hasUnknownPrices =
+  basket.some(item => item.unitPrice === null);
+
+const hasKnownPrices =
+  basket.some(item => item.unitPrice !== null);
+
+if (count) {
+  count.textContent = String(getBasketCount());
+}
+
+if (total) {
+  total.textContent = hasKnownPrices
+    ? formatter.format(getBasketTotal())
+    : 'Price to Be Confirmed';
+}
+
+if (totalLabel) {
+  totalLabel.textContent = hasUnknownPrices
+    ? hasKnownPrices
+      ? 'Known-Price Subtotal'
+      : 'Pricing Status'
+    : 'Estimated Total';
+}
 
   const countrySelect =
     document.querySelector<HTMLSelectElement>('#customerCountry');
@@ -430,7 +466,7 @@ import Header from '../../components/Header.astro';
       if (email && !email.value) email.value = user.email || '';
     } else {
       if (status) {
-        status.textContent = 'Guest checkout — no account required.';
+        status.textContent = 'Guest inquiry — no account required.';
       }
     }
   });

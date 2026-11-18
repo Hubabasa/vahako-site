@@ -130,13 +130,18 @@ import {
             </div>
           </div>
 
-          <div class="profile-detail">
-            <UserRound size={20} />
-            <div>
-              <strong>My Orders</strong>
-              <p>Order history will be available when checkout is connected.</p>
-            </div>
-          </div>
+          
+<div class="profile-detail">
+  <UserRound size={20} />
+  <div>
+    <strong>My Orders</strong>
+    <p>View your previous purchases, payment details and order status.</p>
+    <a href="/account/orders/" class="orders-link">
+      View My Orders &rarr;
+    </a>
+  </div>
+</div>
+
 
           <button type="button" id="signout-button" class="signout-button">
             <LogOut size={18} /> Sign Out
@@ -160,7 +165,28 @@ import {
       signOut
     } from 'firebase/auth';
 
-    import { auth, googleProvider } from '../../lib/firebase';
+    import { auth, googleProvider, db } from '../../lib/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+
+    
+async function ensureCustomerProfile(user: import('firebase/auth').User) {
+  const customerRef = doc(db, 'customers', user.uid);
+
+  // Check whether this customer already exists.
+  const existingProfile = await getDoc(customerRef);
+
+  // Do not overwrite an existing customer profile.
+  if (existingProfile.exists()) {
+    return;
+  }
+
+  // Create a profile for a new customer.
+  await setDoc(customerRef, {
+    displayName: user.displayName || 'Vahako Customer',
+    email: user.email || '',
+    createdAt: serverTimestamp()
+  });
+}
 
     const el = (id: string) => document.getElementById(id)!;
     const loading = el('auth-loading');
@@ -246,6 +272,16 @@ import {
       if (user) {
         panel.hidden = true;
         dashboard.hidden = false;
+
+
+ensureCustomerProfile(user).catch((error) => {
+  console.error('Unable to initialize customer profile:', error);
+  showMessage(
+    'Your account is signed in, but we could not initialize your customer profile. Please refresh and try again.',
+    true
+  );
+});
+
 
         el('profile-name').textContent = user.displayName || 'Vahako Customer';
         el('profile-email').textContent = user.email || '';
@@ -652,4 +688,30 @@ import {
     .account-card { padding: 23px 18px; border-radius: 17px; }
     .account-intro h1 { font-size: 32px; }
   }
+
+
+
+.orders-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 11px 17px;
+  background: #d71920;
+  color: #ffffff;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.orders-link:hover {
+  background: #b9151c;
+}
+
+.orders-link:focus-visible {
+  outline: 3px solid #172033;
+  outline-offset: 3px;
+}
+
 </style>

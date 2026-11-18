@@ -46,9 +46,27 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
   const { request, env } = context;
   try {
     const origin = request.headers.get('Origin');
-    if (!origin || !['https://vahako.com', 'https://www.vahako.com'].includes(origin)) {
-      return json({ success: false, message: 'Request origin not allowed.' }, 403);
-    }
+
+const allowedOrigins = [
+  'https://vahako.com',
+  'https://www.vahako.com'
+];
+
+const requestUrl = new URL(request.url);
+
+const isLocalDevelopment =
+  ['127.0.0.1', 'localhost'].includes(requestUrl.hostname) &&
+  origin === requestUrl.origin;
+
+if (
+  !origin ||
+  (!allowedOrigins.includes(origin) && !isLocalDevelopment)
+) {
+  return json({
+    success: false,
+    message: 'Request origin not allowed.'
+  }, 403);
+}
     if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) {
       return json({ success: false, message: 'JSON content required.' }, 415);
     }
@@ -68,6 +86,57 @@ export const onRequestPost = async (context: PagesContext): Promise<Response> =>
         !/^[a-zA-Z0-9_-]{16,100}$/.test(payload.requestId)) {
       return json({ success: false, message: 'Invalid order information.' }, 400);
     }
+
+    for (const entry of payload.items) {
+  if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+    return json({ success: false, message: 'Invalid inquiry item.' }, 400);
+  }
+
+  const item = entry as Record<string, unknown>;
+
+  if (
+    typeof item.id !== 'string' ||
+    !item.id.trim() ||
+    item.id.length > 200 ||
+    !Number.isInteger(item.quantity) ||
+    (item.quantity as number) < 1 ||
+    (item.quantity as number) > 999 ||
+    !(
+      item.unitPrice === null ||
+      (
+        typeof item.unitPrice === 'number' &&
+        Number.isFinite(item.unitPrice) &&
+        item.unitPrice >= 0
+      )
+    ) ||
+    !item.options ||
+    typeof item.options !== 'object' ||
+    Array.isArray(item.options)
+  ) {
+    return json({
+      success: false,
+      message: 'Invalid product information or pricing.'
+    }, 400);
+  }
+
+  const options = item.options as Record<string, unknown>;
+
+  if (
+    Object.keys(options).length > 30 ||
+    Object.entries(options).some(
+      ([key, value]) =>
+        key.length > 100 ||
+        typeof value !== 'string' ||
+        value.length > 500
+    )
+  ) {
+    return json({
+      success: false,
+      message: 'Invalid product configuration.'
+    }, 400);
+  }
+}
+
     if (!env.VAHAKO_ORDER_SCRIPT_URL || !env.VAHAKO_ORDER_SECRET) {
       return json({ success: false, message: 'Order service is not configured.' }, 503);
     }

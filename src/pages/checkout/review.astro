@@ -9,26 +9,26 @@ import Header from '../../components/Header.astro';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,follow" />
-  <title>Review Your Order | Vahako</title>
+  <title>Final Inquiry Check | Vahako</title>
 </head>
 <body>
   <Header />
 
   <main class="review-page">
-    <a href="/checkout/details/" class="back-link">← Edit Customer Details</a>
+    <a href="/checkout/details/" class="back-link">← Edit Contact Information</a>
 
-    <h1>Review Your Order</h1>
+    <h1>Final Inquiry Check</h1>
     <p class="intro">
-      Please check your information and products before submitting your order.
+      Please review your contact information, selected products and specifications before submitting your inquiry.
     </p>
 
-    <div id="loading">Loading your order...</div>
+    <div id="loading">Loading your inquiry...</div>
 
     <div id="reviewContent" class="review-grid" hidden>
       <div class="main-column">
         <section class="card">
           <div class="section-heading">
-            <h2>Customer Information</h2>
+            <h2>Your Contact Information</h2>
             <a href="/checkout/details/">Edit</a>
           </div>
 
@@ -38,7 +38,7 @@ import Header from '../../components/Header.astro';
         <section class="card">
           <div class="section-heading">
             <h2>Products</h2>
-            <a href="/checkout/">Edit Basket</a>
+            <a href="/checkout/">Edit Inquiry List</a>
           </div>
 
           <div id="reviewProducts"></div>
@@ -46,7 +46,7 @@ import Header from '../../components/Header.astro';
       </div>
 
       <aside class="card summary-card">
-        <h2>Order Summary</h2>
+        <h2>Inquiry Summary</h2>
 
         <div class="summary-row">
           <span>Total Items</span>
@@ -54,8 +54,8 @@ import Header from '../../components/Header.astro';
         </div>
 
         <div class="summary-row">
-          <span>Product Total</span>
-          <strong id="productTotal">LKR 0</strong>
+<span id="productTotalLabel">Estimated Total</span>
+<strong id="productTotal">LKR 0</strong>
         </div>
 
         <div class="summary-row">
@@ -64,23 +64,26 @@ import Header from '../../components/Header.astro';
         </div>
 
         <div class="summary-total">
-          <span>Product Total</span>
-          <strong id="finalTotal">LKR 0</strong>
+          <span id="finalTotalLabel">Estimated Total</span>
+<strong id="finalTotal">LKR 0</strong>
         </div>
 
         <p class="notice">
-          No payment is required now. Vahako will contact you to confirm
-          your order, delivery charges and payment arrangements.
-        </p>
+  Displayed amounts include only products with known prices.
+  Products marked "Ask for Price" are excluded from these amounts.
+  Final product pricing, specifications and delivery charges
+  will be confirmed by our team after reviewing your inquiry.
+  Submitting an inquiry does not confirm an order.
+</p>
 
         <button id="confirmOrder" type="button">
-          Confirm & Submit Order
+          Confirm & Submit Inquiry
         </button>
 
         <p id="submissionStatus" role="status" aria-live="polite"></p>
 
         <p class="secure-note">
-          Your order will be recorded as Pending Confirmation.
+          Your inquiry will be recorded and reviewed by our team.
         </p>
       </aside>
     </div>
@@ -480,28 +483,74 @@ import Header from '../../components/Header.astro';
       });
 
       info.appendChild(
-        element('p', 'product-price',
-          `Quantity: ${item.quantity} × ${money(item.unitPrice)}`
-        )
-      );
+  element(
+    'p',
+    'product-price',
+    `Quantity: ${item.quantity} × ${
+      item.unitPrice === null
+        ? 'Ask for Price'
+        : money(item.unitPrice)
+    }`
+  )
+);
 
-      const lineTotal = element(
-        'strong',
-        'line-total',
-        money(item.quantity * item.unitPrice)
-      );
+const lineTotal = element(
+  'strong',
+  'line-total',
+  item.unitPrice === null
+    ? 'Ask for Price'
+    : money(item.quantity * item.unitPrice)
+);
 
       product.append(image, info, lineTotal);
       productsBox.appendChild(product);
     });
 
     const count = document.querySelector<HTMLElement>('#itemCount');
-    const total = document.querySelector<HTMLElement>('#productTotal');
-    const finalTotal = document.querySelector<HTMLElement>('#finalTotal');
+const total = document.querySelector<HTMLElement>('#productTotal');
+const finalTotal = document.querySelector<HTMLElement>('#finalTotal');
 
-    if (count) count.textContent = String(getBasketCount());
-    if (total) total.textContent = money(getBasketTotal());
-    if (finalTotal) finalTotal.textContent = money(getBasketTotal());
+const productTotalLabel =
+  document.querySelector<HTMLElement>('#productTotalLabel');
+
+const finalTotalLabel =
+  document.querySelector<HTMLElement>('#finalTotalLabel');
+
+const hasUnknownPrices =
+  basket.some(item => item.unitPrice === null);
+
+const hasKnownPrices =
+  basket.some(item => item.unitPrice !== null);
+
+const displayAmount = hasKnownPrices
+  ? money(getBasketTotal())
+  : 'Price to Be Confirmed';
+
+const displayLabel = hasUnknownPrices
+  ? hasKnownPrices
+    ? 'Known-Price Subtotal'
+    : 'Pricing Status'
+  : 'Estimated Total';
+
+if (count) {
+  count.textContent = String(getBasketCount());
+}
+
+if (total) {
+  total.textContent = displayAmount;
+}
+
+if (finalTotal) {
+  finalTotal.textContent = displayAmount;
+}
+
+if (productTotalLabel) {
+  productTotalLabel.textContent = displayLabel;
+}
+
+if (finalTotalLabel) {
+  finalTotalLabel.textContent = displayLabel;
+}
 
     if (loading) loading.hidden = true;
     if (content) content.hidden = false;
@@ -558,7 +607,7 @@ import Header from '../../components/Header.astro';
 
     submitting = true;
     confirmButton.disabled = true;
-    confirmButton.textContent = 'Submitting Order...';
+    confirmButton.textContent = 'Submitting Inquiry...';
 
     if (status) {
       status.className = '';
@@ -587,7 +636,7 @@ import Header from '../../components/Header.astro';
 
       if (!response.ok || !result.success || !result.orderNumber) {
         throw new Error(
-          result.message || 'Unable to submit your order.'
+          result.message || 'Unable to submit your inquiry.'
         );
       }
 
@@ -606,7 +655,7 @@ import Header from '../../components/Header.astro';
 
       if (status) {
         status.className = 'success';
-        status.textContent = 'Order submitted successfully!';
+        status.textContent = 'Inquiry submitted successfully!';
       }
 
       window.location.href = '/checkout/success/';
@@ -617,7 +666,7 @@ import Header from '../../components/Header.astro';
         status.textContent =
           error instanceof Error
             ? error.message
-            : 'Unable to submit your order. Please try again.';
+            : 'Unable to submit your inquiry. Please try again.';
       }
 
       submitting = false;

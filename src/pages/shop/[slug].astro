@@ -129,13 +129,13 @@ const productSchema = {
         <p class="product-description">{description}</p>
         <p class="availability"><span class:list={['availability-dot', { unavailable: availability === 'out-of-stock' }]}></span>{availabilityLabel}</p>
 
-        {options.length > 0 && <section class="product-configurator" id="product-configurator" data-price={price} data-sale-price={salePrice ?? ''} data-currency={currency}>
+        {options.length > 0 && <section class="product-configurator" id="product-configurator" data-price={price} data-sale-price={salePrice ?? ''} data-currency={currency} data-price-on-request={priceOnRequest ? 'true' : 'false'}>
           <h2>Customize Your Product</h2>
           <p>Choose your preferred options. Prices update instantly.</p>
           {options.map((option) => <div class="config-option">
             <label for={`config-${option.name}`}>{option.label}</label>
             <select id={`config-${option.name}`} class="config-select" data-option-name={option.name}>
-              {option.choices.map((choice) => <option value={choice.value} data-adjustment={choice.priceAdjustment} data-sale-adjustment={choice.saleAdjustment ?? choice.priceAdjustment}>{choice.label}</option>)}
+           {option.choices.map((choice) => <option value={choice.value} data-adjustment={choice.priceAdjustment} data-sale-adjustment={choice.saleAdjustment ?? choice.priceAdjustment} data-price-on-request={choice.priceOnRequest === true ? 'true' : 'false'}>{choice.label}</option>)}
             </select>
           </div>)}
           {!priceOnRequest && <div class="configured-price" aria-live="polite" aria-atomic="true">
@@ -147,15 +147,22 @@ const productSchema = {
         </section>}
 
         <div class="quantity-control"><label for="quantity">Quantity</label><input id="quantity" type="number" min="1" max="999" step="1" value="1" inputmode="numeric" /></div>
-        <div class="product-actions">
+
+<p class="inquiry-disclaimer">
+  Hello, submitting an inquiry is not an order confirmation.
+  One of our staff members will contact you to discuss
+  specifications and other details. Thank you!
+</p>
+
+<div class="product-actions">
   <button
     type="button"
     class="add-to-basket"
     id="addToBasket"
-    disabled={availability === 'out-of-stock' || priceOnRequest}
+    disabled={availability === 'out-of-stock'}
   >
     <ShoppingCart size={19} strokeWidth={2.2} aria-hidden="true" />
-    <span>Add to Basket</span>
+    <span>Inquire Now</span>
   </button>
 
   <a
@@ -405,6 +412,18 @@ const productSchema = {
   cursor: pointer;
 }
 
+.inquiry-disclaimer {
+  margin: 18px 0 14px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #c51e2b;
+  border-radius: 8px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
 </style>
 
 <script>
@@ -431,27 +450,60 @@ import { addToBasket } from '../../lib/basket';
     const formatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: configurator.dataset.currency || 'LKR', maximumFractionDigits: 0 });
     const selects = [...configurator.querySelectorAll<HTMLSelectElement>('.config-select')];
     const update = () => {
-      let regular = basePrice;
-      let final = saleBase;
-      const choices: string[] = [];
+  let regular = basePrice;
+  let final = saleBase;
+  const choices: string[] = [];
+  const productPriceOnRequest = document.querySelector<HTMLElement>(
+    '#product-configurator'
+  )?.dataset.priceOnRequest === 'true';
+
+  let askForPrice = productPriceOnRequest;
       selects.forEach((select) => {
-        const option = select.selectedOptions[0];
-        if (!option) return;
-        regular += Number(option.dataset.adjustment ?? 0);
-        final += Number(option.dataset.saleAdjustment ?? option.dataset.adjustment ?? 0);
-        choices.push(`${select.dataset.optionName}: ${option.textContent?.trim() ?? option.value}`);
-      });
+  const option = select.selectedOptions[0];
+  if (!option) return;
+
+  if (option.dataset.priceOnRequest === 'true') {
+    askForPrice = true;
+  }
+
+  regular += Number(option.dataset.adjustment ?? 0);
+  final += Number(option.dataset.saleAdjustment ?? option.dataset.adjustment ?? 0);
+
+  choices.push(
+    `${select.dataset.optionName}: ${option.textContent?.trim() ?? option.value}`
+  );
+});
       const mainRegular = document.querySelector<HTMLElement>('#mainRegularPrice');
       const mainFinal = document.querySelector<HTMLElement>('#mainCurrentPrice');
       const configuredRegular = document.querySelector<HTMLElement>('#configuredRegularPrice');
       const configuredFinal = document.querySelector<HTMLElement>('#configuredFinalPrice');
-      if (mainRegular) mainRegular.textContent = formatter.format(regular);
-      if (mainFinal) mainFinal.textContent = formatter.format(final);
-      if (configuredRegular) configuredRegular.textContent = formatter.format(regular);
-      if (configuredFinal) configuredFinal.textContent = formatter.format(final);
-      configurator.dataset.configuredPrice = String(final);
+      if (mainRegular) {
+  mainRegular.textContent = askForPrice ? '' : formatter.format(regular);
+  mainRegular.style.display = askForPrice ? 'none' : '';
+}
+
+if (mainFinal) {
+  mainFinal.textContent = askForPrice
+    ? 'Ask for Price'
+    : formatter.format(final);
+}
+
+if (configuredRegular) {
+  configuredRegular.textContent = askForPrice
+    ? ''
+    : formatter.format(regular);
+  configuredRegular.style.display = askForPrice ? 'none' : '';
+}
+
+if (configuredFinal) {
+  configuredFinal.textContent = askForPrice
+    ? 'Ask for Price'
+    : formatter.format(final);
+}
+      configurator.dataset.configuredPrice = askForPrice ? '' : String(final);
+      configurator.dataset.configuredPriceOnRequest = askForPrice ? 'true' : 'false';
       if (inquiry && productInfo) {
-        const message = `Hello Vahako, I am interested in ${productInfo.title}.\n${choices.join('\n')}\nQuantity: ${Math.max(1, Number(quantityInput?.value) || 1)}\nDisplayed unit price: ${formatter.format(final)} (subject to confirmation)\n${productInfo.productUrl}`;
+        const message = `Hello Vahako, I am interested in ${productInfo.title}.\n${choices.join('\n')}\nQuantity: ${Math.max(1, Number(quantityInput?.value) || 1)}\nDisplayed unit price: ${askForPrice ? 'Ask for Price' : formatter.format(final)} (subject to confirmation)\n${productInfo.productUrl}`;
         inquiry.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
       }
     };
@@ -515,7 +567,7 @@ document.querySelector<HTMLButtonElement>('#addToBasket')
     const quantityInput =
       document.querySelector<HTMLInputElement>('#quantity');
 
-    if (!product || product.priceOnRequest) return;
+    if (!product) return;
 
     const quantity = Number(quantityInput?.value);
 
@@ -541,9 +593,15 @@ document.querySelector<HTMLButtonElement>('#addToBasket')
         }
       });
 
-    const unitPrice = configurator
-      ? Number(configurator.dataset.configuredPrice)
-      : Number(product.salePrice ?? product.price);
+    const requiresQuotation = configurator
+  ? configurator.dataset.configuredPriceOnRequest === 'true'
+  : product.priceOnRequest === true;
+
+const unitPrice = requiresQuotation
+  ? null
+  : configurator
+    ? Number(configurator.dataset.configuredPrice)
+    : Number(product.salePrice ?? product.price);
 
     const success = addToBasket({
       id: product.id,
@@ -560,7 +618,7 @@ document.querySelector<HTMLButtonElement>('#addToBasket')
     if (note) {
       note.hidden = false;
       note.textContent = success
-        ? 'Product added to your basket successfully!'
+        ? 'Product added to your inquiry list successfully!'
         : 'Unable to save your basket. Please try again.';
     }
   });
